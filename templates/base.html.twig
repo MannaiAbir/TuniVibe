@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        
+        {% block stylesheets %}
+        <style>
+            /* Style global */
+            body {
+                background-color: #f0f8ff; /* Couleur de fond légère */
+                font-family: 'Arial', sans-serif;
+                margin: 0;
+                padding: 0;
+                color: #333;
+            }
+
+            /* Header */
+            header {
+                background-color:rgb(246, 248, 249); /* Bleu foncé pour l'en-tête */
+                color: white;
+                padding: 10px 0;
+                text-align: center;
+            }
+
+            /* Liens */
+            a {
+                color:rgb(86, 88, 90);
+                text-decoration: none;
+            }
+
+            a:hover {
+                text-decoration: underline;
+            }
+
+            /* Pied de page */
+            footer {
+                background-color: #333;
+                color: white;
+                text-align: center;
+                padding: 10px 0;
+                position: fixed;
+                width: 100%;
+                bottom: 0;
+            }
+
+            /* Stylisation des titres */
+            h1 {
+                color:rgb(13, 13, 14); /* Couleur bleue pour les titres */
+                font-size: 2rem;
+            }
+
+            h2 {
+                color: #333; /* Couleur des sous-titres */
+            }
+        </style>
+        {% endblock %}
+
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </head>
+    <body>
+        <header>
+            <h1>Bienvenue sur notre site!</h1>
+        </header>
+
+        {% block body %}
+        <!-- Contenu spécifique à chaque page -->
+        {% endblock %}
+
+        <footer>
+            <p>&copy; 2025 Mon Site Web. Tous droits réservés.</p>
+        </footer>
+    </body>
+</html>
