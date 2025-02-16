@@ -1,0 +1,54 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ path('app_home') }}">TuniVibe</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            {# Left-aligned items (e.g., Home, Admin, Editor, User) #}
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Home</a>
+                </li>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_admin') }}">Admin Dashboard</a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_EDITOR') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_editor') }}">Editor Dashboard</a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_USER') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_user') }}">User Dashboard</a>
+                    </li>
+                {% endif %}
+            </ul>
+
+            {# Right-aligned items (e.g., login/logout) #}
+            <ul class="navbar-nav ms-auto">
+                {% if app.user %}
+                    {# Display user-specific links when logged in #}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_user') }}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <form action="{{ path('app_logout') }}" method="post">
+                            <button type="submit" class="nav-link btn btn-link" style="border: none; background: none; cursor: pointer;">Logout</button>
+                        </form>
+                    </li>
+                {% else %}
+                    {# Display login and register links when not logged in #}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_register') }}">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
