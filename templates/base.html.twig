@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Esprit Template - Index</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="img/favicon.png" rel="icon">
+  <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  {% block css %}
+  <link rel="stylesheet" href="{{ asset('front/libraries/bootstrap/css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('front/libraries/icofont/icofont.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('front/libraries/owl.carousel/assets/owl.carousel.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('front/libraries/boxicons/css/boxicons.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('front/libraries/venobox/venobox.css') }}">
+  <link rel="stylesheet" href="{{ asset('front/libraries/aos/aos.css') }}">
+
+  <!-- Template Main CSS File -->
+  <link rel="stylesheet" href="{{ asset('front/css/style.css') }}">
+  {% endblock %}
+<!-- Owl Carousel CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+
+
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" >
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+       <h1 class="logo">
+       <a href="index.html">
+        <img src="{{ asset('front/img/tunivibe.png') }}" alt="TuniVibe Logo" class="logo-img">
+        </a>
+       </h1>
+      <h1 class="logo"><a href="#">TuniVibe</a></h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      
+         <nav class="nav-menu d-none d-lg-flex align-items-center">
+            <a href="#" class="btn custom-btn me-6">Login</a>
+            <a href="#" class="btn custom-btn ">Sign Up</a>
+         </nav><!-- .nav-menu -->
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  <section >
+
+<!-- Carousel Start -->
+<div class="header-carousel owl-carousel">
+    <!-- Slide 1 -->
+    <div class="header-carousel-item">
+        <img src="{{ asset('front/img/cul1.jpg') }}" class="img-fluid w-100" alt="Image">
+        <div class="carousel-caption">
+            <div class="carousel-caption-content p-3">
+                <h5 class="text-white text-uppercase fw-bold mb-4" style="letter-spacing: 3px;">EXPÉRIENCE CULTURELLE</h5>
+                <h1 class="display-1 text-capitalize text-white mb-4">Découvrez le Monde avec TuniVibe</h1>
+                <p class="mb-5 fs-5">
+                    Plongez dans une aventure culturelle unique et connectez-vous avec des personnes partageant les mêmes passions.
+                </p>
+                <a class="btn custom-carousel-btn rounded-pill py-3 px-5" href="#">Rejoindre la Communauté</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="header-carousel-item">
+        <img src="{{ asset('front/img/cul2.jpg') }}" class="img-fluid w-100" alt="Image">
+        <div class="carousel-caption">
+            <div class="carousel-caption-content p-3">
+                <h5 class="text-white text-uppercase fw-bold mb-4" style="letter-spacing: 3px;">EXPÉRIENCE SOCIALE</h5>
+                <h1 class="display-1 text-capitalize text-white mb-4">Rencontrez, Partagez, Échangez</h1>
+                <p class="mb-5 fs-5 animated slideInDown">
+                    Participez à des événements, ateliers et rencontres enrichissantes avec notre communauté dynamique.
+                </p>
+                <a class="btn custom-carousel-btn rounded-pill py-3 px-5" href="#">Rejoindre la Communauté</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="header-carousel-item">
+        <img src="{{ asset('front/img/cul3.jpg') }}" class="img-fluid w-100" alt="Image">
+        <div class="carousel-caption">
+            <div class="carousel-caption-content p-3">
+                <h5 class="text-white text-uppercase fw-bold mb-4" style="letter-spacing: 3px;">TUNIVIBE</h5>
+                <h1 class="display-1 text-capitalize text-white mb-4">Vivez des Moments Inoubliables</h1>
+                <p class="mb-5 fs-5 animated slideInDown">
+                    Élargissez vos horizons à travers des voyages, des découvertes culturelles et des activités immersives.
+                </p>
+                <a class="btn custom-carousel-btn rounded-pill " href="#">Rejoindre la Communauté</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Carousel End -->
+ </section><!-- End Hero -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+    <div class="container">
+      <div class="copyright">
+        &copy; Copyright <strong><span>TuniVibet</span></strong>. All Rights Reserved
+      </div>
+      <div class="credits">
+        Designed by <a href="https://bootstrapmade.com/">Tunivibes</a>
+      </div>
+    </div>
+  </footer><!-- End  Footer -->
+
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top"><i class="bx bx-up-arrow-alt"></i></a>
+
+  <!-- Libraries JS Files -->
+    {% block js %}
+  <script src="{{ asset('front/libraries/jquery/jquery.min.js') }}"></script>
+  <script src="{{ asset('front/libraries/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ asset('front/libraries/jquery.easing/jquery.easing.min.js') }}"></script>
+  <script src="{{ asset('frontlibraries/php-email-form/validate.js') }}"></script>
+  <script src="{{ asset('front/libraries/waypoints/jquery.waypoints.min.js') }}"></script>
+  <script src="{{ asset('front/libraries/counterup/counterup.min.js') }}"></script>
+  <script src="{{ asset('front/libraries/owl.carousel/owl.carousel.min.js') }}"></script>
+  <script src="{{ asset('front/libraries/isotope-layout/isotope.pkgd.min.js') }}"></script>
+  <script src="{{ asset('front/libraries/venobox/venobox.min.js') }}"></script>
+  <script src="{{ asset('front/libraries/aos/aos.js') }}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{{ asset('front/js/main.js') }}"></script>
+  <script src="{{ asset('front/js/carousel.js') }}"></script>
+
+    {% endblock %}
+    <!-- Owl Carousel JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,49 @@
+{% extends 'base3.html.twig' %}
+
+{% block title %}Liste des Hébergements{% endblock %}
+
+{% block body %}
+<h1 class="text-center my-4">Liste des Hébergements</h1>
+
+<div class="container mb-4">
+    <a href="{{ path('hebergement_new') }}" class="btn btn-primary">Ajouter un Nouvel Hébergement</a>
+</div>
+
+<div class="container">
+    <div class="row">
+        {% for h in hebergements %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card shadow-lg border-2 rounded-lg p-3">
+                    <a href="{{ path('hebergement_show', {'idhebergement': h.idhebergement}) }}">
+                        {% if h.image %}
+                            <img src="{{ asset('uploads/images/' ~ h.image) }}" class="card-img-top img-fluid rounded" alt="{{ h.nom }}">
+                        {% else %}
+                            <img src="{{ asset('img/default-image.jpg') }}" class="card-img-top img-fluid rounded" alt="{{ h.nom }}">
+                        {% endif %}
+                    </a>
+                    <div class="card-body text-center">
+                        <h5 class="card-title font-weight-bold">{{ h.nom }}</h5>
+                        <p class="card-text"><strong>Type :</strong> <span class="text-muted">{{ h.type }}</span></p>
+                        <p class="card-text"><strong>Adresse :</strong> <span class="text-muted">{{ h.adresse }}</span></p>
+                        <p class="card-text"><strong>Capacité :</strong> <span class="text-muted">{{ h.capacite }}</span></p>
+                        <p class="card-text"><strong>Description :</strong> <span class="text-muted">{{ h.description }}</span></p>
+
+                        <div class="d-flex justify-content-center">
+                            <a href="{{ path('hebergement_show', {'idhebergement': h.idhebergement}) }}" class="btn btn-info mx-2">Voir</a>
+                            <a href="{{ path('hebergement_edit', {'idhebergement': h.idhebergement}) }}" class="btn btn-warning mx-2">Modifier</a>
+
+                            <form action="{{ path('hebergement_delete', {'idhebergement': h.idhebergement}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet hébergement ?');">
+                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <p class="text-center">Aucun hébergement trouvé.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

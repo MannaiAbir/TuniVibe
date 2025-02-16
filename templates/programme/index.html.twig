@@ -1,0 +1,21 @@
+{# templates/programme/index.html.twig #}
+
+<h1>Liste des Programmes</h1>
+
+<ul>
+    {% for programme in programmes %}
+        <li>
+            <strong>Nom:</strong> {{ programme.nom }} <br>
+             <strong>Lieu:</strong> {{ programme.lieu }} <br>
+             <strong>Date début:</strong> {{ programme.dateDebut|date('d/m/Y H:i') }} <br>
+            <strong>Date fin:</strong> {{ programme.dateFin|date('d/m/Y H:i') }} <br>
+            <strong>Description:</strong> {{ programme.description }} <br>
+
+            <a href="{{ path('programme_show', {'id': programme.id}) }}">Voir</a>
+            <a href="{{ path('programme_edit', {'id': programme.id}) }}">Modifier</a>
+            <a href="{{ path('programme_delete', {'id': programme.id}) }}">Supprimer</a>
+        </li>
+    {% endfor %}
+</ul>
+
+<a href="{{ path('programme_new') }}">Ajouter un nouveau programme</a>
