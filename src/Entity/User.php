@@ -119,4 +119,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // Clear temporary sensitive data
     }
+    public function serialize(): string
+    {
+        return serialize([$this->id, $this->username, $this->password]);
+    }
+
+    public function unserialize($serialized): void
+    {
+        [$this->id, $this->username, $this->password] = unserialize($serialized);
+    }
 }
