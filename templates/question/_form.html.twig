@@ -1,0 +1,175 @@
+{% block title %}{% endblock %}
+
+{% block body %}
+    <header class="site-header d-flex flex-column justify-content-center align-items-center">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-5 col-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active" aria-current="page">Quiz</li>
+                        </ol>
+                    </nav>
+
+                    <h2 class="text-white">Quiz</h2>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="section-padding section-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-12">
+                    <h3 class="mb-4 pb-2">Create a New Question</h3>
+                </div>
+
+                <div class="col-lg-6 col-12">
+                    {{ form_start(form, {'attr': {'class': 'custom-form contact-form', 'role': 'form'}}) }}
+                        <div class="row">
+                            <!-- Hidden quizId Field -->
+                            <div class="col-lg-12 col-12">
+                                {{ form_widget(form.quizId, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+
+                            <!-- Question Field -->
+                            <div class="col-lg-12 col-12">
+                                <div class="form-floating">
+                                    {{ form_widget(form.question, {'attr': {'class': 'form-control', 'placeholder': 'Question'}}) }}
+                                    {{ form_label(form.question, 'Question') }}
+                                </div>
+                            </div>
+
+                            <!-- Options Field -->
+                            <div class="col-lg-12 col-12">
+                                <div id="options-list" data-prototype="{{ form_widget(form.options.vars.prototype)|e }}">
+                                    {% for optionField in form.options %}
+                                        <div class="option-item">
+                                            <div class="form-floating">
+                                                {{ form_widget(optionField, {'attr': {'class': 'form-control', 'placeholder': 'Option'}}) }}
+                                                {{ form_label(optionField, 'Option') }}
+                                            </div>
+                                            <button type="button" class="save-option btn btn-primary">Save</button>
+                                            <button type="button" class="remove-option btn btn-danger">Remove</button>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- Add Option Button -->
+                            <div class="col-lg-12 col-12">
+                                <button type="button" id="add-option" class="btn btn-secondary">Add Option</button>
+                            </div>
+
+                            <!-- Correct Option Field -->
+                            <div class="col-lg-12 col-12">
+                                <div class="form-floating">
+                                    {{ form_widget(form.optionCorrect, {'attr': {'class': 'form-control'}}) }}
+                                    {{ form_label(form.optionCorrect, 'Correct Option') }}
+                                </div>
+                            </div>
+
+                            <!-- Livre Field -->
+                            <div class="col-lg-12 col-12">
+                                <div class="form-floating">
+                                    {{ form_widget(form.livre, {'attr': {'class': 'form-control'}}) }}
+                                    {{ form_label(form.livre, 'Livre') }}
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="col-lg-4 col-12 ms-auto">
+                                <button type="submit" class="form-control btn btn-primary">{{ button_label|default('Save') }}</button>
+                            </div>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const optionsList = document.getElementById('options-list');
+        const addOptionBtn = document.getElementById('add-option');
+        const correctOptionDropdown = document.getElementById('question_optionCorrect'); // Updated to 'question_optionCorrect'
+        const prototype = optionsList.dataset.prototype;
+        let index = optionsList.children.length;
+
+        function updateCorrectOptionDropdown() {
+            correctOptionDropdown.innerHTML = '<option value="">Select the correct option</option>'; // Clear existing options
+            document.querySelectorAll('.option-item input').forEach(input => {
+                if (input.value.trim()) {
+                    let newOption = document.createElement('option');
+                    newOption.value = input.value;
+                    newOption.textContent = input.value;
+                    correctOptionDropdown.appendChild(newOption);
+                }
+            });
+        }
+
+        // Add new option
+        addOptionBtn.addEventListener('click', function () {
+            const newForm = prototype.replace(/__name__/g, index);
+            const newDiv = document.createElement('div');
+            newDiv.classList.add('option-item');
+            newDiv.innerHTML = newForm;
+
+            const inputField = newDiv.querySelector('input');
+            inputField.name = 'question[options][' + index + ']'; // Adjusted to match 'question[options]'
+
+            // Add Save button
+            const saveBtn = document.createElement('button');
+            saveBtn.type = 'button';
+            saveBtn.textContent = 'Save';
+            saveBtn.classList.add('save-option', 'btn', 'btn-primary');
+            saveBtn.addEventListener('click', function (e) {
+                e.preventDefault(); // Prevent accidental deletion
+                saveOption(inputField);
+            });
+
+            // Add Remove button
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.textContent = 'Remove';
+            removeBtn.classList.add('remove-option', 'btn', 'btn-danger');
+            removeBtn.addEventListener('click', function () {
+                newDiv.remove();
+                updateCorrectOptionDropdown(); // Update dropdown when an option is removed
+            });
+
+            newDiv.appendChild(saveBtn);
+            newDiv.appendChild(removeBtn);
+            optionsList.appendChild(newDiv);
+            index++;
+        });
+
+        // Save option logic
+        function saveOption(inputField) {
+            const optionText = inputField.value.trim();
+            if (!optionText) {
+                alert('Please enter an option before saving.');
+                return;
+            }
+
+            updateCorrectOptionDropdown(); // Ensure dropdown updates
+            alert('Option saved: ' + optionText);
+        }
+
+        // Handle remove buttons for existing options
+        document.querySelectorAll('.remove-option').forEach(button => {
+            button.addEventListener('click', function () {
+                this.closest('.option-item').remove();
+                updateCorrectOptionDropdown();
+            });
+        });
+
+        // Ensure dropdown updates on page load
+        updateCorrectOptionDropdown();
+    });
+</script>
+
+{% endblock %}

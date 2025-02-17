@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Question index{% endblock %}
+
+{% block body %}
+    <h1>Questions index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Question</th>
+                <th>Options</th>
+                <th>Correct Option</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for question in questions %}
+            <tr>
+                <td>{{ question.id }}</td>
+                <td>{{ question.question }}</td>
+                <td>
+                    {% if question.options is not empty %}
+                        <ul>
+                            {% for option in question.options %}
+                                <li>{{ option }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        No options available.
+                    {% endif %}
+                </td>
+                <td>{{ question.optionCorrect }}</td>
+                <td>
+                    {% if quiz %}
+                        <a href="{{ path('app_question_show', {'quizId': quiz.id, 'id': question.id}) }}">show</a>
+                        <a href="{{ path('app_question_edit', {'quizId': quiz.id, 'id': question.id}) }}">edit</a>
+                    {% else %}
+                        No quiz available.
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">No questions found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if quiz %}
+        <a href="{{ path('app_question_new', {'quizId': quiz.id}) }}">Create new question</a>
+    {% else %}
+        <p>No quiz found to add questions to.</p>
+    {% endif %}
+{% endblock %}
+

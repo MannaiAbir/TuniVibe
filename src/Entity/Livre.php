@@ -1,0 +1,207 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\LivreRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+
+
+#[ORM\Entity(repositoryClass: LivreRepository::class)]
+class Livre
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $titre = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $auteur = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $description = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $fichierUrl = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $dateCreation = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $genre = null;
+
+    /**
+     * @var Collection<int, Telechargement>
+     */
+    #[ORM\OneToMany(targetEntity: Telechargement::class, mappedBy: 'livre')]
+    private Collection $telechargements;
+
+    /**
+     * @var Collection<int, TentativeQuiz>
+     */
+    #[ORM\OneToMany(targetEntity: TentativeQuiz::class, mappedBy: 'livre')]
+    private Collection $tentativeQuizzes;
+
+    #[ORM\Column(length: 255)]
+    private ?string $imageCouverture = null;
+
+    public function __construct()
+    {
+        $this->telechargements = new ArrayCollection();
+        $this->tentativeQuizzes = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTitre(): ?string
+    {
+        return $this->titre;
+    }
+
+    public function setTitre(string $titre): static
+    {
+        $this->titre = $titre;
+
+        return $this;
+    }
+
+    public function getAuteur(): ?string
+    {
+        return $this->auteur;
+    }
+
+    public function setAuteur(string $auteur): static
+    {
+        $this->auteur = $auteur;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getFichierUrl(): ?string
+    {
+        return $this->fichierUrl;
+    }
+
+    public function setFichierUrl(string $fichierUrl): static
+    {
+        $this->fichierUrl = $fichierUrl;
+
+        return $this;
+    }
+
+    public function getDateCreation(): ?\DateTimeInterface
+    {
+        return $this->dateCreation;
+    }
+
+    public function setDateCreation(\DateTimeInterface $dateCreation): static
+    {
+        $this->dateCreation = $dateCreation;
+
+        return $this;
+    }
+
+    public function getGenre(): ?string
+    {
+        return $this->genre;
+    }
+
+    public function setGenre(string $genre): static
+    {
+        $this->genre = $genre;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Telechargement>
+     */
+    public function getTelechargements(): Collection
+    {
+        return $this->telechargements;
+    }
+
+    public function addTelechargement(Telechargement $telechargement): static
+    {
+        if (!$this->telechargements->contains($telechargement)) {
+            $this->telechargements->add($telechargement);
+            $telechargement->setLivre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTelechargement(Telechargement $telechargement): static
+    {
+        if ($this->telechargements->removeElement($telechargement)) {
+            // set the owning side to null (unless already changed)
+            if ($telechargement->getLivre() === $this) {
+                $telechargement->setLivre(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TentativeQuiz>
+     */
+    public function getTentativeQuizzes(): Collection
+    {
+        return $this->tentativeQuizzes;
+    }
+
+    public function addTentativeQuiz(TentativeQuiz $tentativeQuiz): static
+    {
+        if (!$this->tentativeQuizzes->contains($tentativeQuiz)) {
+            $this->tentativeQuizzes->add($tentativeQuiz);
+            $tentativeQuiz->setLivre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTentativeQuiz(TentativeQuiz $tentativeQuiz): static
+    {
+        if ($this->tentativeQuizzes->removeElement($tentativeQuiz)) {
+            // set the owning side to null (unless already changed)
+            if ($tentativeQuiz->getLivre() === $this) {
+                $tentativeQuiz->setLivre(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getImageCouverture(): ?string
+    {
+        return $this->imageCouverture;
+    }
+
+    public function setImageCouverture(string $imageCouverture): static
+    {
+        $this->imageCouverture = $imageCouverture;
+
+        return $this;
+    }
+}

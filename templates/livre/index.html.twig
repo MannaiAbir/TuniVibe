@@ -1,0 +1,176 @@
+{% block stylesheets %}
+    <style>
+        /* General styles for the page */
+        body {
+            background-color: #f8f9fa; /* Light background color for the page */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        /* Table styles */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table th, .table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #3498db;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .table tr:hover {
+            background-color: #f1f1f1;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Image styling */
+        .table img {
+            max-width: 100px;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .table img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Action links styling */
+        .table td a {
+            margin-right: 10px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .table td a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        /* Button for creating new book */
+        .create-button {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 25px;
+            background-color: #27ae60;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .create-button:hover {
+            background-color: #219653;
+            transform: translateY(-2px);
+        }
+
+        /* Styling for the 'no records found' message */
+        .no-records {
+            text-align: center;
+            color: #777;
+            font-style: italic;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        /* Responsive table adjustments */
+        @media (max-width: 768px) {
+            .table th, .table td {
+                padding: 10px;
+            }
+
+            .table img {
+                max-width: 80px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>Livre Index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>Description</th>
+                <th>FichierUrl</th>
+                <th>DateCreation</th>
+                <th>Genre</th>
+                <th>Image Couverture</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for livre in livres %}
+            <tr>
+                <td>{{ livre.id }}</td>
+                <td>{{ livre.titre }}</td>
+                <td>{{ livre.auteur }}</td>
+                <td>{{ livre.description }}</td>
+                <td>{{ livre.fichierUrl }}</td>
+                <td>{{ livre.dateCreation ? livre.dateCreation|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ livre.genre }}</td>
+                <td>
+                    {% if livre.imageCouverture %}
+                        <img src="{{ asset('uploads/images/' ~ livre.imageCouverture) }}" alt="Image de couverture">
+                    {% else %}
+                        No image
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ path('app_livre_show', {'id': livre.id}) }}">Show</a>
+                    <a href="{{ path('app_livre_edit', {'id': livre.id}) }}">Edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9" class="no-records">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_livre_new') }}" class="create-button">Create New</a>
+{% endblock %}
