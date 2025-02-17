@@ -482,6 +482,38 @@ strong {
 }
 
 
+
+
+
+
+
+
+
+
+/* Aligner les boutons Login et Register à droite */
+.navbar-nav {
+  margin-left: auto;
+  display: flex;
+
+}
+
+/* Changer la couleur du texte en noir */
+.navbar-nav .nav-item a[href*="login"],
+.navbar-nav .nav-item a[href*="home"],
+.navbar-nav .nav-item a[href*="register"] {
+    color: black !important;
+}
+
+/* Changer la couleur au survol si nécessaire */
+.navbar-nav .nav-item a[href*="login"]:hover,
+.navbar-nav .nav-item a[href*="register"]:hover {
+    color: #333 !important;
+}
+
+
+
+
+
 /*---------------------------------------
   HERO        
 -----------------------------------------*/
@@ -1219,6 +1251,47 @@ body {
 
 .sidebar.open ~ #main-content {
   margin-right: 250px;
+}
+
+
+
+
+
+
+
+
+/* Animation fluide du slider */
+.header-carousel .header-carousel-item {
+  transition: transform 1s ease-in-out;
+}
+
+/* Ajustement des images */
+.header-carousel-item img {
+  object-fit: cover;
+  width: 100%;
+  height: 80vh; /* Ajuste selon le design */
+}
+
+/* Personnalisation des boutons de navigation */
+.owl-prev, .owl-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.owl-prev { left: 10px; }
+.owl-next { right: 10px; }
+
+.owl-prev:hover, .owl-next:hover {
+  background: #007bff;
 }
 
 
