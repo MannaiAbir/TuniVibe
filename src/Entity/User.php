@@ -6,8 +6,6 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -35,10 +33,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $adresse = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Hebergement::class, orphanRemoval: true)]
-    private Collection $hebergements;
-    
-   
+    // Getters and Setters
 
     public function getId(): ?int
     {
@@ -124,7 +119,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // Clear temporary sensitive data
     }
-
     public function serialize(): string
     {
         return serialize([$this->id, $this->username, $this->password]);
@@ -135,30 +129,52 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         [$this->id, $this->username, $this->password] = unserialize($serialized);
     }
 
-    // Hebergement relationship methods
-    public function getHebergements(): Collection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Workshop::class, orphanRemoval: true)]
+    private Collection $workshops;
+    
+    public function __construct()
     {
-        return $this->hebergements;
+        $this->workshops = new ArrayCollection();
     }
     
-    public function addHebergement(Hebergement $hebergement): static
+    public function getWorkshops(): Collection
     {
-        if (!$this->hebergements->contains($hebergement)) {
-            $this->hebergements->add($hebergement);
-            $hebergement->setUser($this);
+        return $this->workshops;
+    }
+    
+    public function addWorkshop(Workshop $workshop): static
+    {
+        if (!$this->workshops->contains($workshop)) {
+            $this->workshops->add($workshop);
+            $workshop->setUser($this);
         }
         return $this;
     }
     
-    public function removeHebergement(Hebergement $hebergement): static
+    public function removeWorkshop(Workshop $workshop): static
     {
-        if ($this->hebergements->removeElement($hebergement)) {
-            if ($hebergement->getUser() === $this) {
-                $hebergement->setUser(null);
+        if ($this->workshops->removeElement($workshop)) {
+            if ($workshop->getUser() === $this) {
+                $workshop->setUser(null);
             }
         }
         return $this;
     }
 
-   
 }
