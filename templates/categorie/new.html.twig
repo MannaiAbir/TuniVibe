@@ -1,0 +1,27 @@
+{% extends 'baseadmin.html.twig' %}
+
+
+
+{% block body %}
+    <div class="container mt-4">
+        <h2>{{ categorie.id ? 'Modifier' : 'Ajouter' }} une Catégorie</h2>
+
+        {{ form_start(form) }}
+            <div class="mb-3">
+                {{ form_label(form.nom) }}
+                {{ form_widget(form.nom, { 'attr': {'class': 'form-control'} }) }}
+
+                {% if form.nom.vars.errors|length > 0 %}
+                    {% for error in form.nom.vars.errors %}
+                        <div class="text-danger mt-1">
+                            {{ error.message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <a href="{{ path('categorie_index') }}" class="btn btn-secondary">Retour à la liste</a>
+            <button type="submit" class="btn btn-primary">{{ categorie.id ? 'Modifier' : 'Ajouter' }}</button>
+        {{ form_end(form) }}
+
+    </div>
+{% endblock %}
