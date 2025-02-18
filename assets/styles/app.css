@@ -1,12 +1,3 @@
 body {
     background-color: skyblue;
 }
-/* Ajouter un effet de mouvement sur la carte hébergement */
-.card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition douce pour le mouvement et l'ombre */
-}
-
-.card:hover {
-    transform: translateY(-10px);  /* Déplace l'élément vers le haut de 10px */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Ombre portée plus marquée pour l'effet de survol */
-}

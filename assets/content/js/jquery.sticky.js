@@ -231,3 +231,19 @@ $(document).ready(function(){
 
 
 
+
+  $(document).ready(function () {
+    $(".header-carousel").owlCarousel({
+        items: 1,            // Un seul élément visible à la fois
+        loop: true,          // Répétition infinie
+        autoplay: true,      // Défilement automatique
+        autoplayTimeout: 4000, // Temps entre chaque slide (4s)
+        autoplayHoverPause: true, // Pause au survol
+        smartSpeed: 1200,    // Vitesse fluide du défilement
+        nav: true,           // Afficher les flèches de navigation
+        dots: true,          // Activer les points indicateurs
+        navText: ["<", ">"]  // Personnalisation des flèches
+    });
+});
+
+

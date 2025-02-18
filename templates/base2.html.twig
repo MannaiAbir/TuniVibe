@@ -9,19 +9,30 @@
 
         <title>Topic Listing Contact Page</title>
 
-        <!-- CSS FILES -->        
+
+
         <link rel="preconnect" href="https://fonts.googleapis.com">
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans&display=swap" rel="stylesheet">
-                        
+
+         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                         
+
+
+
+
+
+
         <link href="{{ asset('content/css/bootstrap.min.css')}}" rel="stylesheet">
 
         <link href="{{ asset('content/css/bootstrap-icons.css')}}" rel="stylesheet">
 
         <link href="{{ asset('content/css/templatemo-topic-listing.css')}}" rel="stylesheet">
-          <link rel="stylesheet" href="{{ asset('front/css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('front/css/style.css') }}">
+        
+
 <!--
 
 TemplateMo 590 topic listing
@@ -34,99 +45,102 @@ https://templatemo.com/tm-590-topic-listing
     <body class="topics-listing-page" id="top">
 
         <main>
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="logo"><img src="{{ asset('front/img/tunivibe.png') }}" alt="TuniVibe Logo" class="logo-img"></a>
+        <a class="navbar-brand" href="{{ path('app_home') }}">
+            <span>TuniVibe</span>
+        </a>
 
-            <nav class="navbar navbar-expand-lg">
-                <div class="container">
-                     <a class="logo"><img src="{{ asset('front/img/tunivibe.png') }}" alt="TuniVibe Logo" class="logo-img"></a>
-                    <a class="navbar-brand" href="#">
-                        
-                        <span>TuniVibe</span>
-                    </a>
+        <div class="d-lg-none ms-auto me-4">
+            <a href="#top" class="navbar-icon bi-person smoothscroll"></a>
+        </div>
 
-                    <div class="d-lg-none ms-auto me-4">
-                        <a href="#top" class="navbar-icon bi-person smoothscroll"></a>
-                    </div>
-    
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-    
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav ms-lg-5 me-lg-auto">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-lg-5 me-lg-auto">
+                {% if app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="{{ path('app_acceuil') }}">Acceuil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="{{ path('atelier_index') }}">Workshops</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="#">Événements</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="{{ path('gestionhebergement_index') }}">Hébergements</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="#">Vlogs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="#">Bibliothèque</a>
+                    </li>
+                {% else %}
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_home') }}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_login') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                             <a class="nav-link" href="{{ path('app_register') }}">Register</a>
+                       </li>
+</ul>
+                {% endif %}
+            </ul>
+
+            {% if app.user %}
+                <button id="toggleSidebar" class="toggle-btn">☰</button>
+                <div id="sidebar" class="sidebar">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a href="{{ path('app_user') }}" class="nav-link">
+                                <i class="bi bi-person"></i> Profile
+                            </a>
+                        </li>
+                        {% if is_granted('ROLE_EDITOR') %}
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="#">Home</a>
+                                <a href="{{ path('workshop_index') }}" class="nav-link">Mes Workshops</a>
                             </li>
-
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="#">Workshop</a>
+                                <a href="#" class="nav-link">Mes Événements</a>
                             </li>
-    
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="#">Evenement</a>
+                                <a href="{{ path('hebergement_index') }}" class="nav-link">Mes Hébergements</a>
                             </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link click-scroll" href="#">Hebergement</a>
-                            </li>
-    
-                            <li class="nav-item">
-                                <a class="nav-link click-scroll" href="#">Vlog</a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link click-scroll" href="#">Bibliotheque</a>
-                            </li>
-                        </ul>
-
-                        <button id="toggleSidebar" class="toggle-btn">☰</button>
-
-                    <div id="sidebar" class="sidebar">
-                       <ul class="nav flex-column">
-                          <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                      <i class="bi bi-person"></i> Profile
-                                 </a>
-                                 <li class="nav-item">
-                                      <a href="#" class="nav-link">Mes Workshops</a>
-                                 </li>
-                                 <li class="nav-item">
-                                       <a href="#" class="nav-link">Mes Événements</a>
-                                 </li>
-                                 <li class="nav-item">
-                                        <a href="#" class="nav-link">Mes Hébergements</a>
-                                 </li>
-                                 <li class="nav-item">
-                                       <a href="#" class="nav-link">Mes Vlogs</a>
-                                 </li>
-                                 <li class="nav-item">
-                                       <a href="#" class="nav-link">Ma Bibliothèque</a>
-                                 </li>
-                         </li>
-                       </ul>
-                   </div>
-                    </div>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Mes Vlogs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Ma Bibliothèque</a>
+                        </li>
+                        <li class="nav-item">
+                            <form action="{{ path('app_logout') }}" method="post" class="d-inline">
+                                <button type="submit" class="nav-link btn btn-link" >
+                                    Déconnexion
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
                 </div>
-            </nav>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+             {% block header %}
 
 
-            <header class="site-header d-flex flex-column justify-content-center align-items-center">
-                <div class="container">
-                    <div class="row align-items-center">
 
-                        <div class="col-lg-5 col-12">
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                              <li class="breadcrumb-item"><a href="{{ path('hebergement_index') }}">Retour</a></li>
-                                </ol>
-                            </nav>
-
-                            <h2 class="text-white">Liste des Hébergements</h2>
-                        </div>
-
-                    </div>
-                </div>
-            </header>
-
+               {% endblock %}
 
             <section class="section-padding section-bg">
               {% block body %}

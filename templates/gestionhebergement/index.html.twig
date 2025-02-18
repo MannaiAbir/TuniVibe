@@ -1,0 +1,55 @@
+{% extends 'base2.html.twig' %}
+
+{% block header %}
+    <header class="site-header d-flex flex-column justify-content-center align-items-center">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-5 col-12">
+                    <h2 class="text-white">Liste des Hébergements</h2>
+                </div>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+       
+        <div class="row">
+            {% for h in hebergements %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card shadow-lg border-2 rounded-lg p-3">
+                        <div class="d-flex align-items-center mb-3 p-3 bg-light rounded">
+                            <div class="user-placeholder rounded-circle bg-secondary d-flex align-items-center justify-content-center"
+                                 style="width: 60px; height: 60px; object-fit: cover; margin-right: 10px;">
+                                <i class="bi bi-person text-white" style="font-size: 30px;"></i>
+                            </div>
+                            <p class="card-text"><strong>Créé par :</strong> {{ h.user.username }}</p>
+                        </div>
+                        <!-- Image cliquable menant à la page 'show' -->
+                        <a href="{{ path('gestionhebergement_show', {'idhebergement': h.idhebergement}) }}">
+                            {% if h.image %}
+                                <img src="{{ asset('uploads/images/' ~ h.image) }}" class="card-img-top img-fluid rounded" alt="{{ h.nom }}">
+                            {% else %}
+                                <img src="{{ asset('img/default-image.jpg') }}" class="card-img-top img-fluid rounded" alt="{{ h.nom }}">
+                            {% endif %}
+                        </a>
+                        <div class="card-body text-center">
+                            <h5 class="card-title font-weight-bold">{{ h.nom }}</h5>
+                            <p class="card-text"><strong>Type :</strong> <span class="text-muted">{{ h.type }}</span></p>
+                            <p class="card-text"><strong>Adresse :</strong> <span class="text-muted">{{ h.adresse }}</span></p>
+                            <p class="card-text"><strong>Capacité :</strong> <span class="text-muted">{{ h.capacite }}</span></p>
+                            <p class="card-text"><strong>Description :</strong> <span class="text-muted">{{ h.description }}</span></p>
+
+                 
+                        </div>
+                    </div>
+                </div><!-- End Hebergement Card -->
+            {% else %}
+                <div class="col-12">
+                    <p class="text-center">Aucun hébergement trouvé.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

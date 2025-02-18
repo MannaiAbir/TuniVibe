@@ -15,7 +15,9 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans&display=swap" rel="stylesheet">
-                        
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
         <link href="{{ asset('content/css/bootstrap.min.css')}}" rel="stylesheet">
 
         <link href="{{ asset('content/css/bootstrap-icons.css')}}" rel="stylesheet">
@@ -34,8 +36,7 @@ https://templatemo.com/tm-590-topic-listing
     <body class="topics-listing-page" id="top">
 
         <main>
-
-
+           
 
 
             <header class="site-header d-flex flex-column justify-content-center align-items-center">
@@ -45,16 +46,22 @@ https://templatemo.com/tm-590-topic-listing
                         <div class="col-lg-5 col-12">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="#">Homepage</a></li>
+                                    <a href="javascript:history.back()" class="btn btn-secondary mt-3">
+                                        <i class="fa-solid fa-arrow-left"></i> Retour
+                                    </a>
                                 </ol>
                             </nav>
 
-                            <h2 class="text-white">Liste des Héb</h2>
+                              {% block header %}
+
+                              {% endblock %}
                         </div>
 
                     </div>
                 </div>
             </header>
+
+
 
 
             <section class="section-padding section-bg">

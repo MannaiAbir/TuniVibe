@@ -119,4 +119,24 @@ class Hebergement
     {
         return $this->programmes;
     }
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'hebergements')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+        return $this;
+    }
+
 }
