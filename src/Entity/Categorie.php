@@ -13,7 +13,11 @@ class Categorie
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 50)]
+    #[Assert\Length(
+        min: 5,
+        minMessage: "Le nom de la catégorie doit contenir au moins {{ limit }} caractères."
+    )]
     private ?string $nom = null;
 
     public function getId(): ?int
@@ -32,4 +36,6 @@ class Categorie
 
         return $this;
     }
+
+    
 }

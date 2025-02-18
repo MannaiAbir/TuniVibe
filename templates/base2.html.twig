@@ -101,7 +101,7 @@ https://templatemo.com/tm-590-topic-listing
                         </li>
                         {% if is_granted('ROLE_EDITOR') %}
                             <li class="nav-item">
-                                <a href="#" class="nav-link">Mes Workshops</a>
+                                <a href="{{ path('workshop_index') }}" class="nav-link">Mes Workshops</a>
                             </li>
                             <li class="nav-item">
                                 <a href="#" class="nav-link">Mes Événements</a>
