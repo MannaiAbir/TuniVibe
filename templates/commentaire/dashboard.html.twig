@@ -1,0 +1,47 @@
+{% extends 'base4.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+    <h1 class="text-center mb-4">Tableau de bord</h1>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Bienvenu sur le Tableau de bord</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Bienvenue sur votre tableau de bord d'administration.</p>
+                        <p>Utilisez le menu pour naviguer dans les différentes sections.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Informations utiles</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Gestion des utilisateurs</li>
+                            <li>Gestion des contenus</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+ <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Dernières mises à jour</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Consultez ici les dernières modifications et mises à jour importantes concernant votre application.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

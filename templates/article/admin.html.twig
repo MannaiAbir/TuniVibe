@@ -1,0 +1,155 @@
+{% extends 'base4.html.twig' %}
+
+{% block title %}Liste des articles{% endblock %}
+
+{% block body %}
+    <h1 class="text-center mb-4">Liste des articles</h1>
+
+    <a href="{{ path('app_article_new2') }}" class="btn btn-primary mb-3">Ajouter un article</a>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Status</th>
+                    <th>Image</th>
+                    <th>Créé le</th>
+                    <th>Actions</th>
+                    <th>Éditer statut</th> <!-- Nouvelle colonne pour éditer le statut -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for article in articles %}
+                    <tr>
+                        <td>{{ article.title }}</td>
+                        <td>{{ article.Status }}</td>
+
+
+                        <td>                <img src="{{ asset(article.image) }}" alt="{{ article.title }}" class="article-image">
+</td>
+                        <td>{{ article.createdAt|date('d/m/Y H:i') }}</td>
+                        <td>
+                            <a href="{{ path('app_article_show2', {'id': article.id}) }}" class="btn btn-info btn-sm">Voir</a>
+                            <a href="{{ path('app_article_commenter2', {'id': article.id}) }}" class="btn btn-info btn-sm">Commenter</a>
+
+                            <a href="{{ path('app_article_edit2', {'id': article.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                            <a href="{{ path('app_article_comments2', {'id': article.id}) }}" class="btn btn-secondary btn-sm">Voir les commentaires</a>
+
+                            <form method="post" action="{{ path('app_article_delete2', {'id': article.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
+                                <button class="btn btn-danger btn-sm" type="submit">Supprimer</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="post" action="{{ path('app_article_edit_status', {'id': article.id}) }}" style="display:inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('edit_status' ~ article.id) }}">
+                                <select name="status" class="form-control form-control-sm">
+                                    <option value="published" {% if article.status == 'published' %}selected{% endif %}>Publié</option>
+                                    <option value="draft" {% if article.status == 'draft' %}selected{% endif %}>Brouillon</option>
+                                    <option value="pending" {% if article.status == 'pending' %}selected{% endif %}>En attente</option>
+                                </select>
+                                <button class="btn btn-info btn-sm mt-2" type="submit">Mettre à jour</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">Aucun article trouvé</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <style>
+        /* CSS amélioré pour personnaliser l'apparence de la table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            text-align: center;
+            padding: 12px;
+            vertical-align: middle;
+        }
+
+        table th {
+            background-color: #4CAF50; /* Couleur plus moderne */
+            color: rgb(198, 79, 42);
+            font-weight: bold;
+        }
+
+        table td {
+            background-color: #f9f9f9;
+        }
+
+       .article-image {
+    width: 150px; /* Taille commune en largeur */
+    height: 150px; /* Taille commune en hauteur */
+    object-fit: cover; /* Conserve le ratio sans déformation */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    display: block; /* Évite l'espace sous l'image */
+    margin: 0 auto; /* Centre l'image dans la cellule */
+}
+
+.article-image:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+
+        /* Style pour les boutons */
+        .btn {
+            margin: 5px;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+        }
+
+        /* Personnalisation des lignes de la table */
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        /* Message quand il n'y a pas d'article */
+        .text-center {
+            font-size: 16px;
+            font-weight: bold;
+            color: #888;
+        }
+
+        /* Mise en page responsive */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        /* Amélioration de l'affichage des actions */
+        td a {
+            text-decoration: none;
+        }
+
+        td a:hover {
+            opacity: 0.8;
+        }
+
+        /* Animation pour les boutons */
+        .btn {
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+
+{% endblock %}

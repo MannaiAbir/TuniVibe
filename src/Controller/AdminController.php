@@ -17,7 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 final class AdminController extends AbstractController
 {
     #[Route('/admin', name: 'app_admin', methods: ['GET'])]
-    #[IsGranted('ROLE_ADMIN')]
+    ##[IsGranted('ROLE_ADMIN')]
     public function index(UserRepository $userRepository): Response
     {
         // Fetch all users
@@ -30,7 +30,7 @@ final class AdminController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'app_edit', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')]
+    ##[IsGranted('ROLE_ADMIN')]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         // Create the form for editing the user
@@ -51,7 +51,7 @@ final class AdminController extends AbstractController
     }
 
     #[Route('/admin/delete/{id}', name: 'app_delete', methods: ['GET'])]
-    #[IsGranted('ROLE_ADMIN')]
+    ##[IsGranted('ROLE_ADMIN')]
     public function delete(int $id, EntityManagerInterface $entityManager, LoggerInterface $logger): RedirectResponse
     {
         // Debugging: Log the id to see if it's passed correctly

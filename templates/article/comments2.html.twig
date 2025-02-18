@@ -1,0 +1,22 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Commentaires - {{ article.title }}{% endblock %}
+
+{% block body %}
+    <h1>Commentaires sur "{{ article.title }}"</h1>
+
+    <a href="{{ path('app_article_index2') }}" class="btn btn-secondary mb-3">Retour aux articles</a>
+
+    {% if commentaires is empty %}
+        <p>Aucun commentaire pour cet article.</p>
+    {% else %}
+        <ul class="list-group">
+            {% for commentaire in commentaires %}
+                <li class="list-group-item">
+                    <strong>{{ commentaire.authorC }}</strong> ({{ commentaire.postedAt|date('d/m/Y H:i') }})
+                    <p>{{ commentaire.contentC }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
