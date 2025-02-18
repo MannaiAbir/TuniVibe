@@ -2,9 +2,11 @@
 
 
 
-             {% block header %}
-                 <h2 class="text-white">Modifier:  {{seance.titre}}</h2>
-             {% endblock %}
+{% block header %}
+    <a href="{{ path('workshop_show', {'id': seance.workshop.id}) }}" class="btn btn-secondary mt-3">Retour</a>
+    <h2 class="text-white">Modifier:  {{ seance.titre }}</h2>
+{% endblock %}
+
 
 
 

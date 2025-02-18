@@ -1,8 +1,10 @@
 {% extends 'base3.html.twig' %}
 
 {% block header %}
-    <h2 class="text-white">Créer une Séance pour "{{ workshop.titre }}"</h2>
+    <a href="{{ path('workshop_show', {'id': workshop.id}) }}" class="btn btn-secondary mt-3">Retour</a>
+    <h2 class="text-white">Ajouter une seance</h2>
 {% endblock %}
+
 
 {% block body %}
   <div class="form-container">
