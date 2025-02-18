@@ -54,7 +54,11 @@ final class ArticleController extends AbstractController
 
                 try {
                     $imageFile->move(
+<<<<<<< HEAD
                         $this->getParameter('images_directory'),
+=======
+                        $this->getParameter('uploads_directory'),
+>>>>>>> 4f151ce4df8e3002be4787cbdb5ce73435b4aac6
                         $newFilename
                     );
                 } catch (FileException $e) {
@@ -62,7 +66,11 @@ final class ArticleController extends AbstractController
                     return $this->redirectToRoute('app_article_new');
                 }
 
+<<<<<<< HEAD
                 $article->setImage('uploads/images/'.$newFilename);
+=======
+                $article->setImage('uploads/'.$newFilename);
+>>>>>>> 4f151ce4df8e3002be4787cbdb5ce73435b4aac6
             }
 
             $article->setCreatedAt(new \DateTimeImmutable());
@@ -102,7 +110,11 @@ final class ArticleController extends AbstractController
 
                 try {
                     $imageFile->move(
+<<<<<<< HEAD
                         $this->getParameter('images_directory'),
+=======
+                        $this->getParameter('uploads_directory'),
+>>>>>>> 4f151ce4df8e3002be4787cbdb5ce73435b4aac6
                         $newFilename
                     );
                 } catch (FileException $e) {
@@ -110,7 +122,11 @@ final class ArticleController extends AbstractController
                     return $this->redirectToRoute('app_article_new2');
                 }
 
+<<<<<<< HEAD
                 $article->setImage('uploads/images/'.$newFilename);
+=======
+                $article->setImage('uploads/'.$newFilename);
+>>>>>>> 4f151ce4df8e3002be4787cbdb5ce73435b4aac6
             }
 
             $article->setCreatedAt(new \DateTimeImmutable());

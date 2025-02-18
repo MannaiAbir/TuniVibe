@@ -22,6 +22,7 @@ final class CommentaireController extends AbstractController
         ]);
     }
 
+<<<<<<< HEAD
 
     #[Route('/dashboard', name: 'app_commentaire_dashboard')]
 public function dashboard(): Response
@@ -45,6 +46,8 @@ public function accueil(): Response
 }
 
 
+=======
+>>>>>>> 4f151ce4df8e3002be4787cbdb5ce73435b4aac6
     #[Route('/new', name: 'app_commentaire_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -101,7 +104,10 @@ public function accueil(): Response
 
         return $this->redirectToRoute('app_commentaire_index', [], Response::HTTP_SEE_OTHER);
     }
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 4f151ce4df8e3002be4787cbdb5ce73435b4aac6
 }

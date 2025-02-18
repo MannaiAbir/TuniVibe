@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 {% extends 'base4.html.twig' %}
+=======
+{% extends 'base2.html.twig' %}
+>>>>>>> 4f151ce4df8e3002be4787cbdb5ce73435b4aac6
 
 {% block title %}Liste des articles{% endblock %}
 
@@ -24,10 +28,14 @@
                     <tr>
                         <td>{{ article.title }}</td>
                         <td>{{ article.Status }}</td>
+<<<<<<< HEAD
 
 
                         <td>                <img src="{{ asset(article.image) }}" alt="{{ article.title }}" class="article-image">
 </td>
+=======
+                        <td><img src="{{ asset(article.image) }}" alt="{{ article.title }}" class="img-thumbnail"></td>
+>>>>>>> 4f151ce4df8e3002be4787cbdb5ce73435b4aac6
                         <td>{{ article.createdAt|date('d/m/Y H:i') }}</td>
                         <td>
                             <a href="{{ path('app_article_show2', {'id': article.id}) }}" class="btn btn-info btn-sm">Voir</a>
@@ -85,6 +93,7 @@
             background-color: #f9f9f9;
         }
 
+<<<<<<< HEAD
        .article-image {
     width: 150px; /* Taille commune en largeur */
     height: 150px; /* Taille commune en hauteur */
@@ -102,6 +111,14 @@
 }
 
 
+=======
+        /* Style pour les images avec bordure arrondie */
+        img.img-thumbnail {
+            border-radius: 5px;
+            width: 100px;
+            height: auto;
+        }
+>>>>>>> 4f151ce4df8e3002be4787cbdb5ce73435b4aac6
 
         /* Style pour les boutons */
         .btn {

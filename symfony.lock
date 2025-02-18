@@ -284,6 +284,10 @@
         ]
     },
     "twig/extra-bundle": {
+<<<<<<< HEAD
         "version": "v3.20.0"
+=======
+        "version": "v3.19.0"
+>>>>>>> 4f151ce4df8e3002be4787cbdb5ce73435b4aac6
     }
 }

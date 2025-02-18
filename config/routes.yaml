@@ -3,6 +3,9 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+<<<<<<< HEAD
 app_logout:
     path: /logout
     methods: [POST]
+=======
+>>>>>>> 4f151ce4df8e3002be4787cbdb5ce73435b4aac6
