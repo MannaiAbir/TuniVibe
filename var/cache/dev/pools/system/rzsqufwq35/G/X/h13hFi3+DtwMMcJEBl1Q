@@ -1,0 +1,3 @@
+<?php //cb7370e50b8a666bab4364dd1307285b
+
+return [PHP_INT_MAX, 'libraries/venobox/venobox.min.js'];

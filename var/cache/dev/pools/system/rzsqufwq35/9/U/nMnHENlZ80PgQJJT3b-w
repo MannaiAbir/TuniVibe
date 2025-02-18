@@ -1,0 +1,3 @@
+<?php //7d3a0cfe7e53f4278bf63833a1a0ca4e
+
+return [PHP_INT_MAX, 'libraries/waypoints/jquery.waypoints.min.js'];
