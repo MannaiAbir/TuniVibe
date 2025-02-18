@@ -6,7 +6,9 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
+#[Assert\GroupSequence(['User', 'registration'])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -16,21 +18,47 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank(message: "L'adresse email est obligatoire.")]
+    #[Assert\Email(message: "L'adresse email '{{ value }}' n'est pas valide.")]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Le mot de passe est obligatoire.")]
+    #[Assert\Length(
+        min: 6,
+        max: 50,
+        minMessage: "Le mot de passe doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "Le mot de passe ne peut pas dépasser {{ limit }} caractères."
+    )]
     private ?string $password = null;
 
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le nom d'utilisateur est obligatoire.")]
+    #[Assert\Length(
+        min: 3,
+        max: 15,
+        minMessage: "Le nom d'utilisateur doit contenir au moins {{ 3 }} caractères.",
+        maxMessage: "Le nom d'utilisateur ne peut pas dépasser {{ 15 }} caractères."
+    )]
     private ?string $username = null;
 
     #[ORM\Column(length: 20)]
+    #[Assert\NotBlank(message: "Le numéro de téléphone est obligatoire.")]
+    #[Assert\Regex(
+        pattern: "/^[0-9]{8,15}$/",
+        message: "Le numéro de téléphone doit contenir entre 8 et 15 chiffres."
+    )]
     private ?string $numeroTelephone = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "L'adresse est obligatoire.")]
+    #[Assert\Length(
+        max: 25,
+        maxMessage: "L'adresse ne peut pas dépasser {{25 }} caractères."
+    )]
     private ?string $adresse = null;
 
     // Getters and Setters
@@ -59,9 +87,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // Ensure every user has at least ROLE_USER
-        $roles[] = 'ROLE_USER';
-
+        $roles[] = 'ROLE_USER'; // Garantir que chaque utilisateur a au moins ROLE_USER
         return array_unique($roles);
     }
 
@@ -128,4 +154,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         [$this->id, $this->username, $this->password] = unserialize($serialized);
     }
+
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Workshop::class, orphanRemoval: true)]
+    private Collection $workshops;
+    
+    public function __construct()
+    {
+        $this->workshops = new ArrayCollection();
+    }
+    
+    public function getWorkshops(): Collection
+    {
+        return $this->workshops;
+    }
+    
+    public function addWorkshop(Workshop $workshop): static
+    {
+        if (!$this->workshops->contains($workshop)) {
+            $this->workshops->add($workshop);
+            $workshop->setUser($this);
+        }
+        return $this;
+    }
+    
+    public function removeWorkshop(Workshop $workshop): static
+    {
+        if ($this->workshops->removeElement($workshop)) {
+            if ($workshop->getUser() === $this) {
+                $workshop->setUser(null);
+            }
+        }
+        return $this;
+    }
+
 }
