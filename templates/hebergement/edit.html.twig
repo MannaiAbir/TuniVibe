@@ -1,0 +1,98 @@
+{% extends 'base3.html.twig' %}
+
+{% block title %}Modifier l'Hébergement{% endblock %}
+
+{% block body %}
+<div class="form-container">
+    <h1 class="text-center my-4">Modifier l'Hébergement</h1>
+
+    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
+    <div class="form-group">
+        {{ form_label(form.nom) }}
+        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+        <div class="error-message">{{ form_errors(form.nom) }}</div>
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.type) }}
+        {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+        <div class="error-message">{{ form_errors(form.type) }}</div>
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.adresse) }}
+        {{ form_widget(form.adresse, {'attr': {'class': 'form-control'}}) }}
+        <div class="error-message">{{ form_errors(form.adresse) }}</div>
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.capacite) }}
+        {{ form_widget(form.capacite, {'attr': {'class': 'form-control'}}) }}
+        <div class="error-message">{{ form_errors(form.capacite) }}</div>
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.description) }}
+        {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+        <div class="error-message">{{ form_errors(form.description) }}</div>
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.image) }}
+        {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+        <div class="error-message">{{ form_errors(form.image) }}</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Mettre à jour</button>
+
+    {{ form_end(form) }}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(event) {
+        let errors = [];
+
+        const nom = document.querySelector('#hebergement_nom');
+        const type = document.querySelector('#hebergement_type');
+        const adresse = document.querySelector('#hebergement_adresse');
+        const capacite = document.querySelector('#hebergement_capacite');
+        const description = document.querySelector('#hebergement_description');
+
+        document.querySelectorAll('.error-message').forEach(el => el.innerHTML = '');
+
+        if (nom.value.length < 5) {
+            errors.push({ field: 'nom', message: "Le nom doit contenir au moins 5 caractères." });
+        }
+
+        if (type.value.length < 3) {
+            errors.push({ field: 'type', message: "Le type doit contenir au moins 3 caractères." });
+        }
+
+        if (adresse.value.length < 5) {
+            errors.push({ field: 'adresse', message: "L'adresse doit contenir au moins 5 caractères." });
+        }
+
+        if (capacite.value <= 0) {
+            errors.push({ field: 'capacite', message: "La capacité doit être supérieure à zéro." });
+        }
+
+        if (description.value.length < 10) {
+            errors.push({ field: 'description', message: "La description doit contenir au moins 10 caractères." });
+        }
+
+        if (errors.length > 0) {
+            event.preventDefault();
+            errors.forEach(error => {
+                const errorContainer = document.querySelector(`#hebergement_${error.field}`).parentNode.querySelector('.error-message');
+                if (errorContainer) {
+                    errorContainer.innerHTML = error.message;
+                }
+            });
+        }
+    });
+});
+</script>
+{% endblock %}
