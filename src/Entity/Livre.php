@@ -29,6 +29,9 @@ class Livre
     #[ORM\Column(length: 255)]
     private ?string $fichierUrl = null;
 
+    #[ORM\OneToOne(targetEntity: Quiz::class, mappedBy: 'livre', cascade: ['persist', 'remove'])]
+    private ?Quiz $quiz = null;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateCreation = null;
 
@@ -50,10 +53,14 @@ class Livre
     #[ORM\Column(length: 255)]
     private ?string $imageCouverture = null;
 
+    #[ORM\OneToMany(mappedBy: 'livre', targetEntity: Question::class)]
+private Collection $questions;
+
     public function __construct()
     {
         $this->telechargements = new ArrayCollection();
         $this->tentativeQuizzes = new ArrayCollection();
+        $this->questions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -81,6 +88,25 @@ class Livre
     public function setAuteur(string $auteur): static
     {
         $this->auteur = $auteur;
+
+        return $this;
+    }
+
+    // In Livre entity
+public function getQuiz(): ?Quiz
+{
+    // Get the first associated quiz from the related questions
+    foreach ($this->getQuestions() as $question) {
+        if ($question->getQuiz()) {
+            return $question->getQuiz();
+        }
+    }
+    return null; // Return null if no quiz is found
+}
+
+    public function setQuiz(?Quiz $quiz): self
+    {
+        $this->quiz = $quiz;
 
         return $this;
     }
@@ -132,6 +158,11 @@ class Livre
 
         return $this;
     }
+
+    public function getQuestions(): Collection
+{
+    return $this->questions;
+}
 
     /**
      * @return Collection<int, Telechargement>

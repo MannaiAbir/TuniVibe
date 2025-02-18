@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Livre;
 use App\Form\LivreType;
+use App\Entity\Quiz;
 use App\Repository\LivreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,18 +18,32 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[Route('/livre')]
 final class LivreController extends AbstractController
 {
-    #[Route(name: 'app_livre_index', methods: ['GET'])]
-    public function index(LivreRepository $livreRepository): Response
-    {
-        return $this->render('livre/index.html.twig', [
-            'livres' => $livreRepository->findAll(),
-        ]);
+    #[Route('/', name: 'app_livre_index', methods: ['GET'])]
+public function index(LivreRepository $livreRepository): Response
+{
+    // Fetch all livres
+    $livres = $livreRepository->findAll();
+
+    // Extract unique genres from the livres
+    $genres = [];
+    foreach ($livres as $livre) {
+        $genre = $livre->getGenre();
+        if ($genre && !in_array($genre, $genres)) {
+            $genres[] = $genre;
+        }
     }
 
+    // Pass both livres and genres to the template
+    return $this->render('livre/index.html.twig', [
+        'livres' => $livres,
+        'genres' => $genres,
+    ]);
+}
     #[Route('/new', name: 'app_livre_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $livre = new Livre();
+        $quiz = new Quiz();
         $form = $this->createForm(LivreType::class, $livre);
         $form->handleRequest($request);
 
@@ -49,6 +64,12 @@ final class LivreController extends AbstractController
                     $this->addFlash('error', 'Erreur lors de l\'upload du fichier.');
                 }
             }
+            // Set the Quiz on the Livre
+        $livre->setQuiz($quiz);
+
+        // Set the Livre on the Quiz (bidirectional relationship)
+        $quiz->setLivre($livre);
+
             $imageFile = $form->get('imageCouverture')->getData();
 
             if ($imageFile) {
@@ -80,12 +101,17 @@ final class LivreController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_livre_show', methods: ['GET'])]
-    public function show(Livre $livre): Response
+    public function show(Livre $livre, EntityManagerInterface $entityManager): Response
     {
+        // Fetch the quiz associated with the Livre
+        $quiz = $livre->getQuiz(); // Assuming you have a relationship set up on Livre for Quiz
+    
         return $this->render('livre/show.html.twig', [
             'livre' => $livre,
+            'quiz' => $quiz, // Pass the associated quiz to the template
         ]);
     }
+    
 
     #[Route('/{id}/edit', name: 'app_livre_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Livre $livre, EntityManagerInterface $entityManager): Response

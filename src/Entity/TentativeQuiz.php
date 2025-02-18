@@ -26,6 +26,9 @@ class TentativeQuiz
     #[ORM\ManyToOne(inversedBy: 'tentativeQuizzes')]
     private ?Livre $livre = null;
 
+    #[ORM\ManyToOne(inversedBy: 'tentativeQuizzes')]
+    private ?Quiz $quiz = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +78,18 @@ class TentativeQuiz
     public function setLivre(?Livre $livre): static
     {
         $this->livre = $livre;
+
+        return $this;
+    }
+
+    public function getQuiz(): ?Quiz
+    {
+        return $this->quiz;
+    }
+
+    public function setQuiz(?Quiz $quiz): static
+    {
+        $this->quiz = $quiz;
 
         return $this;
     }

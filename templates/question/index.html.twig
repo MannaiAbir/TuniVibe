@@ -1,58 +1,158 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Question index{% endblock %}
+{% block title %}Quizzes{% endblock %}
 
-{% block body %}
-    <h1>Questions index</h1>
+{% block stylesheets %}
+    <style>
+        /* General styles for the page */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Question</th>
-                <th>Options</th>
-                <th>Correct Option</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for question in questions %}
-            <tr>
-                <td>{{ question.id }}</td>
-                <td>{{ question.question }}</td>
-                <td>
-                    {% if question.options is not empty %}
-                        <ul>
-                            {% for option in question.options %}
-                                <li>{{ option }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        No options available.
-                    {% endif %}
-                </td>
-                <td>{{ question.optionCorrect }}</td>
-                <td>
-                    {% if quiz %}
-                        <a href="{{ path('app_question_show', {'quizId': quiz.id, 'id': question.id}) }}">show</a>
-                        <a href="{{ path('app_question_edit', {'quizId': quiz.id, 'id': question.id}) }}">edit</a>
-                    {% else %}
-                        No quiz available.
-                    {% endif %}
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">No questions found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        h1, h2 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+            text-align: center;
+        }
 
-    {% if quiz %}
-        <a href="{{ path('app_question_new', {'quizId': quiz.id}) }}">Create new question</a>
-    {% else %}
-        <p>No quiz found to add questions to.</p>
-    {% endif %}
+        /* Quiz Grid Styling */
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .quiz-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+
+        .quiz-card p {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .quiz-card ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .quiz-card ul li {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .quiz-card .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .quiz-card .actions a {
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .quiz-card .actions a.btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .quiz-card .actions a.btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .quiz-card .actions a.btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .quiz-card .actions a.btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        /* No Records Styling */
+        .no-records {
+            text-align: center;
+            color: #777;
+            font-style: italic;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
 {% endblock %}
 
+{% block body %}
+    <div class="container">
+        {% if not quiz %}
+            <h2>Select a Quiz</h2>
+            <div class="quiz-grid">
+                {% for q in quizzes %}
+                    <div class="quiz-card">
+                        <h3>Quiz #{{ q.id }}</h3>
+                        <div class="actions">
+                            <a href="{{ path('app_question_index', {'quizId': q.id}) }}" class="btn btn-primary">View Questions</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="no-records">
+                        <p>No quizzes found</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if quiz %}
+            <h1>Questions for Quiz #{{ quiz.id }}</h1>
+            <div class="quiz-grid">
+                {% for question in questions %}
+                    <div class="quiz-card">
+                        <h3>Question #{{ question.id }}</h3>
+                        <p><strong>Question:</strong> {{ question.question }}</p>
+                        <p><strong>Correct Option:</strong> {{ question.optionCorrect }}</p>
+                        <div class="actions">
+                            <a href="{{ path('app_question_edit', {'quizId': quiz.id, 'id': question.id}) }}" class="btn btn-secondary">Edit</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="no-records">
+                        <p>No questions found</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="{{ path('app_question_new', {'quizId': quiz.id}) }}" class="btn btn-primary">Create New Question</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

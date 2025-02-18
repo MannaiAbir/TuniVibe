@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quiz Result{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        /* General styles for the page */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        /* Result Section Styling */
+        .result-section {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .result-section p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .result-section a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .result-section a:hover {
+            background-color: #2980b9;
+        }
+
+        /* Message Styling */
+        .message {
+            font-size: 1.2rem;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .message.perfect {
+            color: #27ae60;
+        }
+
+        .message.good {
+            color: #f1c40f;
+        }
+
+        .message.practice {
+            color: #e74c3c;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <main>
+        <!-- Header Section -->
+        <header class="site-header d-flex flex-column justify-content-center align-items-center">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-5 col-12">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{{ path('app_livre_index') }}">Homepage</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Quiz Result</li>
+                            </ol>
+                        </nav>
+
+                        <h2 class="text-white">Quiz Result</h2>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Result Section -->
+        <section class="section-padding section-bg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-12 m-auto">
+                        <div class="result-section">
+                            <h1>Your Score for Quiz</h1>
+                            <p>You scored <strong>{{ score }}</strong> out of <strong>{{ totalQuestions }}</strong>.</p>
+
+                            {% if score == totalQuestions %}
+                                <p class="message perfect">Perfect! You answered all questions correctly!</p>
+                            {% elseif score > totalQuestions / 2 %}
+                                <p class="message good">Good job! You got more than half correct!</p>
+                            {% else %}
+                                <p class="message practice">Keep practicing, you'll get better next time!</p>
+                            {% endif %}
+
+                            <a href="{{ path('app_quiz_index') }}">Back to Quizzes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}

@@ -1,71 +1,75 @@
 {% block stylesheets %}
     <style>
-        /* General form styling */
+        /* General styles for the page */
         body {
-            background-color: #f8f9fa; /* Light background color for the page */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            font-family: 'Montserrat', sans-serif;
             color: #333;
             margin: 0;
             padding: 0;
         }
 
-        form {
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        .site-header {
+            background-color: #3498db;
+            padding: 100px 0;
+            color: white;
         }
 
-        form:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        form h1 {
+        .site-header h2 {
             font-size: 2.5rem;
-            margin-bottom: 25px;
-            color: #2c3e50;
             font-weight: 700;
-            text-align: center;
         }
 
-        /* Form rows */
-        .form-row {
-            margin-bottom: 20px;
+        .topics-detail-block {
+            border-radius: 12px;
+            overflow: hidden;
         }
 
-        .form-row label {
-            display: block;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #34495e;
-        }
-
-        .form-row input,
-        .form-row select,
-        .form-row textarea {
+        .topics-detail-block img {
             width: 100%;
-            padding: 12px;
-            font-size: 1rem;
-            border: 1px solid #ddd;
+            height: auto;
+        }
+
+        /* Form Styling */
+        .custom-form {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        .custom-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-floating {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-floating .form-control {
             border-radius: 8px;
+            padding: 1rem;
+            border: 1px solid #ddd;
             background-color: #f8f9fa;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .form-row input:focus,
-        .form-row select:focus,
-        .form-row textarea:focus {
+        .form-floating .form-control:focus {
             border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.2);
             outline: none;
         }
 
-        .form-row textarea {
+        .form-floating label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .form-floating textarea {
             resize: vertical;
             min-height: 120px;
         }
@@ -126,19 +130,31 @@
             transform: translateY(-2px);
         }
 
+        /* Back to List and Delete Form */
+        .product-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .btn-back {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .btn-back:hover {
+            background-color: #219653;
+            transform: translateY(-2px);
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            form {
+            .custom-form {
                 padding: 20px;
             }
 
-            form h1 {
-                font-size: 2rem;
-            }
-
-            .form-row input,
-            .form-row select,
-            .form-row textarea {
+            .form-floating .form-control {
                 padding: 10px;
             }
 
@@ -149,13 +165,106 @@
     </style>
 {% endblock %}
 
-{{ form_start(form) }}
-    {{ form_row(form.titre) }}
-    {{ form_row(form.auteur) }}
-    {{ form_row(form.description) }}
-    {{ form_row(form.fichierUrl) }}
-    {{ form_row(form.imageCouverture, {'attr': {'accept': 'image/*'}}) }} <!-- Ensure file input is rendered correctly -->
-    {{ form_row(form.dateCreation) }}
-    {{ form_row(form.genre) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+{% block body %}
+    <main>
+        <!-- Header Section -->
+        <header class="site-header d-flex flex-column justify-content-center align-items-center">
+            <div class="container">
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-lg-5 col-12 mb-5">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{{ path('app_livre_index') }}">Homepage</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Create Livre</li>
+                            </ol>
+                        </nav>
+
+                        <div class="d-flex align-items-center mt-5">
+                            <a href="#livre-form" class="btn custom-btn custom-border-btn smoothscroll me-4">Create Livre</a>
+                            <a href="#top" class="custom-icon bi-bookmark smoothscroll"></a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-5 col-12">
+                        <div class="topics-detail-block bg-white shadow-lg">
+                            <div class="topics-detail-block-image img-fluid bg-light d-flex align-items-center justify-content-center">
+                                <p class="text-muted">No image</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Create Livre Form Section -->
+        <section class="section-padding section-bg" id="livre-form">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-12 m-auto">
+                        {{ form_start(form, {'attr': {'class': 'custom-form contact-form', 'role': 'form'}}) }}
+                            <div class="row">
+                                <!-- Titre Field -->
+                                <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': 'Titre', 'required': 'required'}}) }}
+                                        {{ form_label(form.titre, 'Titre', {'label_attr': {'class': 'form-label'}}) }}
+                                    </div>
+                                </div>
+
+                                <!-- Auteur Field -->
+                                <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.auteur, {'attr': {'class': 'form-control', 'placeholder': 'Auteur', 'required': 'required'}}) }}
+                                        {{ form_label(form.auteur, 'Auteur', {'label_attr': {'class': 'form-label'}}) }}
+                                    </div>
+                                </div>
+
+                                <!-- Description Field -->
+                                <div class="col-lg-12 col-12">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Description', 'required': 'required', 'style': 'height: 150px;'}}) }}
+                                        {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                                    </div>
+                                </div>
+
+                                <!-- FichierUrl Field -->
+                                <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.fichierUrl, {'attr': {'class': 'form-control', 'placeholder': 'Fichier URL'}}) }}
+                                        {{ form_label(form.fichierUrl, 'Fichier URL', {'label_attr': {'class': 'form-label'}}) }}
+                                    </div>
+                                </div>
+
+                                <!-- Genre Field -->
+                                <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.genre, {'attr': {'class': 'form-control', 'placeholder': 'Genre', 'required': 'required'}}) }}
+                                        {{ form_label(form.genre, 'Genre', {'label_attr': {'class': 'form-label'}}) }}
+                                    </div>
+                                </div>
+
+                                <!-- Image Couverture Field -->
+                                <div class="col-lg-12 col-12">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.imageCouverture, {'attr': {'class': 'form-control', 'placeholder': 'Image Couverture'}}) }}
+                                        {{ form_label(form.imageCouverture, 'Image Couverture', {'label_attr': {'class': 'form-label'}}) }}
+                                    </div>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="col-lg-4 col-12 ms-auto">
+                                    <button type="submit" class="form-control">{{ button_label|default('Create') }}</button>
+                                </div>
+                            </div>
+                        {{ form_end(form) }}
+
+                        <!-- Back to List -->
+                        <div class="product-actions mt-5">
+                            <a href="{{ path('app_livre_index') }}" class="btn btn-back">Back to List</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}

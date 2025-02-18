@@ -3,11 +3,204 @@
 {% block title %}Edit Livre{% endblock %}
 
 {% block body %}
-    <h1>Edit Livre</h1>
+    <main>
+        <!-- Header Section -->
+        <header class="site-header d-flex flex-column justify-content-center align-items-center">
+            <div class="container">
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-lg-5 col-12 mb-5">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{{ path('app_livre_index') }}">Homepage</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Edit Livre</li>
+                            </ol>
+                        </nav>
 
-    {{ include('livre/_form.html.twig', {'button_label': 'Update'}) }}
+                        <h2 class="text-white">Edit Livre</h2>
 
-    <a href="{{ path('app_livre_index') }}">back to list</a>
+                        <div class="d-flex align-items-center mt-5">
+                            <a href="#livre-form" class="btn custom-btn custom-border-btn smoothscroll me-4">Edit Livre</a>
+                            <a href="#top" class="custom-icon bi-bookmark smoothscroll"></a>
+                        </div>
+                    </div>
 
-    {{ include('livre/_delete_form.html.twig') }}
+                    <div class="col-lg-5 col-12">
+                        <div class="topics-detail-block bg-white shadow-lg">
+                            {% if livre.imageCouverture %}
+                                <img src="{{ asset('uploads/images/' ~ livre.imageCouverture) }}" class="topics-detail-block-image img-fluid" alt="Cover Image">
+                            {% else %}
+                                <div class="topics-detail-block-image img-fluid bg-light d-flex align-items-center justify-content-center">
+                                    <p class="text-muted">No image</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+      <!-- Edit Livre Form Section -->
+<section class="section-padding section-bg" id="livre-form">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-8 col-12 m-auto">
+                {{ form_start(form, {'attr': {'class': 'custom-form contact-form', 'role': 'form'}}) }}
+                    <div class="row">
+                        <!-- Titre Field -->
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <div class="form-floating">
+                                {{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': 'Titre', 'required': 'required'}}) }}
+                                {{ form_label(form.titre, 'Titre', {'label_attr': {'class': 'form-label'}}) }}
+                            </div>
+                        </div>
+
+                        <!-- Auteur Field -->
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <div class="form-floating">
+                                {{ form_widget(form.auteur, {'attr': {'class': 'form-control', 'placeholder': 'Auteur', 'required': 'required'}}) }}
+                                {{ form_label(form.auteur, 'Auteur', {'label_attr': {'class': 'form-label'}}) }}
+                            </div>
+                        </div>
+
+                        <!-- Description Field -->
+                        <div class="col-lg-12 col-12">
+                            <div class="form-floating">
+                                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Description', 'required': 'required', 'style': 'height: 150px;'}}) }}
+                                {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                            </div>
+                        </div>
+
+                        <!-- FichierUrl Field -->
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <div class="form-floating">
+                                {{ form_widget(form.fichierUrl, {'attr': {'class': 'form-control', 'placeholder': 'Fichier URL'}}) }}
+                                {{ form_label(form.fichierUrl, 'Fichier URL', {'label_attr': {'class': 'form-label'}}) }}
+                            </div>
+                        </div>
+
+                        <!-- Genre Field -->
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <div class="form-floating">
+                                {{ form_widget(form.genre, {'attr': {'class': 'form-control', 'placeholder': 'Genre', 'required': 'required'}}) }}
+                                {{ form_label(form.genre, 'Genre', {'label_attr': {'class': 'form-label'}}) }}
+                            </div>
+                        </div>
+
+                        <!-- Image Couverture Field -->
+                        <div class="col-lg-12 col-12">
+                            <div class="form-floating">
+                                {{ form_widget(form.imageCouverture, {'attr': {'class': 'form-control', 'placeholder': 'Image Couverture'}}) }}
+                                {{ form_label(form.imageCouverture, 'Image Couverture', {'label_attr': {'class': 'form-label'}}) }}
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="col-lg-4 col-12 ms-auto">
+                            <button type="submit" class="form-control">{{ button_label|default('Update') }}</button>
+                        </div>
+                    </div>
+                {{ form_end(form) }}
+
+                <!-- Back to List and Delete Form -->
+                <div class="product-actions mt-5">
+                    <a href="{{ path('app_livre_index') }}" class="btn btn-back">Back to List</a>
+                    {{ include('livre/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    </main>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .site-header {
+            background-color: #3498db;
+            padding: 100px 0;
+            color: white;
+        }
+
+        .site-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .topics-detail-block {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .topics-detail-block img {
+            width: 100%;
+            height: auto;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-back {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .btn-back:hover {
+            background-color: #219653;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .delete-form {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .delete-form button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-form button:hover {
+            background-color: #c0392b;
+        }
+    </style>
 {% endblock %}

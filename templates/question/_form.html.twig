@@ -28,9 +28,6 @@
                     {{ form_start(form, {'attr': {'class': 'custom-form contact-form', 'role': 'form'}}) }}
                         <div class="row">
                             <!-- Hidden quizId Field -->
-                            <div class="col-lg-12 col-12">
-                                {{ form_widget(form.quizId, {'attr': {'class': 'form-control'}}) }}
-                            </div>
 
                             <!-- Question Field -->
                             <div class="col-lg-12 col-12">
@@ -40,7 +37,7 @@
                                 </div>
                             </div>
 
-                            <!-- Options Field -->
+                           
                             <div class="col-lg-12 col-12">
                                 <div id="options-list" data-prototype="{{ form_widget(form.options.vars.prototype)|e }}">
                                     {% for optionField in form.options %}
@@ -75,6 +72,8 @@
                                     {{ form_widget(form.livre, {'attr': {'class': 'form-control'}}) }}
                                     {{ form_label(form.livre, 'Livre') }}
                                 </div>
+        </div>
+
                             </div>
 
                             <!-- Submit Button -->
@@ -91,14 +90,37 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script>
+<script>
     document.addEventListener('DOMContentLoaded', function () {
         const optionsList = document.getElementById('options-list');
         const addOptionBtn = document.getElementById('add-option');
-        const correctOptionDropdown = document.getElementById('question_optionCorrect'); // Updated to 'question_optionCorrect'
+        const correctOptionDropdown = document.getElementById('question_optionCorrect');
         const prototype = optionsList.dataset.prototype;
         let index = optionsList.children.length;
 
+        // Form and livre validation setup
+        const form = document.querySelector('form');
+        const livreField = document.getElementById('question_livre'); // Assuming the livre field ID is 'question_livre'
+        let firstLivreId = null; // Store the livre ID of the first question
+
+        livreField.addEventListener('change', function () {
+            if (!firstLivreId) {
+                firstLivreId = livreField.value; // Set the first livre ID
+            } else if (livreField.value !== firstLivreId) {
+                alert('The livre ID must be the same for all questions in the quiz!');
+                livreField.value = firstLivreId; // Reset to the first livre ID
+            }
+        });
+
+        // Prevent form submission if livre IDs don’t match
+        form.addEventListener('submit', function (e) {
+            if (livreField.value !== firstLivreId) {
+                alert('The livre ID must be the same for all questions!');
+                e.preventDefault(); // Prevent form submission
+            }
+        });
+
+        // Update correct option dropdown
         function updateCorrectOptionDropdown() {
             correctOptionDropdown.innerHTML = '<option value="">Select the correct option</option>'; // Clear existing options
             document.querySelectorAll('.option-item input').forEach(input => {
@@ -113,6 +135,13 @@
 
         // Add new option
         addOptionBtn.addEventListener('click', function () {
+            // Ensure less than 4 options before adding more
+            const currentOptionsCount = optionsList.querySelectorAll('.option-item').length;
+            if (currentOptionsCount >= 4) {
+                alert("You can only add 4 options.");
+                return;
+            }
+
             const newForm = prototype.replace(/__name__/g, index);
             const newDiv = document.createElement('div');
             newDiv.classList.add('option-item');
@@ -131,14 +160,16 @@
                 saveOption(inputField);
             });
 
-            // Add Remove button
+            // Add Remove button with confirmation prompt
             const removeBtn = document.createElement('button');
             removeBtn.type = 'button';
             removeBtn.textContent = 'Remove';
             removeBtn.classList.add('remove-option', 'btn', 'btn-danger');
             removeBtn.addEventListener('click', function () {
-                newDiv.remove();
-                updateCorrectOptionDropdown(); // Update dropdown when an option is removed
+                if (confirm('Are you sure you want to remove this option?')) {
+                    newDiv.remove();
+                    updateCorrectOptionDropdown(); // Update dropdown when an option is removed
+                }
             });
 
             newDiv.appendChild(saveBtn);
@@ -159,17 +190,19 @@
             alert('Option saved: ' + optionText);
         }
 
-        // Handle remove buttons for existing options
-        document.querySelectorAll('.remove-option').forEach(button => {
-            button.addEventListener('click', function () {
-                this.closest('.option-item').remove();
-                updateCorrectOptionDropdown();
-            });
+        // Handle remove buttons for existing options (dynamically added ones too)
+        optionsList.addEventListener('click', function (e) {
+            if (e.target.classList.contains('remove-option')) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to remove this option?')) {
+                    e.target.closest('.option-item').remove();
+                    updateCorrectOptionDropdown(); // Update dropdown when an option is removed
+                }
+            }
         });
 
         // Ensure dropdown updates on page load
         updateCorrectOptionDropdown();
     });
 </script>
-
 {% endblock %}

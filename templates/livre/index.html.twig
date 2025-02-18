@@ -1,8 +1,10 @@
+{% extends 'base.html.twig' %}
+
 {% block stylesheets %}
     <style>
         /* General styles for the page */
         body {
-            background-color: #f8f9fa; /* Light background color for the page */
+            background-color: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #333;
             margin: 0;
@@ -108,69 +110,145 @@
             margin-top: 20px;
         }
 
-        /* Responsive table adjustments */
-        @media (max-width: 768px) {
-            .table th, .table td {
-                padding: 10px;
-            }
+        /* Nav Tabs Styling */
+        .nav-tabs {
+            border-bottom: 2px solid #dee2e6;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
 
-            .table img {
-                max-width: 80px;
-            }
+        .nav-tabs .nav-item {
+            margin: 0 5px;
+        }
 
-            h1 {
-                font-size: 2rem;
-            }
+        .nav-tabs .nav-link {
+            border: none;
+            color: #495057;
+            font-weight: 500;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+            border-radius: 0;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #3498db;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: #3498db;
+            background-color: transparent;
         }
     </style>
 {% endblock %}
 
 {% block body %}
-    <h1>Livre Index</h1>
+    <!-- Browse Library Section -->
+    <section class="explore-section section-padding" id="section_2">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="mb-4">Browse Library</h2>
+                </div>
+            </div>
+        </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Titre</th>
-                <th>Auteur</th>
-                <th>Description</th>
-                <th>FichierUrl</th>
-                <th>DateCreation</th>
-                <th>Genre</th>
-                <th>Image Couverture</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for livre in livres %}
-            <tr>
-                <td>{{ livre.id }}</td>
-                <td>{{ livre.titre }}</td>
-                <td>{{ livre.auteur }}</td>
-                <td>{{ livre.description }}</td>
-                <td>{{ livre.fichierUrl }}</td>
-                <td>{{ livre.dateCreation ? livre.dateCreation|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ livre.genre }}</td>
-                <td>
-                    {% if livre.imageCouverture %}
-                        <img src="{{ asset('uploads/images/' ~ livre.imageCouverture) }}" alt="Image de couverture">
-                    {% else %}
-                        No image
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{{ path('app_livre_show', {'id': livre.id}) }}">Show</a>
-                    <a href="{{ path('app_livre_edit', {'id': livre.id}) }}">Edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="9" class="no-records">No records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <!-- Genre Filter Tabs -->
+        <div class="container-fluid">
+            <div class="row">
+                <ul class="nav nav-tabs" id="genreTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="all-tab" data-genre="all" type="button" role="tab" aria-controls="all-tab-pane" aria-selected="true">All</button>
+                    </li>
+                    {% for genre in genres %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="{{ genre|lower }}-tab" data-genre="{{ genre }}" type="button" role="tab" aria-controls="{{ genre|lower }}-tab-pane" aria-selected="false">{{ genre }}</button>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Livre Index Section -->
+<section class="explore-section section-padding" id="section_2">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="mb-4">Livre Index</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Livre Grid -->
+    <div class="container">
+        <div class="row">
+            {% for livre in livres %}
+                <div class="col-lg-4 col-md-6 col-12 mb-4 livre-row" data-genre="{{ livre.genre }}">
+                    <div class="custom-block bg-white shadow-lg">
+                        <a href="{{ path('app_livre_show', {'id': livre.id}) }}">
+                            <div class="d-flex">
+                                <div>
+                                    <h5 class="mb-2">{{ livre.titre }}</h5>
+                                    <p class="mb-0">{{ livre.auteur }}</p>
+                                </div>
+                                <span class="badge bg-design rounded-pill ms-auto">{{ livre.genre }}</span>
+                            </div>
+
+                            {% if livre.imageCouverture %}
+                                <img src="{{ asset('uploads/images/' ~ livre.imageCouverture) }}" class="custom-block-image img-fluid" alt="Image de couverture">
+                            {% else %}
+                                <div class="custom-block-image img-fluid bg-light d-flex align-items-center justify-content-center">
+                                    <p class="text-muted">No image</p>
+                                </div>
+                            {% endif %}
+                        </a>
+
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="{{ path('app_livre_show', {'id': livre.id}) }}" class="btn btn-sm btn-outline-primary">Show</a>
+                            <a href="{{ path('app_livre_edit', {'id': livre.id}) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <div class="no-records text-center">
+                        <p>No records found</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 
     <a href="{{ path('app_livre_new') }}" class="create-button">Create New</a>
+
+    <!-- JavaScript for Genre Filtering -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterButtons = document.querySelectorAll('.nav-link');
+            const livreRows = document.querySelectorAll('.livre-row');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to the clicked button
+                    this.classList.add('active');
+
+                    const selectedGenre = this.getAttribute('data-genre');
+
+                    // Filter rows based on genre
+                    livreRows.forEach(row => {
+                        const rowGenre = row.getAttribute('data-genre');
+                        if (selectedGenre === 'all' || rowGenre === selectedGenre) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 {% endblock %}

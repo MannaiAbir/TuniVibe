@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Livre;
 use App\Entity\Question;
+use App\Entity\Quiz;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -11,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -21,8 +23,10 @@ class QuestionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
 {
     $builder
-    ->add('quiz', HiddenType::class, [
-        'data' => $options['quizId'], // Passing quizId to the form
+    ->add('quiz', EntityType::class, [
+        'class' => Quiz::class, // Replace with your actual Quiz class
+        'choice_label' => 'id', // Or use 'name' or another property for display
+        'disabled' => true,
     ])
         ->add('question')
         ->add('options', CollectionType::class, [
@@ -31,7 +35,10 @@ class QuestionType extends AbstractType
             'allow_delete' => true,
             'prototype' => true,  // This allows Symfony to generate a prototype for new fields
             'by_reference' => false,
-            'label' => 'Options',
+            'constraints' => [
+            new Count(['min' => 4, 'max' => 4, 'minMessage' => 'You must provide exactly 4 options for this question']),
+        ],
+            'label' => '',
             'entry_options' => [
                 'label' => false,
                 'attr' => ['class' => 'option-field'], // Add a class to easily target input fields

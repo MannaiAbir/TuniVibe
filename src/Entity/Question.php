@@ -39,12 +39,16 @@ class Question
     #[Assert\NotBlank(message: "The correct option cannot be blank.")]
     private ?string $optionCorrect = '';
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[Assert\NotNull(message: "A livre must be selected.")]
-    private ?Livre $livre = null;
+    #[ORM\ManyToOne(targetEntity: Livre::class, inversedBy: 'questions')]
+#[ORM\JoinColumn(name: "livre_id", referencedColumnName: "id", nullable: false)]
+private ?Livre $livre = null;
+
+    //#[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    //#[Assert\NotNull(message: "A livre must be selected.")]
+    //private ?Livre $livre = null;
 
     #[ORM\ManyToOne(targetEntity: Quiz::class, inversedBy: 'questions')]
-#[ORM\JoinColumn(nullable: false)]
+#[ORM\JoinColumn(name: "quiz_id", referencedColumnName: "id")]
 private ?Quiz $quiz = null;
 
     public function getId(): ?int
