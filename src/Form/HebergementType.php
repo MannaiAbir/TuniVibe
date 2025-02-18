@@ -5,6 +5,8 @@ namespace App\Form;
 use App\Entity\Hebergement;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\File;
+
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -77,17 +79,14 @@ class HebergementType extends AbstractType
                 ],
             ])
             ->add('image', FileType::class, [
-                'label' => 'Image (JPEG, PNG file) *',
-                'mapped' => false,
-                'required' => true, // Rend le champ obligatoire
-                'attr' => ['accept' => 'image/*'],
+                'label' => 'Télécharger une nouvelle image',
+                'mapped' => false, // Ne pas mapper directement avec l'entité
+                'required' => false, // Permet d'éviter d'exiger une image à chaque modification
                 'constraints' => [
-                    new Assert\NotBlank(['message' => 'Veuillez télécharger une image.']),
-                    new Assert\File([
-                        'maxSize' => '2M',
-                        'maxSizeMessage' => 'L\'image ne doit pas dépasser 2MB.',
-                        'mimeTypes' => ['image/jpeg', 'image/png'],
-                        'mimeTypesMessage' => 'Seuls les fichiers JPEG et PNG sont autorisés.',
+                    new File([
+                        'maxSize' => '5M',
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp'],
+                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG, PNG, WEBP).',
                     ])
                 ],
             ]);

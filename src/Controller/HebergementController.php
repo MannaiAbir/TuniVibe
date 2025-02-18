@@ -106,41 +106,68 @@ class HebergementController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
-    // Modifier un hébergement (seulement si l'utilisateur connecté en est le propriétaire)
-    #[Route('/hebergement/edit/{idhebergement}', name: 'hebergement_edit')]
-    public function edit(int $idhebergement, Request $request): Response
-    {
-        $hebergement = $this->entityManager->getRepository(Hebergement::class)->find($idhebergement);
-
-        if (!$hebergement) {
-            throw $this->createNotFoundException('L\'hébergement avec l\'id ' . $idhebergement . ' n\'a pas été trouvé.');
-        }
-
-        // Vérifier que l'utilisateur connecté est bien le propriétaire de l'hébergement
-        if ($this->getUser() !== $hebergement->getUser()) {
-            throw $this->createAccessDeniedException('Vous ne pouvez modifier que vos propres hébergements.');
-        }
-
-        $form = $this->createForm(HebergementType::class, $hebergement);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->flush();
-
-            // Redirection selon la provenance
-            $referer = $request->headers->get('referer');
-            if (strpos($referer, 'hebergement_show') !== false) {
-                return $this->redirectToRoute('hebergement_show', ['idhebergement' => $hebergement->getIdhebergement()]);
-            } else {
-                return $this->redirectToRoute('hebergement_index');
+  
+        #[Route('/hebergement/edit/{idhebergement}', name: 'hebergement_edit')]
+        public function edit(int $idhebergement, Request $request, EntityManagerInterface $entityManager): Response
+        {
+            $hebergement = $entityManager->getRepository(Hebergement::class)->find($idhebergement);
+    
+            if (!$hebergement) {
+                throw $this->createNotFoundException('L\'hébergement avec l\'id ' . $idhebergement . ' n\'a pas été trouvé.');
             }
+    
+            // Vérifier que l'utilisateur connecté est bien le propriétaire
+            if ($this->getUser() !== $hebergement->getUser()) {
+                throw $this->createAccessDeniedException('Vous ne pouvez modifier que vos propres hébergements.');
+            }
+    
+            // Sauvegarde de l'ancienne image
+            $oldImage = $hebergement->getImage();
+    
+            $form = $this->createForm(HebergementType::class, $hebergement);
+            $form->handleRequest($request);
+    
+            if ($form->isSubmitted() && $form->isValid()) {
+                /** @var UploadedFile $imageFile */
+                $imageFile = $form->get('image')->getData();
+    
+                if ($imageFile) {
+                    // Générer un nom unique pour la nouvelle image
+                    $newFilename = uniqid().'.'.$imageFile->guessExtension();
+    
+                    // Déplacer l'image vers le dossier de stockage
+                    try {
+                        $imageFile->move(
+                            $this->getParameter('images_directory'), // Configuré dans services.yaml
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                        throw new \Exception('Erreur lors de l\'upload de l\'image');
+                    }
+    
+                    // Supprimer l'ancienne image si elle existe
+                    if ($oldImage) {
+                        $oldImagePath = $this->getParameter('images_directory') . '/' . $oldImage;
+                        if (file_exists($oldImagePath)) {
+                            unlink($oldImagePath);
+                        }
+                    }
+    
+                    // Mettre à jour l'entité avec le nouveau fichier
+                    $hebergement->setImage($newFilename);
+                }
+    
+                $entityManager->flush();
+    
+                return $this->redirectToRoute('hebergement_index', ['idhebergement' => $hebergement->getIdhebergement()]);
+            }
+    
+            return $this->render('hebergement/edit.html.twig', [
+                'form' => $form->createView(),
+                'hebergement' => $hebergement
+            ]);
         }
-
-        return $this->render('hebergement/edit.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
+    
 
     // Supprimer un hébergement (seulement si l'utilisateur connecté en est le propriétaire)
     #[Route('/hebergement/delete/{idhebergement}', name: 'hebergement_delete')]

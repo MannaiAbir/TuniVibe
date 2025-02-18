@@ -38,14 +38,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Hebergement::class, orphanRemoval: true)]
     private Collection $hebergements;
     
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Workshop::class, orphanRemoval: true)]
-    private Collection $workshops;
-
-    public function __construct()
-    {
-        $this->hebergements = new ArrayCollection();
-        $this->workshops = new ArrayCollection();
-    }
+   
 
     public function getId(): ?int
     {
@@ -167,28 +160,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    // Workshop relationship methods
-    public function getWorkshops(): Collection
-    {
-        return $this->workshops;
-    }
-    
-    public function addWorkshop(Workshop $workshop): static
-    {
-        if (!$this->workshops->contains($workshop)) {
-            $this->workshops->add($workshop);
-            $workshop->setUser($this);
-        }
-        return $this;
-    }
-    
-    public function removeWorkshop(Workshop $workshop): static
-    {
-        if ($this->workshops->removeElement($workshop)) {
-            if ($workshop->getUser() === $this) {
-                $workshop->setUser(null);
-            }
-        }
-        return $this;
-    }
+   
 }

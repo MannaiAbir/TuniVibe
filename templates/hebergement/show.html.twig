@@ -1,4 +1,4 @@
-{% extends 'base2.html.twig' %}
+{% extends 'base3.html.twig' %}
 
 {% block body %}
   <section>
@@ -28,7 +28,7 @@
               <button type="submit" class="btn btn-primary"><i class="bi bi-trash"></i> Supprimer</button>
             </form>
 
-            <a href="{{ path('hebergement_edit', {'idhebergement': hebergement.idhebergement}) }}" class="class="btn btn-primary"><i class="bi bi-pencil"></i> Modifier</a>
+            <a href="{{ path('hebergement_edit', {'idhebergement': hebergement.idhebergement}) }}" class="btn btn-primary"><i class="bi bi-pencil"></i> Modifier</a>
           </div>
         </div>
       </div>
@@ -50,11 +50,15 @@
               <strong>Date fin :</strong> {{ programme.dateFin|date('d/m/Y H:i') }} <br>
               <strong>Description :</strong> {{ programme.description }} <br>
 
-              <a href="{{ path('programme_edit', {'id': programme.id}) }}" class="class="btn btn-primary"><i class="bi bi-pencil"></i> Modifier</a>
-              <form method="post" action="{{ path('programme_delete', {'id': programme.id}) }}" style="display:inline;" onsubmit="return confirm('Confirmer la suppression de ce programme ?');">
-                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ programme.id) }}">
-                <button type="submit" class="btn btn-primary danger"><i class="bi bi-trash"></i> Supprimer</button>
-              </form>
+     <a href="{{ path('programme_edit', {'id': programme.id}) }}" class="btn btn-primary">
+    <i class="bi bi-pencil"></i> Modifier
+</a>
+<form method="post" action="{{ path('programme_delete', {'id': programme.id}) }}" style="display:inline;" onsubmit="return confirm('Confirmer la suppression de ce programme ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ programme.id) }}">
+    <button type="submit" class="btn btn-primary">
+        <i class="bi bi-trash"></i> Supprimer
+    </button>
+</form>
             </li>
           {% endfor %}
         {% endif %}
