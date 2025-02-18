@@ -210,7 +210,11 @@
         ]
     },
     "symfony/stimulus-bundle": {
+<<<<<<< HEAD
         "version": "2.22",
+=======
+        "version": "2.23",
+>>>>>>> e7360dc (Add Symfony project to Gestion-Utilisateur branch)
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -250,7 +254,11 @@
         ]
     },
     "symfony/ux-turbo": {
+<<<<<<< HEAD
         "version": "2.22",
+=======
+        "version": "2.23",
+>>>>>>> e7360dc (Add Symfony project to Gestion-Utilisateur branch)
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -284,6 +292,7 @@
         ]
     },
     "twig/extra-bundle": {
+<<<<<<< HEAD
         "version": "v3.19.0"
     },
     "vich/uploader-bundle": {
@@ -294,5 +303,8 @@
             "version": "1.13",
             "ref": "1b3064c2f6b255c2bc2f56461aaeb76b11e07e36"
         }
+=======
+        "version": "v3.20.0"
+>>>>>>> e7360dc (Add Symfony project to Gestion-Utilisateur branch)
     }
 }

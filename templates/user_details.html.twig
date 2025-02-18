@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Details{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                {% if user is defined %}
+                    <h1>User Details</h1>
+                    <p>Email: {{ user.email }}</p>
+                    <p>Name: {{ user.name }}</p>
+                {% else %}
+                    <p>No user data available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
