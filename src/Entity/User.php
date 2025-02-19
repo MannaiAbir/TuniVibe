@@ -6,6 +6,8 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -128,4 +130,49 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         [$this->id, $this->username, $this->password] = unserialize($serialized);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Workshop::class, orphanRemoval: true)]
+    private Collection $workshops;
+    
+    public function __construct()
+    {
+        $this->workshops = new ArrayCollection();
+    }
+    
+    public function getWorkshops(): Collection
+    {
+        return $this->workshops;
+    }
+    
+    public function addWorkshop(Workshop $workshop): static
+    {
+        if (!$this->workshops->contains($workshop)) {
+            $this->workshops->add($workshop);
+            $workshop->setUser($this);
+        }
+        return $this;
+    }
+    
+    public function removeWorkshop(Workshop $workshop): static
+    {
+        if ($this->workshops->removeElement($workshop)) {
+            if ($workshop->getUser() === $this) {
+                $workshop->setUser(null);
+            }
+        }
+        return $this;
+    }
+
 }

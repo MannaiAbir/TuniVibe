@@ -1,0 +1,35 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Participants - {{ evenement.titre }}{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <h1>Participants de {{ evenement.titre }}</h1>
+    
+    <div class="participants-list mt-4">
+        {% if participants|length > 0 %}
+            <div class="row">
+                {% for participant in participants %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card participant-card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-user me-2"></i>
+                                    {{ participant.email }} {# Afficher le nom ou email #}
+                                </h5>
+                                <p class="mb-0 text-muted">
+                                    Inscrit le : {{ participant.createdAt|date('d/m/Y') }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                Aucun participant pour le moment
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

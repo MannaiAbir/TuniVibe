@@ -1,0 +1,210 @@
+{# templates/evenements/edit.html.twig #}
+{% extends 'base2.html.twig' %}
+
+{% block title %}Modifier l'événement{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-header {
+            background: #7c4dff;
+            color: white;
+            border-radius: 12px 12px 0 0 !important;
+            padding: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 2rem;
+            background: #ffffff;
+        }
+
+        .form-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #7c4dff;
+            box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.1);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+
+        .btn-primary {
+            background: #7c4dff;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary:hover {
+            background: #673ab7;
+            transform: translateY(-1px);
+        }
+
+        .btn-link {
+            color: #7c4dff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 200px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-top: 1rem;
+            border: 2px dashed #e9ecef;
+            padding: 0.5rem;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="card">
+            <div class="card-header">
+                Modifier l'événement
+            </div>
+            
+            <div class="card-body">
+                {{ form_start(form, { 
+                    'attr': { 
+                    'data-turbo-frame': 'edit_event_frame',
+                     'data-turbo': form.vars.submitted|default(false) ? 'false' : 'true'
+                    }                 
+                }) }}
+                    <div class="form-section">
+                        <div class="full-width">
+                            {{ form_label(form.titre, 'Titre', {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="input-group">
+                                {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+                                <i class="fas fa-heading input-icon"></i>
+                            </div>
+                            {{ form_errors(form.titre) }}
+                        </div>
+
+                        <div class="full-width">
+                            {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 3}}) }}
+                            {{ form_errors(form.description) }}
+                        </div>
+
+                        <div>
+                            {{ form_label(form.dateDebut, 'Date de début', {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="input-group">
+                                {{ form_widget(form.dateDebut, {'attr': {'class': 'form-control'}}) }}
+                                <i class="fas fa-calendar-alt input-icon"></i>
+                            </div>
+                            {{ form_errors(form.dateDebut) }}
+                        </div>
+
+                        <div>
+                            {{ form_label(form.dateFin, 'Date de fin', {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="input-group">
+                                {{ form_widget(form.dateFin, {'attr': {'class': 'form-control'}}) }}
+                                <i class="fas fa-calendar-times input-icon"></i>
+                            </div>
+                            {{ form_errors(form.dateFin) }}
+                        </div>
+
+                        <div>
+                            {{ form_label(form.lieu, 'Lieu', {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="input-group">
+                                {{ form_widget(form.lieu, {'attr': {'class': 'form-control'}}) }}
+                                <i class="fas fa-map-marker-alt input-icon"></i>
+                            </div>
+                            {{ form_errors(form.lieu) }}
+                        </div>
+
+                        <div class="full-width">
+                            {{ form_label(form.image, 'URL de l\'image', {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="input-group">
+                                {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+                                <i class="fas fa-image input-icon"></i>
+                            </div>
+                            {{ form_errors(form.image) }}
+                            {% if form.vars.value.image %}
+                                <img src="{{ form.vars.value.image }}" class="image-preview mt-2" alt="Preview">
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a href="{{ path('app_evenements_index') }}" class="btn-link">
+                            <i class="fas fa-arrow-left me-2"></i>Retour à la liste
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Enregistrer
+                        </button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

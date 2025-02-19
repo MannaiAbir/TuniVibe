@@ -1,0 +1,179 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Détails de l'événement{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .event-header {
+        position: relative;
+        overflow: hidden;
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .event-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 40%;
+        background: linear-gradient(transparent, rgba(0,0,0,0.5));
+    }
+
+    .event-content {
+        margin-top: -80px;
+        transition: transform 0.3s ease;
+    }
+
+    .detail-card {
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(0,0,0,0.08);
+        transition: transform 0.3s ease;
+    }
+
+    .detail-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .activity-card {
+        transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        cursor: pointer;
+    }
+
+    .activity-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,191,165,0.15);
+    }
+
+    .btn-join {
+        position: relative;
+        overflow: hidden;
+        border: none;
+        background: linear-gradient(135deg, #00bfa5 0%, #009688 100%);
+        letter-spacing: 0.5px;
+    }
+
+    .btn-join::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        bottom: -50%;
+        left: -50%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transform: rotateZ(-45deg) translateX(-300%);
+        transition: transform 0.6s ease;
+    }
+
+    .btn-join:hover::after {
+        transform: rotateZ(-45deg) translateX(300%);
+    }
+
+    @media (max-width: 768px) {
+        .event-content {
+            margin-top: -40px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <!-- En-tête de l'événement -->
+    <div class="event-header mb-5" style="height: 500px;">
+        <img src="{{ evenement.image ?? 'https://via.placeholder.com/1600x600' }}" 
+             class="w-100 h-100 object-fit-cover" 
+             alt="{{ evenement.titre }}">
+    </div>
+    
+    <!-- Contenu principal -->
+    <div class="event-content bg-white p-4 p-lg-5 rounded-4 shadow-lg position-relative">
+        <h1 class="mb-4 display-5 fw-bold">{{ evenement.titre }}</h1>
+        
+        <!-- Détails -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-6 col-lg-4">
+                <div class="detail-card p-3 rounded-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-calendar-alt text-primary fs-3 me-3"></i>
+                        <div>
+                            <div class="text-muted small">Début</div>
+                            <div class="fw-bold">{{ evenement.dateDebut|date('d/m/Y H:i') }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4">
+                <div class="detail-card p-3 rounded-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-calendar-times text-danger fs-3 me-3"></i>
+                        <div>
+                            <div class="text-muted small">Fin</div>
+                            <div class="fw-bold">{{ evenement.dateFin|date('d/m/Y H:i') }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4">
+                <div class="detail-card p-3 rounded-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-map-marker-alt text-success fs-3 me-3"></i>
+                        <div>
+                            <div class="text-muted small">Lieu</div>
+                            <div class="fw-bold">{{ evenement.lieu }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-5">
+            <h4 class="mb-3 fw-semibold">Description</h4>
+            <p class="lead text-muted lh-lg">{{ evenement.description }}</p>
+        </div>
+
+        <!-- Activités -->
+        <div class="bg-light p-4 p-lg-5 rounded-4">
+            <h4 class="mb-4 fw-semibold"><i class="fas fa-tasks me-2"></i>Activités associées</h4>
+            
+            {% if evenement.activites is not empty %}
+                <div class="row g-4">
+                    {% for activite in evenement.activites %}
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="activity-card card shadow-sm h-100 border-start border-3 border-success">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success fw-semibold">{{ activite.nom }}</h5>
+                                    <p class="card-text text-muted">{{ activite.description }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info mt-3 rounded-3">
+                    Aucune activité n'est associée à cet événement
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="d-flex gap-3 mt-5 flex-wrap justify-content-center justify-content-md-start">
+            <a href="{{ path('app_evenements_index') }}" 
+               class="btn btn-lg btn-outline-secondary px-4 py-2 rounded-3">
+                <i class="fas fa-arrow-left me-2"></i>Retour
+            </a>
+            
+            <button class="btn btn-lg btn-join text-white px-4 py-2 rounded-3">
+                <i class="fas fa-user-plus me-2"></i>
+                Rejoindre l'événement
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

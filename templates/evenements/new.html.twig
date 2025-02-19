@@ -1,0 +1,299 @@
+{# templates/evenements/new.html.twig #}
+{% extends 'base2.html.twig' %}
+
+{% block title %}Créer un nouvel événement{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="card">
+            <div class="card-header">
+                Créer un nouvel événement
+            </div>
+            
+            <div class="card-body">
+                {{ form_start(form, {'attr': {'id': 'eventForm', 'data-turbo': 'false'}}) }}
+                    <div class="form-section">
+                        <!-- Titre -->
+                        <div class="full-width">
+                            {{ form_label(form.titre, 'Titre', {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="input-group">
+                                {{ form_widget(form.titre, {
+                                    'attr': {
+                                        'class': 'form-control',
+                                        'placeholder': 'Ex: Concert en plein air',
+                                        'minlength': '5',
+                                        'maxlength': '100',
+                                        'required': 'required'
+                                    }
+                                }) }}
+                                <i class="fas fa-pen-alt input-icon"></i>
+                            </div>
+                            {{ form_errors(form.titre) }}
+                            <div id="titre_error" class="error-message"></div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="full-width">
+                            {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.description, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'rows': 3,
+                                    'placeholder': 'Décrivez votre événement...',
+                                    'minlength': '10',
+                                    'maxlength': '500',
+                                    'required': 'required'
+                                }
+                            }) }}
+                            {{ form_errors(form.description) }}
+                            <div id="description_error" class="error-message"></div>
+                        </div>
+
+                        <!-- Dates -->
+                        <div>
+                            {{ form_label(form.dateDebut, 'Date de début', {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="input-group">
+                                {{ form_widget(form.dateDebut, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                                <i class="fas fa-calendar-plus input-icon"></i>
+                            </div>
+                            {{ form_errors(form.dateDebut) }}
+                            <div id="dateDebut_error" class="error-message"></div>
+                        </div>
+
+                        <div>
+                            {{ form_label(form.dateFin, 'Date de fin', {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="input-group">
+                                {{ form_widget(form.dateFin, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                                <i class="fas fa-calendar-check input-icon"></i>
+                            </div>
+                            {{ form_errors(form.dateFin) }}
+                            <div id="dateFin_error" class="error-message"></div>
+                        </div>
+
+                        <!-- Lieu -->
+                        <div>
+                            {{ form_label(form.lieu, 'Lieu', {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="input-group">
+                                {{ form_widget(form.lieu, {
+                                    'attr': {
+                                        'class': 'form-control',
+                                        'placeholder': 'Ex: Paris, France',
+                                        'minlength': '3',
+                                        'maxlength': '100',
+                                        'required': 'required'
+                                    }
+                                }) }}
+                                <i class="fas fa-map-marker-alt input-icon"></i>
+                            </div>
+                            {{ form_errors(form.lieu) }}
+                            <div id="lieu_error" class="error-message"></div>
+                        </div>
+
+                        <!-- Image -->
+                        <div class="full-width">
+                            {{ form_label(form.image, 'URL de l\'image', {'label_attr': {'class': 'form-label'}}) }}
+                            <div class="input-group">
+                                {{ form_widget(form.image, {
+                                    'attr': {
+                                        'class': 'form-control',
+                                        'placeholder': 'https://exemple.com/image.jpg',
+                                        'pattern': '^https?://.+',
+                                        'required': 'required'
+                                    }
+                                }) }}
+                                <i class="fas fa-link input-icon"></i>
+                            </div>
+                            {{ form_errors(form.image) }}
+                            <div id="image_error" class="error-message"></div>
+                            <div id="imagePreviewContainer" class="d-none">
+                                <img src="" class="image-preview mt-2" alt="Aperçu de l'image" 
+                                     onerror="this.onerror=null;document.getElementById('imagePreviewContainer').classList.add('d-none');">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activités -->
+                    <div class="full-width mb-4">
+                        <div class="activity-selector">
+                            <label class="form-label">Activités sélectionnées :</label>
+                            <div id="selectedActivities" class="selected-activities-container mb-3"></div>
+                            
+                            {{ form_widget(form.activites, {'attr': {'class': 'form-control'}}) }}
+                           
+                        </div>
+                        {{ form_errors(form.activites) }}
+                        <div id="activites_error" class="error-message"></div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a href="{{ path('app_evenements_index') }}" class="btn-link">
+                            <i class="fas fa-arrow-left me-2"></i>Retour à la liste
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-paw me-2"></i>Enregistrer
+                        </button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Gestion de la prévisualisation d'image
+            const imageField = document.getElementById('{{ form.image.vars.id }}');
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            const previewImage = previewContainer.querySelector('img');
+            
+            const handleImagePreview = () => {
+                const urlPattern = /^https?:\/\//;
+                if (urlPattern.test(imageField.value)) {
+                    previewImage.src = imageField.value;
+                    previewContainer.classList.remove('d-none');
+                    
+                    // Vérification du chargement de l'image
+                    previewImage.onload = () => {
+                        document.getElementById('image_error').textContent = '';
+                    };
+                    previewImage.onerror = () => {
+                        previewContainer.classList.add('d-none');
+                        document.getElementById('image_error').textContent = "Impossible de charger l'image depuis cette URL";
+                    };
+                } else {
+                    previewContainer.classList.add('d-none');
+                }
+            };
+
+            imageField.addEventListener('input', handleImagePreview);
+
+            // Gestion des activités
+            const updateSelectedActivities = async () => {
+                const selectedDiv = document.getElementById('selectedActivities');
+                selectedDiv.innerHTML = '';
+                const options = document.querySelectorAll('[name="evenements[activites][]"] option:checked');
+                
+                for (const option of options) {
+                    const activityName = await loadActivityName(option.value);
+                    const badge = document.createElement('span');
+                    badge.className = 'badge bg-primary me-2 mb-2 p-2';
+                    badge.innerHTML = `
+                        ${activityName}
+                        <button type="button" class="ms-2 btn-close btn-close-white" data-id="${option.value}"></button>
+                    `;
+                    selectedDiv.appendChild(badge);
+                }
+            };
+
+            // Validation du formulaire
+            const form = document.getElementById('eventForm');
+            const validate = {
+                titre: () => {
+                    const field = document.getElementById('{{ form.titre.vars.id }}');
+                    const error = document.getElementById('titre_error');
+                    if (field.value.length < 5 || field.value.length > 100) {
+                        error.textContent = 'Le titre doit contenir entre 5 et 100 caractères';
+                        return false;
+                    }
+                    error.textContent = '';
+                    return true;
+                },
+                description: () => {
+                    const field = document.getElementById('{{ form.description.vars.id }}');
+                    const error = document.getElementById('description_error');
+                    if (field.value.length < 10 || field.value.length > 500) {
+                        error.textContent = 'La description doit contenir entre 10 et 500 caractères';
+                        return false;
+                    }
+                    error.textContent = '';
+                    return true;
+                },
+                lieu: () => {
+                    const field = document.getElementById('{{ form.lieu.vars.id }}');
+                    const error = document.getElementById('lieu_error');
+                    if (field.value.length < 3 || field.value.length > 100) {
+                        error.textContent = 'Le lieu doit contenir entre 3 et 100 caractères';
+                        return false;
+                    }
+                    error.textContent = '';
+                    return true;
+                },
+                image: () => {
+                    const error = document.getElementById('image_error');
+                    const urlPattern = /^https?:\/\//;
+                    
+                    if (!urlPattern.test(imageField.value)) {
+                        error.textContent = 'L\'URL doit commencer par http:// ou https://';
+                        return false;
+                    }
+                    error.textContent = '';
+                    return true;
+                },
+                activites: () => {
+                    const select = document.getElementById('{{ form.activites.vars.id }}');
+                    const error = document.getElementById('activites_error');
+                    if (select.selectedOptions.length === 0) {
+                        error.textContent = 'Veuillez sélectionner au moins une activité';
+                        return false;
+                    }
+                    error.textContent = '';
+                    return true;
+                }
+            };
+
+            // Événements de validation en temps réel
+            document.getElementById('{{ form.titre.vars.id }}').addEventListener('input', validate.titre);
+            document.getElementById('{{ form.description.vars.id }}').addEventListener('input', validate.description);
+            document.getElementById('{{ form.lieu.vars.id }}').addEventListener('input', validate.lieu);
+            imageField.addEventListener('input', () => {
+                validate.image();
+                handleImagePreview();
+            });
+
+            // Gestion de la soumission
+            form.addEventListener('submit', (e) => {
+                const isValid = Object.values(validate).every(fn => fn());
+                if (!isValid) {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+
+            // Fonction pour charger le nom d'une activité
+            async function loadActivityName(activityId) {
+                const response = await fetch(`/activites/${activityId}/name`);
+                return await response.text();
+            }
+
+            window.addEventListener('message', (e) => {
+                if (e.data.type === 'ADD_ACTIVITY') {
+                    const select = document.querySelector('#evenements_activites');
+                    const option = document.createElement('option');
+                    option.value = e.data.activityId;
+                    option.selected = true;
+                    if (!select.querySelector(`option[value="${e.data.activityId}"]`)) {
+                        select.appendChild(option);
+                        updateSelectedActivities();
+                    }
+                }
+            });
+
+            document.getElementById('selectedActivities').addEventListener('click', (e) => {
+                if (e.target.classList.contains('btn-close')) {
+                    const id = e.target.dataset.id;
+                    const select = document.querySelector('[name="evenements[activites][]"]');
+                    const option = select.querySelector(`option[value="${id}"]`);
+                    if (option) option.selected = false;
+                    updateSelectedActivities();
+                }
+            });
+
+            updateSelectedActivities();
+        });
+    </script>
+{% endblock %}

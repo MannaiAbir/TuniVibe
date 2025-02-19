@@ -1,0 +1,21 @@
+{# templates/gestion/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <h1>Tableau de bord de gestion</h1>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Événements</h2>
+                {% include 'evenements/_liste.html.twig' %}
+            </div>
+            
+            <div class="col-md-6">
+                <h2>Activités</h2>
+                {% include 'activites/_liste.html.twig' %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

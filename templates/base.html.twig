@@ -1,49 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>{% block title %}Topic Listing Bootstrap 5 Template{% endblock %}</title>
-
-    <!-- CSS FILES -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans&display=swap" rel="stylesheet">
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/bootstrap-icons.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/templatemo-topic-listing.css') }}" rel="stylesheet">
-
-    {% block stylesheets %}
-    
-    {% endblock %}
-</head>
-<body id="top">
-    {% include '_navbar.html.twig' %}
-
-    <main>
-        {% block body %}
-           {% if user is defined %}
-              <h1>User Details</h1>
-             <p>Email: {{ user.email }}</p>
-             <p>Name: {{ user.name }}</p>
-           {% else %}
-               <p>No user data available.</p>
-           {% endif %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        <style>
+            .container {
+                background-color:rgb(248, 248, 248);
+                padding: 10px;
+                border-radius: 10px;
+            }
+            body {
+                background-color: white;
+                margin: 0;
+                font-family: Arial, sans-serif;
+            }
+            .card {
+                background-color: rgb(195, 220, 180);
+            }
+            .hover-effect:hover {
+                transform: translateY(-5px);
+                transition: transform 0.3s ease;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+            .nav-container {
+                padding: 15px;
+                background-color: rgba(88, 237, 205, 0.9);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
+            }
+            .nav-link {
+                text-decoration: none;
+                color: #2c3e50;
+                padding: 10px 15px;
+                border-radius: 5px;
+                transition: background-color 0.3s;
+            }
+            .nav-link:hover {
+                background-color: rgba(255, 218, 185, 0.5);
+            }
+        </style>
+        {% block stylesheets %}
         {% endblock %}
-    </main>
 
-    {% include '_footer.html.twig' %}
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </head>
+    <body>
+        <div class="nav-container">
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('app_evenements_index') }}" class="nav-link">
+                    <i class="fas fa-tools"></i> Admin Événements
+                </a>
+            {% else %}
+                <a href="{{ path('app_evenements_public') }}" class="nav-link">
+                    <i class="fas fa-calendar-alt"></i> Événements
+                </a>
+            {% endif %}
+        </div>
 
-    {% block javascripts %}
-        <!-- JAVASCRIPT FILES -->
-        <script src="{{ asset('js/jquery.min.js') }}"></script>
-        <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-        <script src="{{ asset('js/jquery.sticky.js') }}"></script>
-        <script src="{{ asset('js/click-scroll.js') }}"></script>
-        <script src="{{ asset('js/custom.js') }}"></script>
-    {% endblock %}
-</body>
+        {% block body %}{% endblock %}
+    </body>
 </html>

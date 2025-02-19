@@ -1,0 +1,251 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Nouvelle Activité{% endblock %}
+
+{% block body %}
+    <div class="form-container">
+        <h1 class="form-title">➕ Création d'activité</h1>
+
+        {{ form_start(form, {'attr': {'class': 'activity-form'}}) }}
+            <div class="form-group">
+                {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.nom, {
+                    'attr': {
+                        'class': 'form-input ' ~ (form.nom.vars.errors|length ? 'input-error'),
+                        'placeholder': 'Nom de l\'activité',
+                        'required': 'required',
+                        'minlength': '3',
+                        'maxlength': '255'
+                    }
+                }) }}
+                {{ form_errors(form.nom, {'attr': {'class': 'error-message'}}) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.description, {
+                    'attr': {
+                        'class': 'form-textarea ' ~ (form.description.vars.errors|length ? 'input-error'),
+                        'rows': '5',
+                        'placeholder': 'Description détaillée...',
+                        'required': 'required',
+                        'minlength': '10',
+                        'maxlength': '2000'
+                    }
+                }) }}
+                {{ form_errors(form.description, {'attr': {'class': 'error-message'}}) }}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn validate-btn">
+                    <span class="check-icon"></span>
+                    Enregistrer
+                </button>
+                
+                <a href="{{ path('app_activites_index') }}" class="btn cancel-btn">
+                    <span class="cross-icon"></span>
+                    Annuler
+                </a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+
+    <style>
+        /* Configuration générale */
+        .form-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            font-size: 2.2em;
+        }
+
+        /* Groupes de formulaire */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        /* Champs de saisie */
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            border-color: #4299e1;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        /* Style des erreurs */
+        .input-error {
+            border-color: #f56565 !important;
+            box-shadow: 0 0 0 3px rgba(245, 101, 101, 0.1);
+        }
+
+        .error-message {
+            color: #f56565;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .error-message::before {
+            content: '⚠';
+            font-size: 1rem;
+        }
+
+        /* Boutons */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .validate-btn {
+            background: #48bb78;
+            color: white;
+        }
+
+        .validate-btn:hover {
+            background: #38a169;
+            transform: translateY(-1px);
+        }
+
+        .cancel-btn {
+            background: #f56565;
+            color: white;
+            text-decoration: none;
+        }
+
+        .cancel-btn:hover {
+            background: #e53e3e;
+            transform: translateY(-1px);
+        }
+
+        /* Icônes CSS */
+        .check-icon,
+        .cross-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 0.5rem;
+            position: relative;
+        }
+
+        .check-icon::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 14px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            left: 50%;
+            top: 40%;
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .cross-icon::before,
+        .cross-icon::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: white;
+            top: 50%;
+            left: 0;
+        }
+
+        .cross-icon::before {
+            transform: rotate(45deg);
+        }
+
+        .cross-icon::after {
+            transform: rotate(-45deg);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+document.querySelector('.activity-form').addEventListener('input', function(e) {
+    const input = e.target;
+    
+    if (input.validity.valid) {
+        input.classList.remove('input-error');
+    } else {
+        input.classList.add('input-error');
+    }
+});
+
+document.querySelector('.validate-btn').addEventListener('click', function(e) {
+    const form = document.querySelector('.activity-form');
+    if (!form.checkValidity()) {
+        e.preventDefault();
+        alert('Veuillez corriger les erreurs dans le formulaire');
+        Array.from(form.elements).forEach(element => {
+            if (!element.validity.valid) {
+                element.classList.add('input-error');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
