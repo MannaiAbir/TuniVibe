@@ -32,8 +32,7 @@ class Livre
     #[ORM\OneToOne(targetEntity: Quiz::class, mappedBy: 'livre', cascade: ['persist', 'remove'])]
     private ?Quiz $quiz = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateCreation = null;
+
 
     #[ORM\Column(length: 255)]
     private ?string $genre = null;
@@ -135,17 +134,7 @@ public function getQuiz(): ?Quiz
         return $this;
     }
 
-    public function getDateCreation(): ?\DateTimeInterface
-    {
-        return $this->dateCreation;
-    }
 
-    public function setDateCreation(\DateTimeInterface $dateCreation): static
-    {
-        $this->dateCreation = $dateCreation;
-
-        return $this;
-    }
 
     public function getGenre(): ?string
     {

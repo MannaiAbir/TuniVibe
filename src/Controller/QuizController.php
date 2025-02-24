@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Quiz;
 use App\Form\QuizType;
+use App\Form\QuestionType;
 use App\Entity\Question;
 use App\Entity\TentativeQuiz;
 use Doctrine\ORM\EntityManagerInterface;
@@ -65,6 +66,33 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
         'form' => $form,
     ]);
 }
+#[Route('/setup', name: 'app_quiz_setup')]
+public function setup(Request $request, EntityManagerInterface $entityManager): Response
+{
+    $quiz = new Quiz();
+    $quizForm = $this->createForm(QuizType::class, $quiz);
+    $quizForm->handleRequest($request);
+
+    $question = new Question();
+    $questionForm = $this->createForm(QuestionType::class, $question);
+    $questionForm->handleRequest($request);
+
+    if ($quizForm->isSubmitted() && $quizForm->isValid()) {
+        $entityManager->persist($quiz);
+        $entityManager->flush();
+    }
+
+    if ($questionForm->isSubmitted() && $questionForm->isValid()) {
+        $entityManager->persist($question);
+        $entityManager->flush();
+    }
+
+    return $this->render('quiz/setup.html.twig', [
+        'quizForm' => $quizForm->createView(),
+        'questionForm' => $questionForm->createView(),
+    ]);
+}
+
 
     #[Route('/{id}/submit', name: 'app_quiz_submit', methods: ['POST'])]
 #[ParamConverter('quiz', class: 'App\Entity\Quiz')]

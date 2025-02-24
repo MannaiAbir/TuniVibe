@@ -201,62 +201,68 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-12 m-auto">
-                        {{ form_start(form, {'attr': {'class': 'custom-form contact-form', 'role': 'form'}}) }}
-                            <div class="row">
-                                <!-- Titre Field -->
-                                <div class="col-lg-6 col-md-6 col-12">
-                                    <div class="form-floating">
-                                        {{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': 'Titre', 'required': 'required'}}) }}
-                                        {{ form_label(form.titre, 'Titre', {'label_attr': {'class': 'form-label'}}) }}
-                                    </div>
-                                </div>
+                        {{ form_start(form, {'attr': {'class': 'custom-form contact-form', 'role': 'form', 'novalidate': 'novalidate'}}) }}
+    <div class="row">
+        <!-- Titre Field -->
+        <div class="col-lg-6 col-md-6 col-12">
+            <div class="form-floating">
+                {{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': 'Titre', 'required': 'required'}}) }}
+                {{ form_label(form.titre, 'Titre', {'label_attr': {'class': 'form-label'}}) }}
+                <div class="text-danger error-message"></div> <!-- Custom error message placeholder -->
+            </div>
+        </div>
 
-                                <!-- Auteur Field -->
-                                <div class="col-lg-6 col-md-6 col-12">
-                                    <div class="form-floating">
-                                        {{ form_widget(form.auteur, {'attr': {'class': 'form-control', 'placeholder': 'Auteur', 'required': 'required'}}) }}
-                                        {{ form_label(form.auteur, 'Auteur', {'label_attr': {'class': 'form-label'}}) }}
-                                    </div>
-                                </div>
+        <!-- Auteur Field -->
+        <div class="col-lg-6 col-md-6 col-12">
+            <div class="form-floating">
+                {{ form_widget(form.auteur, {'attr': {'class': 'form-control', 'placeholder': 'Auteur', 'required': 'required'}}) }}
+                {{ form_label(form.auteur, 'Auteur', {'label_attr': {'class': 'form-label'}}) }}
+                <div class="text-danger error-message"></div> <!-- Custom error message placeholder -->
+            </div>
+        </div>
 
-                                <!-- Description Field -->
-                                <div class="col-lg-12 col-12">
-                                    <div class="form-floating">
-                                        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Description', 'required': 'required', 'style': 'height: 150px;'}}) }}
-                                        {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
-                                    </div>
-                                </div>
+        <!-- Description Field -->
+        <div class="col-lg-12 col-12">
+            <div class="form-floating">
+                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Description', 'required': 'required', 'style': 'height: 150px;'}}) }}
+                {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                <div class="text-danger error-message"></div> <!-- Custom error message placeholder -->
+            </div>
+        </div>
 
-                                <!-- FichierUrl Field -->
-                                <div class="col-lg-6 col-md-6 col-12">
-                                    <div class="form-floating">
-                                        {{ form_widget(form.fichierUrl, {'attr': {'class': 'form-control', 'placeholder': 'Fichier URL'}}) }}
-                                        {{ form_label(form.fichierUrl, 'Fichier URL', {'label_attr': {'class': 'form-label'}}) }}
-                                    </div>
-                                </div>
+        <!-- FichierUrl Field -->
+        <div class="col-lg-6 col-md-6 col-12">
+            <div class="form-floating">
+                {{ form_widget(form.fichierUrl, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                {{ form_label(form.fichierUrl, 'Upload Book File', {'label_attr': {'class': 'form-label'}}) }}
+                <div class="text-danger error-message"></div> <!-- Custom error message placeholder -->
+            </div>
+        </div>
 
-                                <!-- Genre Field -->
-                                <div class="col-lg-6 col-md-6 col-12">
-                                    <div class="form-floating">
-                                        {{ form_widget(form.genre, {'attr': {'class': 'form-control', 'placeholder': 'Genre', 'required': 'required'}}) }}
-                                        {{ form_label(form.genre, 'Genre', {'label_attr': {'class': 'form-label'}}) }}
-                                    </div>
-                                </div>
+        <!-- Image Couverture Field -->
+        <div class="col-lg-6 col-md-6 col-12">
+            <div class="form-floating">
+                {{ form_widget(form.imageCouverture, {'attr': {'class': 'form-control'}}) }}
+                {{ form_label(form.imageCouverture, 'Image de couverture', {'label_attr': {'class': 'form-label'}}) }}
+                <div class="text-danger error-message"></div> <!-- Custom error message placeholder -->
+            </div>
+        </div>
 
-                                <!-- Image Couverture Field -->
-                                <div class="col-lg-12 col-12">
-                                    <div class="form-floating">
-                                        {{ form_widget(form.imageCouverture, {'attr': {'class': 'form-control', 'placeholder': 'Image Couverture'}}) }}
-                                        {{ form_label(form.imageCouverture, 'Image Couverture', {'label_attr': {'class': 'form-label'}}) }}
-                                    </div>
-                                </div>
+        <!-- Genre Field -->
+        <div class="col-lg-6 col-md-6 col-12">
+            <div class="form-floating">
+                {{ form_widget(form.genre, {'attr': {'class': 'form-control', 'placeholder': 'Genre', 'required': 'required'}}) }}
+                {{ form_label(form.genre, 'Genre', {'label_attr': {'class': 'form-label'}}) }}
+                <div class="text-danger error-message"></div> <!-- Custom error message placeholder -->
+            </div>
+        </div>
 
-                                <!-- Submit Button -->
-                                <div class="col-lg-4 col-12 ms-auto">
-                                    <button type="submit" class="form-control">{{ button_label|default('Create') }}</button>
-                                </div>
-                            </div>
-                        {{ form_end(form) }}
+        <!-- Submit Button -->
+        <div class="col-lg-4 col-12 ms-auto">
+            <button type="submit" id="submitBtn" class="form-control">{{ button_label|default('Create') }}</button>
+        </div>
+    </div>
+{{ form_end(form) }}
 
                         <!-- Back to List -->
                         <div class="product-actions mt-5">
@@ -267,4 +273,110 @@
             </div>
         </section>
     </main>
+
+{% endblock %}
+{% block javascripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const form = document.querySelector("form");
+
+    // Prevent form submission if there are errors
+    form.addEventListener("submit", function(event) {
+        if (!validateForm()) {
+            event.preventDefault(); // Prevent submission if there are errors
+        }
+        // If the form is valid, it will submit normally and redirect
+    });
+
+    // Validate the form
+    function validateForm() {
+        let formValid = true;
+
+        // Validate each field
+        form.querySelectorAll("input, textarea, select").forEach(input => {
+            const errorDiv = input.parentElement.querySelector(".error-message");
+
+            // Clear previous errors
+            clearError(input);
+
+            // Check for required fields
+            if (input.hasAttribute("required") && !input.value.trim()) {
+                formValid = false;
+                showError(input, "Ce champ est obligatoire.");
+            }
+
+            // Validate Titre (max 50 characters)
+            if (input.name === "livre[titre]" && input.value.length > 20) {
+                formValid = false;
+                showError(input, "Le titre ne doit pas dépasser 20 caractères.");
+            }
+
+            // Validate Auteur (max 30 characters)
+                       if (input.name === "livre[auteur]") {
+                const regex = /^[a-zA-ZÀ-ÿ\s]+$/; // Regex for letters and spaces
+                if (input.value.length > 30) {
+                    formValid = false;
+                    showError(input, "L'auteur ne doit pas dépasser 30 caractères.");
+                } else if (!regex.test(input.value)) {
+                    formValid = false;
+                    showError(input, "L'auteur ne doit contenir que des lettres et des espaces.");
+                }
+            }
+
+
+            // Validate Description (min 20 characters)
+            if (input.name === "livre[description]" && input.value.length < 20) {
+                formValid = false;
+                showError(input, "La description doit contenir au moins 20 caractères.");
+            }
+
+            // Validate FichierUrl (PDF or EPUB)
+            if (input.name === "livre[fichierUrl]") {
+                if (!input.files[0]) {
+                    formValid = false;
+                    showError(input, "Le fichier est obligatoire.");
+                } else {
+                    const file = input.files[0];
+                    const validTypes = ["application/pdf", "application/epub+zip"];
+                    if (!validTypes.includes(file.type)) {
+                        formValid = false;
+                        showError(input, "Veuillez télécharger un fichier PDF ou EPUB valide.");
+                    }
+                }
+            }
+
+            // Validate ImageCouverture (JPG or PNG)
+            if (input.name === "livre[imageCouverture]" && input.files[0]) {
+                const file = input.files[0];
+                const validTypes = ["image/jpeg", "image/png"];
+                if (!validTypes.includes(file.type)) {
+                    formValid = false;
+                    showError(input, "Veuillez télécharger une image valide (JPG/PNG).");
+                }
+            }
+        });
+
+        return formValid; // Return true if the form is valid, false otherwise
+    }
+
+    // Show error message
+    function showError(input, message) {
+        const errorDiv = input.parentElement.querySelector(".error-message");
+        if (errorDiv) {
+            errorDiv.textContent = message;
+            input.classList.add("is-invalid");
+        }
+    }
+
+    // Clear error message
+    function clearError(input) {
+        const errorDiv = input.parentElement.querySelector(".error-message");
+        if (errorDiv) {
+            errorDiv.textContent = "";
+            input.classList.remove("is-invalid");
+        }
+    }
+});
+</script>
+
 {% endblock %}

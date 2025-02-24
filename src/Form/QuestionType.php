@@ -38,7 +38,7 @@ class QuestionType extends AbstractType
             'constraints' => [
             new Count(['min' => 4, 'max' => 4, 'minMessage' => 'You must provide exactly 4 options for this question']),
         ],
-            'label' => '',
+            'label' => 'Options',
             'entry_options' => [
                 'label' => false,
                 'attr' => ['class' => 'option-field'], // Add a class to easily target input fields

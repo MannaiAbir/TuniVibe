@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="col-lg-6 col-12">
-                    {{ form_start(form, {'attr': {'class': 'custom-form contact-form', 'role': 'form'}}) }}
+                    {{ form_start(form, {'attr': {'class': 'custom-form contact-form', 'role': 'form', 'novalidate': 'novalidate'}}) }}
                         <div class="row">
                             <!-- Hidden quizId Field -->
 
@@ -34,6 +34,7 @@
                                 <div class="form-floating">
                                     {{ form_widget(form.question, {'attr': {'class': 'form-control', 'placeholder': 'Question'}}) }}
                                     {{ form_label(form.question, 'Question') }}
+                                    <div class="text-danger error-message"></div>
                                 </div>
                             </div>
 
@@ -51,6 +52,7 @@
                                         </div>
                                     {% endfor %}
                                 </div>
+                                <div class="text-danger error-message"></div> <!-- Custom error message placeholder -->
                             </div>
 
                             <!-- Add Option Button -->
@@ -63,6 +65,7 @@
                                 <div class="form-floating">
                                     {{ form_widget(form.optionCorrect, {'attr': {'class': 'form-control'}}) }}
                                     {{ form_label(form.optionCorrect, 'Correct Option') }}
+                                <div class="text-danger error-message"></div> <!-- Custom error message placeholder -->
                                 </div>
                             </div>
 
@@ -92,117 +95,158 @@
 {% block javascripts %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const optionsList = document.getElementById('options-list');
-        const addOptionBtn = document.getElementById('add-option');
-        const correctOptionDropdown = document.getElementById('question_optionCorrect');
-        const prototype = optionsList.dataset.prototype;
-        let index = optionsList.children.length;
+    const form = document.querySelector('form');
+    const optionsList = document.getElementById('options-list');
+    const addOptionBtn = document.getElementById('add-option');
+    const correctOptionDropdown = document.getElementById('question_optionCorrect');
+    const prototype = optionsList.dataset.prototype;
+    let index = optionsList.children.length;
 
-        // Form and livre validation setup
-        const form = document.querySelector('form');
-        const livreField = document.getElementById('question_livre'); // Assuming the livre field ID is 'question_livre'
-        let firstLivreId = null; // Store the livre ID of the first question
-
-        livreField.addEventListener('change', function () {
-            if (!firstLivreId) {
-                firstLivreId = livreField.value; // Set the first livre ID
-            } else if (livreField.value !== firstLivreId) {
-                alert('The livre ID must be the same for all questions in the quiz!');
-                livreField.value = firstLivreId; // Reset to the first livre ID
-            }
-        });
-
-        // Prevent form submission if livre IDs don’t match
-        form.addEventListener('submit', function (e) {
-            if (livreField.value !== firstLivreId) {
-                alert('The livre ID must be the same for all questions!');
-                e.preventDefault(); // Prevent form submission
-            }
-        });
-
-        // Update correct option dropdown
-        function updateCorrectOptionDropdown() {
-            correctOptionDropdown.innerHTML = '<option value="">Select the correct option</option>'; // Clear existing options
-            document.querySelectorAll('.option-item input').forEach(input => {
-                if (input.value.trim()) {
-                    let newOption = document.createElement('option');
-                    newOption.value = input.value;
-                    newOption.textContent = input.value;
-                    correctOptionDropdown.appendChild(newOption);
-                }
-            });
+    // Prevent form submission if there are errors
+    form.addEventListener('submit', function (event) {
+        if (!validateForm()) {
+            event.preventDefault(); // Prevent submission if there are errors
         }
-
-        // Add new option
-        addOptionBtn.addEventListener('click', function () {
-            // Ensure less than 4 options before adding more
-            const currentOptionsCount = optionsList.querySelectorAll('.option-item').length;
-            if (currentOptionsCount >= 4) {
-                alert("You can only add 4 options.");
-                return;
-            }
-
-            const newForm = prototype.replace(/__name__/g, index);
-            const newDiv = document.createElement('div');
-            newDiv.classList.add('option-item');
-            newDiv.innerHTML = newForm;
-
-            const inputField = newDiv.querySelector('input');
-            inputField.name = 'question[options][' + index + ']'; // Adjusted to match 'question[options]'
-
-            // Add Save button
-            const saveBtn = document.createElement('button');
-            saveBtn.type = 'button';
-            saveBtn.textContent = 'Save';
-            saveBtn.classList.add('save-option', 'btn', 'btn-primary');
-            saveBtn.addEventListener('click', function (e) {
-                e.preventDefault(); // Prevent accidental deletion
-                saveOption(inputField);
-            });
-
-            // Add Remove button with confirmation prompt
-            const removeBtn = document.createElement('button');
-            removeBtn.type = 'button';
-            removeBtn.textContent = 'Remove';
-            removeBtn.classList.add('remove-option', 'btn', 'btn-danger');
-            removeBtn.addEventListener('click', function () {
-                if (confirm('Are you sure you want to remove this option?')) {
-                    newDiv.remove();
-                    updateCorrectOptionDropdown(); // Update dropdown when an option is removed
-                }
-            });
-
-            newDiv.appendChild(saveBtn);
-            newDiv.appendChild(removeBtn);
-            optionsList.appendChild(newDiv);
-            index++;
-        });
-
-        // Save option logic
-        function saveOption(inputField) {
-            const optionText = inputField.value.trim();
-            if (!optionText) {
-                alert('Please enter an option before saving.');
-                return;
-            }
-
-            updateCorrectOptionDropdown(); // Ensure dropdown updates
-            alert('Option saved: ' + optionText);
-        }
-
-        // Handle remove buttons for existing options (dynamically added ones too)
-        optionsList.addEventListener('click', function (e) {
-            if (e.target.classList.contains('remove-option')) {
-                e.preventDefault();
-                if (confirm('Are you sure you want to remove this option?')) {
-                    e.target.closest('.option-item').remove();
-                    updateCorrectOptionDropdown(); // Update dropdown when an option is removed
-                }
-            }
-        });
-
-        // Ensure dropdown updates on page load
-        updateCorrectOptionDropdown();
     });
+
+    // Validate the form
+    function validateForm() {
+        let formValid = true;
+
+        // Validate Question Field
+        const questionField = form.querySelector('[name="question[question]"]');
+        const questionError = questionField.parentElement.querySelector('.error-message');
+        if (!questionField.value.trim()) {
+            formValid = false;
+            showError(questionField, 'La question est obligatoire.');
+        } else {
+            clearError(questionField);
+        }
+
+        // Validate Options Field (exactly 4 options)
+        const optionFields = optionsList.querySelectorAll('.option-item input');
+        const optionsError = optionsList.querySelector('.error-message');
+        if (optionFields.length !== 4) {
+            formValid = false;
+            showError(optionsList, 'Vous devez fournir exactement 4 options.');
+        } else {
+            clearError(optionsList);
+        }
+
+        // Validate Correct Option Field
+        const correctOptionField = form.querySelector('[name="question[optionCorrect]"]');
+        const correctOptionError = correctOptionField.parentElement.querySelector('.error-message');
+        if (!correctOptionField.value.trim()) {
+            formValid = false;
+            showError(correctOptionField, 'Veuillez sélectionner une option correcte.');
+        } else {
+            clearError(correctOptionField);
+        }
+
+        return formValid; // Return true if the form is valid, false otherwise
+    }
+
+    // Show error message
+    function showError(input, message) {
+        const errorDiv = input.parentElement.querySelector('.error-message');
+        if (errorDiv) {
+            errorDiv.textContent = message;
+            input.classList.add('is-invalid');
+        }
+    }
+
+    // Clear error message
+    function clearError(input) {
+        const errorDiv = input.parentElement.querySelector('.error-message');
+        if (errorDiv) {
+            errorDiv.textContent = '';
+            input.classList.remove('is-invalid');
+        }
+    }
+
+    // Update correct option dropdown
+    function updateCorrectOptionDropdown() {
+        correctOptionDropdown.innerHTML = '<option value="">Select the correct option</option>'; // Clear existing options
+        document.querySelectorAll('.option-item input').forEach(input => {
+            if (input.value.trim()) {
+                let newOption = document.createElement('option');
+                newOption.value = input.value;
+                newOption.textContent = input.value;
+                correctOptionDropdown.appendChild(newOption);
+            }
+        });
+    }
+
+    // Add new option
+    addOptionBtn.addEventListener('click', function () {
+        // Ensure less than 4 options before adding more
+        const currentOptionsCount = optionsList.querySelectorAll('.option-item').length;
+        if (currentOptionsCount >= 4) {
+            alert("Vous ne pouvez ajouter que 4 options.");
+            return;
+        }
+
+        const newForm = prototype.replace(/__name__/g, index);
+        const newDiv = document.createElement('div');
+        newDiv.classList.add('option-item');
+        newDiv.innerHTML = newForm;
+
+        const inputField = newDiv.querySelector('input');
+        inputField.name = 'question[options][' + index + ']'; // Adjusted to match 'question[options]'
+
+        // Add Save button
+        const saveBtn = document.createElement('button');
+        saveBtn.type = 'button';
+        saveBtn.textContent = 'Save';
+        saveBtn.classList.add('save-option', 'btn', 'btn-primary');
+        saveBtn.addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent accidental deletion
+            saveOption(inputField);
+        });
+
+        // Add Remove button with confirmation prompt
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.textContent = 'Remove';
+        removeBtn.classList.add('remove-option', 'btn', 'btn-danger');
+        removeBtn.addEventListener('click', function () {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette option ?')) {
+                newDiv.remove();
+                updateCorrectOptionDropdown(); // Update dropdown when an option is removed
+            }
+        });
+
+        newDiv.appendChild(saveBtn);
+        newDiv.appendChild(removeBtn);
+        optionsList.appendChild(newDiv);
+        index++;
+    });
+
+    // Save option logic
+    function saveOption(inputField) {
+        const optionText = inputField.value.trim();
+        if (!optionText) {
+            alert('Veuillez entrer une option avant de sauvegarder.');
+            return;
+        }
+
+        updateCorrectOptionDropdown(); // Ensure dropdown updates
+        alert('Option sauvegardée : ' + optionText);
+    }
+
+    // Handle remove buttons for existing options (dynamically added ones too)
+    optionsList.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-option')) {
+            e.preventDefault();
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette option ?')) {
+                e.target.closest('.option-item').remove();
+                updateCorrectOptionDropdown(); // Update dropdown when an option is removed
+            }
+        }
+    });
+
+    // Ensure dropdown updates on page load
+    updateCorrectOptionDropdown();
+});
 </script>
 {% endblock %}

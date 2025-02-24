@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quiz & Questions{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        /* General styles for the page */
+         body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            margin: 0;
+            
+           
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        /* Header Section Styles */
+        .site-header {
+            background-color: #3498db;
+            padding: 30px 0;
+            color: white;
+        }
+
+        /* Quiz Container Styling */
+        .quiz-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .quiz-box, .question-box {
+            width: 45%;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .quiz-box:hover, .question-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-box h2, .question-box h2 {
+            font-size: 1.8rem;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+
+        .quiz-box p, .question-box p {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        /* Button Styling */
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .quiz-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .quiz-box, .question-box {
+                width: 90%;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <!-- Header Section -->
+    <header class="site-header d-flex flex-column justify-content-center align-items-center">
+        <div class="container">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-lg-5 col-12 mb-5">
+                    <nav aria-label="breadcrumb">
+                        
+                    </nav>
+
+                    <h2 class="text-white">Want to create a quiz for the book you read?</h2>
+
+                  
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+       
+        
+        <!-- Quiz and Questions Container -->
+        <div class="quiz-container">
+            <!-- Quiz Box -->
+            <div class="quiz-box">
+                <h2>Step 1: Create a Quiz</h2>
+                <p>Start by creating a quiz for a book you’ve read. This will allow you to add questions later.</p>
+                <a href="{{ path('app_quiz_new') }}" class="btn">Go to Quiz Creation</a>
+            </div>
+
+            <!-- Question Box -->
+            <div class="question-box">
+                <h2>Step 2: Add Questions</h2>
+                <p>Once you've created a quiz, add questions to test knowledge about the book.</p>
+                <a href="{{ path('app_question_index') }}" class="btn">Go to Questions</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

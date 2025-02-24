@@ -114,8 +114,25 @@
 {% endblock %}
 
 {% block body %}
+<!-- Header Section -->
+    <header class="site-header d-flex flex-column justify-content-center align-items-center">
+        <div class="container">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-lg-5 col-12 mb-5">
+                    <nav aria-label="breadcrumb">
+                        
+                    </nav>
+
+                    <h2 class="text-white">Quizzes</h2>
+
+                  
+                </div>
+
+            </div>
+        </div>
+    </header>
+
     <div class="container">
-        <h1>Quizzes</h1>
 
         <div class="quiz-grid">
             {% for quiz in quizzes %}
