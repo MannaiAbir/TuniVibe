@@ -55,7 +55,7 @@ class LivreType extends AbstractType
             'constraints' => [
                 new NotBlank(['message' => 'Le fichier est obligatoire.']),
                 new File([
-                    'maxSize' => '5M',
+                    'maxSize' => '10M',
                     'mimeTypes' => ['application/pdf', 'application/epub+zip'],
                     'mimeTypesMessage' => 'Please upload a valid PDF or EPUB file',
                 ])

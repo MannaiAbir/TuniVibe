@@ -152,11 +152,14 @@ public function index(LivreRepository $livreRepository): Response
     #[Route('/{id}', name: 'app_livre_delete', methods: ['POST'])]
     public function delete(Request $request, Livre $livre, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$livre->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $livre->getId(), $request->request->get('_token'))) {
             $entityManager->remove($livre);
             $entityManager->flush();
+            $this->addFlash('success', 'Livre deleted successfully.');
+        } else {
+            $this->addFlash('error', 'Invalid CSRF token.');
         }
-
+    
         return $this->redirectToRoute('app_livre_index', [], Response::HTTP_SEE_OTHER);
     }
 }

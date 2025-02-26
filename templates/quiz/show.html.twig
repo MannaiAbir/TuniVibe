@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Take Quiz #{{ quiz.id }}{% endblock %}
+{% block title %}{{ quiz.livre.titre }} Quiz{% endblock %}
 
 {% block stylesheets %}
     <style>
@@ -107,12 +107,12 @@
                     <div class="col-lg-5 col-12">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ path('app_quiz_index') }}">Create a Quiz</a></li>
+                                <li class="breadcrumb-item"><a href="{{ path('app_livre_index') }}">Bibliothèque</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Take Quiz</li>
                             </ol>
                         </nav>
 
-                        <h2 class="text-white">Take Quiz #{{ quiz.id }}</h2>
+                        <h2 class="text-white">{{ quiz.livre.titre }} Quiz</h2>
                     </div>
                 </div>
             </div>

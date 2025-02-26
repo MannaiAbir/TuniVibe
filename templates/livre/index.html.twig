@@ -1,164 +1,37 @@
 {% extends 'base.html.twig' %}
-
 {% block stylesheets %}
     <style>
-        /* General styles for the page */
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-
-        h1 {
-            color: #2c3e50;
-            font-size: 2.5rem;
-            margin-bottom: 25px;
-            font-weight: 700;
-            text-align: center;
-        }
-
-        /* Table styles */
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: #ffffff;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .table th, .table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .table th {
-            background-color: #3498db;
-            color: white;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-        }
-
-        .table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .table tr:hover {
-            background-color: #f1f1f1;
-            transition: background-color 0.3s ease;
-        }
-
-        /* Image styling */
-        .table img {
-            max-width: 100px;
-            height: auto;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .table img:hover {
-            transform: scale(1.05);
-        }
-
-        /* Action links styling */
-        .table td a {
-            margin-right: 10px;
-            color: #3498db;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .table td a:hover {
-            color: #2980b9;
-            text-decoration: underline;
-        }
-
-        /* Button for creating new book */
-        .create-button {
-            display: inline-block;
-            margin-top: 25px;
-            padding: 12px 25px;
-            background-color: #27ae60;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .create-button:hover {
-            background-color: #219653;
-            transform: translateY(-2px);
-        }
-
-        /* Styling for the 'no records found' message */
-        .no-records {
-            text-align: center;
-            color: #777;
-            font-style: italic;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-
-        /* Nav Tabs Styling */
-        .nav-tabs {
-            border-bottom: 2px solid #dee2e6;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .nav-tabs .nav-item {
-            margin: 0 5px;
-        }
-
-        .nav-tabs .nav-link {
-            border: none;
-            color: #495057;
-            font-weight: 500;
-            padding: 10px 20px;
-            transition: all 0.3s ease;
-            border-radius: 0;
-        }
-
-        .nav-tabs .nav-link.active {
-            color: #3498db;
-            border-bottom: 2px solid #3498db;
-        }
-
-        .nav-tabs .nav-link:hover {
-            color: #3498db;
-            background-color: transparent;
-        }
-    </style>
+.create-button {
+    background-color: var(--primary-color);
+    border: 0;
+    border-radius: var(--border-radius-large) !important;
+    color: var(--white-color);
+    max-width: 150px;
+    padding: 10px 20px; /* Ajouter du rembourrage pour une meilleure apparence du bouton */
+    text-align: center; /* Centrer le texte */
+    display: inline-block; /* Faire en sorte qu'il se comporte comme un bouton */
+    text-decoration: none; /* Supprimer le soulignement */
+    margin-bottom: 20px; /* Ajouter de l'espace entre le bouton et le bas */
+}
+ </style>
 {% endblock %}
-
 {% block body %}
-    <!-- Browse Library Section -->
+    <!-- Section Explorer la Bibliothèque -->
     <section class="explore-section section-padding" id="section_2">
         <div class="container">
             <div class="row">
                 <div class="col-12 text-center">
-                    <h2 class="mb-4">Browse Library</h2>
+                    <h2 class="mb-4">Explorer la Bibliothèque</h2>
                 </div>
             </div>
         </div>
 
-        <!-- Genre Filter Tabs -->
+        <!-- Onglets de Filtre par Genre -->
         <div class="container-fluid">
             <div class="row">
                 <ul class="nav nav-tabs" id="genreTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="all-tab" data-genre="all" type="button" role="tab" aria-controls="all-tab-pane" aria-selected="true">All</button>
+                        <button class="nav-link active" id="all-tab" data-genre="all" type="button" role="tab" aria-controls="all-tab-pane" aria-selected="true">Tous</button>
                     </li>
                     {% for genre in genres %}
                         <li class="nav-item" role="presentation">
@@ -169,18 +42,10 @@
             </div>
         </div>
     </section>
-
-    <!-- Livre Index Section -->
-<section class="explore-section section-padding" id="section_2">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center">
-                <h1 class="mb-4">Livre Index</h1>
-            </div>
-        </div>
-    </div>
-
-    <!-- Livre Grid -->
+    
+   <!-- Section Index des Livres -->
+<section>
+    <!-- Grille des Livres -->
     <div class="container">
         <div class="row">
             {% for livre in livres %}
@@ -199,21 +64,24 @@
                                 <img src="{{ asset('uploads/images/' ~ livre.imageCouverture) }}" class="custom-block-image img-fluid" alt="Image de couverture">
                             {% else %}
                                 <div class="custom-block-image img-fluid bg-light d-flex align-items-center justify-content-center">
-                                    <p class="text-muted">No image</p>
+                                    <p class="text-muted">Aucune image</p>
                                 </div>
                             {% endif %}
                         </a>
 
-                        <div class="d-flex justify-content-between mt-3">
-                            <a href="{{ path('app_livre_show', {'id': livre.id}) }}" class="btn btn-sm btn-outline-primary">Show</a>
-                            <a href="{{ path('app_livre_edit', {'id': livre.id}) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
-                        </div>
+                       <div class="d-flex justify-content-between mt-3">
+    <a href="{{ path('app_livre_edit', {'id': livre.id}) }}" class="btn btn-sm btn-outline-primary">Modifier</a>
+    <form action="{{ path('app_livre_delete', {'id': livre.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ livre.id) }}">
+        <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+    </form>
+</div>
                     </div>
                 </div>
             {% else %}
                 <div class="col-12">
                     <div class="no-records text-center">
-                        <p>No records found</p>
+                        <p>Aucun enregistrement trouvé</p>
                     </div>
                 </div>
             {% endfor %}
@@ -221,9 +89,52 @@
     </div>
 </section>
 
-    <a href="{{ path('app_livre_new') }}" class="create-button">Create New</a>
+ <div class="col-lg-4 col-12 ms-auto">
+    <a href="{{ path('app_livre_new') }}" class="create-button">Créer</a>
+</div>
 
-    <!-- JavaScript for Genre Filtering -->
+<section class="contact-section section-padding section-bg" id="section_5">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-12 col-12 text-center">
+                <h2 class="mb-5">Une expérience à attendre avec impatience</h2>
+            </div>
+
+            <div class="col-lg-5 col-12 mb-4 mb-lg-0">
+<iframe class="google-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3035.1332484834716!2d10.297478475647058!3d36.83944667223597!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12fd4ad74bdd8285%3A0x58721aef6c2db516!2sLe%20Kram%20-%20Exhibition%20and%20International%20Trade%20Center%20of%20Tunis!5e1!3m2!1sen!2sth!4v1740497472546!5m2!1sen!2sth" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12 mb-3 mb-lg- mb-md-0 ms-auto">
+                <h4 class="mb-3">Lieu de l'Événement</h4>
+                <p>Kram, Tunisie</p>
+                <hr>
+                <p>Date : du 25 avril au 4 mai 2025</p>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12 mx-auto">
+                <h4 class="mb-3">Informations de Contact</h4>
+                <p>Si vous avez des questions, n'hésitez pas à nous contacter :</p>
+                <hr>
+                <p class="d-flex align-items-center mb-1">
+                    <span class="me-2">Lien</span>
+                    <a href="https://foire.e-festivals.tn" class="site-footer-link">
+                        https://foire.e-festivals.tn
+                    </a>
+                </p>
+                <p class="d-flex align-items-center">
+                    <span class="me-2">Email</span>
+                    <a href="foiredulivre@enpfmca.gov.tn" class="site-footer-link">
+                        foiredulivre@enpfmca.gov.tn
+                    </a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+    <!-- JavaScript pour le Filtrage par Genre -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const filterButtons = document.querySelectorAll('.nav-link');
@@ -231,14 +142,14 @@
 
             filterButtons.forEach(button => {
                 button.addEventListener('click', function () {
-                    // Remove active class from all buttons
+                    // Supprimer la classe active de tous les boutons
                     filterButtons.forEach(btn => btn.classList.remove('active'));
-                    // Add active class to the clicked button
+                    // Ajouter la classe active au bouton cliqué
                     this.classList.add('active');
 
                     const selectedGenre = this.getAttribute('data-genre');
 
-                    // Filter rows based on genre
+                    // Filtrer les lignes en fonction du genre
                     livreRows.forEach(row => {
                         const rowGenre = row.getAttribute('data-genre');
                         if (selectedGenre === 'all' || rowGenre === selectedGenre) {

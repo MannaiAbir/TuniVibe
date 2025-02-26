@@ -207,15 +207,23 @@ public function show(Quiz $quiz, EntityManagerInterface $entityManager): Respons
         ]);
     }
 
-    #[Route('/{id}', name: 'app_quiz_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_quiz_delete', methods: ['POST', 'DELETE'])]
     public function delete(Request $request, Quiz $quiz, EntityManagerInterface $entityManager): Response
     {
-        // Fixing CSRF validation issue
-        if ($this->isCsrfTokenValid('delete'.$quiz->getId(), $request->get('token'))) {
+        // Validate the CSRF token
+        if ($this->isCsrfTokenValid('delete' . $quiz->getId(), $request->request->get('_token'))) {
+            // Remove the quiz
             $entityManager->remove($quiz);
             $entityManager->flush();
+    
+            // Add a flash message for success
+            $this->addFlash('success', 'Le quiz a été supprimé avec succès.');
+        } else {
+            // Add a flash message for CSRF token failure
+            $this->addFlash('error', 'Token CSRF invalide. Impossible de supprimer le quiz.');
         }
-
-        return $this->redirectToRoute('app_quiz_index', [], Response::HTTP_SEE_OTHER);
+    
+        // Redirect to the quiz index page
+        return $this->redirectToRoute('app_quiz_index');
     }
 }

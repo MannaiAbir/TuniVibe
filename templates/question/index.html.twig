@@ -1,158 +1,170 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Quizzes{% endblock %}
+{% block title %}
+    Quiz Questions for {{ quiz.livre ? quiz.livre.titre : 'No Book Associated' }}
+{% endblock %}
 
 {% block stylesheets %}
     <style>
-        /* General styles for the page */
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-
-        h1, h2 {
-            color: #2c3e50;
-            font-size: 2.5rem;
-            margin-bottom: 25px;
-            font-weight: 700;
+        .create-button {
+            background-color: var(--primary-color);
+            border: 0;
+            border-radius: var(--border-radius-large) !important;
+            color: var(--white-color);
+            max-width: 150px;
+            padding: 10px 20px;
             text-align: center;
-        }
-
-        /* Quiz Grid Styling */
-        .quiz-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .quiz-card {
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .quiz-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .quiz-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: #3498db;
-        }
-
-        .quiz-card p {
-            font-size: 1rem;
-            color: #555;
-            margin-bottom: 10px;
-        }
-
-        .quiz-card ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .quiz-card ul li {
-            font-size: 0.9rem;
-            color: #777;
-            margin-bottom: 5px;
-        }
-
-        .quiz-card .actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .quiz-card .actions a {
-            padding: 8px 16px;
-            border-radius: 6px;
+            display: inline-block;
             text-decoration: none;
-            font-size: 0.9rem;
-            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
         }
 
-        .quiz-card .actions a.btn-primary {
-            background-color: #3498db;
-            color: white;
+        .create-button:disabled {
+            background-color: #6c757d; /* Grayed out for disabled state */
+            cursor: not-allowed;
         }
 
-        .quiz-card .actions a.btn-primary:hover {
-            background-color: #2980b9;
-        }
-
-        .quiz-card .actions a.btn-secondary {
-            background-color: #6c757d;
-            color: white;
-        }
-
-        .quiz-card .actions a.btn-secondary:hover {
-            background-color: #5a6268;
-        }
-
-        /* No Records Styling */
-        .no-records {
-            text-align: center;
-            color: #777;
-            font-style: italic;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
+        .badge.bg-danger { background-color: #dc3545; }
+        .badge.bg-success { background-color: #28a745; }
+        .badge.bg-warning { background-color: #ffc107; }
+        .badge.bg-secondary { background-color: #6c757d; }
     </style>
 {% endblock %}
 
 {% block body %}
-    <div class="container">
-        {% if not quiz %}
-            <h2>Select a Quiz</h2>
-            <div class="quiz-grid">
-                {% for q in quizzes %}
-                    <div class="quiz-card">
-                        <h3>Quiz #{{ q.id }}</h3>
-                        <div class="actions">
-                            <a href="{{ path('app_question_index', {'quizId': q.id}) }}" class="btn btn-primary">View Questions</a>
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="no-records">
-                        <p>No quizzes found</p>
-                    </div>
-                {% endfor %}
+    <!-- Section Explorer les Questions -->
+    <section class="explore-section section-padding" id="section_2">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="mb-4">Quiz Questions for Book {{ quiz.livre ? quiz.livre.titre : 'No Book Associated' }}</h2>
+                </div>
             </div>
-        {% endif %}
+        </div>
+    </section>
 
-        {% if quiz %}
-            <h1>Questions for Quiz #{{ quiz.id }}</h1>
-            <div class="quiz-grid">
+    <!-- Section Index des Questions -->
+    <section>
+        <!-- Grille des Questions -->
+        <div class="container">
+            <div class="row">
                 {% for question in questions %}
-                    <div class="quiz-card">
-                        <h3>Question #{{ question.id }}</h3>
-                        <p><strong>Question:</strong> {{ question.question }}</p>
-                        <p><strong>Correct Option:</strong> {{ question.optionCorrect }}</p>
-                        <div class="actions">
-                            <a href="{{ path('app_question_edit', {'quizId': quiz.id, 'id': question.id}) }}" class="btn btn-secondary">Edit</a>
+                    <div class="col-lg-4 col-md-6 col-12 mb-4">
+                        <div class="custom-block bg-white shadow-lg">
+                            <div class="d-flex">
+                                <div>
+                                    <h5 class="mb-2">{{ question.question }}</h5>
+                                    <p class="mb-0">{{ question.optionCorrect }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="d-flex justify-content-between mt-3">
+                                <a href="{{ path('app_question_edit', {'quizId': quiz.id, 'id': question.id}) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <form action="{{ path('app_question_delete', {'quizId': quiz.id, 'id': question.id}) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this question?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ question.id) }}">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 {% else %}
-                    <div class="no-records">
-                        <p>No questions found</p>
+                    <div class="col-12">
+                        <div class="no-records text-center">
+                            <p>No questions found for this quiz</p>
+                        </div>
                     </div>
                 {% endfor %}
             </div>
+        </div>
+    </section>
 
-            <div class="text-center mt-4">
-                <a href="{{ path('app_question_new', {'quizId': quiz.id}) }}" class="btn btn-primary">Create New Question</a>
-            </div>
+    <!-- Bouton Créer -->
+    <div class="col-lg-4 col-12 ms-auto">
+        {% if questions|length >= 10 %}
+            <button class="create-button" disabled onclick="showMaxQuestionsAlert()">Create New Question</button>
+        {% else %}
+            <a href="{{ path('app_question_new', {'quizId': quiz.id}) }}" class="create-button">Create New Question</a>
         {% endif %}
     </div>
+
+    <!-- Section Contact -->
+    <section class="contact-section section-padding section-bg" id="section_5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-12 text-center">
+                    <h2 class="mb-5">Une expérience à attendre avec impatience</h2>
+                </div>
+
+                <div class="col-lg-5 col-12 mb-4 mb-lg-0">
+                    <iframe class="google-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3035.1332484834716!2d10.297478475647058!3d36.83944667223597!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12fd4ad74bdd8285%3A0x58721aef6c2db516!2sLe%20Kram%20-%20Exhibition%20and%20International%20Trade%20Center%20of%20Tunis!5e1!3m2!1sen!2sth!4v1740497472546!5m2!1sen!2sth" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-12 mb-3 mb-lg- mb-md-0 ms-auto">
+                    <h4 class="mb-3">Lieu de l'Événement</h4>
+                    <p>Kram, Tunisie</p>
+                    <hr>
+                    <p>Date : du 25 avril au 4 mai 2025</p>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-12 mx-auto">
+                    <h4 class="mb-3">Informations de Contact</h4>
+                    <p>Si vous avez des questions, n'hésitez pas à nous contacter :</p>
+                    <hr>
+                    <p class="d-flex align-items-center mb-1">
+                        <span class="me-2">Lien</span>
+                        <a href="https://foire.e-festivals.tn" class="site-footer-link">
+                            https://foire.e-festivals.tn
+                        </a>
+                    </p>
+                    <p class="d-flex align-items-center">
+                        <span class="me-2">Email</span>
+                        <a href="foiredulivre@enpfmca.gov.tn" class="site-footer-link">
+                            foiredulivre@enpfmca.gov.tn
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JavaScript pour le Filtrage par Statut de Quiz -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const quizStatusFilterButtons = document.querySelectorAll('#quizStatusTab .nav-link');
+            const quizRows = document.querySelectorAll('.quiz-row');
+
+            // Function to filter quizzes by status
+            function filterQuizzes(selectedQuizStatus) {
+                quizRows.forEach(row => {
+                    const rowQuizStatus = row.getAttribute('data-quiz-status');
+
+                    const quizStatusMatch = selectedQuizStatus === 'all' || rowQuizStatus === selectedQuizStatus;
+
+                    if (quizStatusMatch) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+
+            // Add event listeners for quiz status filters
+            quizStatusFilterButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    quizStatusFilterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const selectedQuizStatus = this.getAttribute('data-quiz-status');
+                    filterQuizzes(selectedQuizStatus);
+                });
+            });
+        });
+
+        // Function to show a popup alert when the quiz has 10 questions
+        function showMaxQuestionsAlert() {
+            alert("You cannot add more than 10 questions to this quiz.");
+        }
+    </script>
 {% endblock %}

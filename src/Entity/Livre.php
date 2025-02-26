@@ -52,8 +52,8 @@ class Livre
     #[ORM\Column(length: 255)]
     private ?string $imageCouverture = null;
 
-    #[ORM\OneToMany(mappedBy: 'livre', targetEntity: Question::class)]
-private Collection $questions;
+    #[ORM\OneToMany(mappedBy: 'livre', targetEntity: Question::class, cascade: ['remove'])]
+    private Collection $questions;
 
     public function __construct()
     {
@@ -151,6 +151,26 @@ public function getQuiz(): ?Quiz
     public function getQuestions(): Collection
 {
     return $this->questions;
+}
+public function addQuestion(Question $question): self
+{
+    if (!$this->questions->contains($question)) {
+        $this->questions[] = $question;
+        $question->setLivre($this);
+    }
+
+    return $this;
+}
+public function removeQuestion(Question $question): self
+{
+    if ($this->questions->removeElement($question)) {
+        // Set the owning side to null (unless already changed)
+        if ($question->getLivre() === $this) {
+            $question->setLivre(null);
+        }
+    }
+
+    return $this;
 }
 
     /**

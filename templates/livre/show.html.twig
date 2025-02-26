@@ -4,14 +4,14 @@
 
 {% block body %}
     <main>
-        <!-- Header Section -->
+        <!-- En-tête de la page -->
         <header class="site-header d-flex flex-column justify-content-center align-items-center">
             <div class="container">
                 <div class="row justify-content-center align-items-center">
                     <div class="col-lg-5 col-12 mb-5">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ path('app_livre_index') }}">Homepage</a></li>
+                                <li class="breadcrumb-item"><a href="{{ path('app_livre_index') }}">Bibliothèque</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">{{ livre.titre }}</li>
                             </ol>
                         </nav>
@@ -19,7 +19,7 @@
                         <h2 class="text-white">{{ livre.titre }}</h2>
 
                         <div class="d-flex align-items-center mt-5">
-                            <a href="#livre-details" class="btn custom-btn custom-border-btn smoothscroll me-4">Read More</a>
+                            <a href="#livre-details" class="btn custom-btn custom-border-btn smoothscroll me-4">En savoir plus</a>
                             <a href="#top" class="custom-icon bi-bookmark smoothscroll"></a>
                         </div>
                     </div>
@@ -30,7 +30,7 @@
                                 <img src="{{ asset('uploads/images/' ~ livre.imageCouverture) }}" class="topics-detail-block-image img-fluid" alt="Cover Image">
                             {% else %}
                                 <div class="topics-detail-block-image img-fluid bg-light d-flex align-items-center justify-content-center">
-                                    <p class="text-muted">No image</p>
+                                    <p class="text-muted">Aucune image</p>
                                 </div>
                             {% endif %}
                         </div>
@@ -39,71 +39,74 @@
             </div>
         </header>
 
-        <!-- Livre Details Section -->
-        <section class="topics-detail-section section-padding" id="livre-details">
+        <!-- Section des détails du livre -->
+        <section class="book-details-section section-padding" id="livre-details">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-12 m-auto">
-                        <h3 class="mb-4">{{ livre.titre }}</h3>
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-12">
+                        <div class="book-details-box">
+                            <h3 class="mb-4 text-center">{{ livre.titre }}</h3>
 
-                        <div class="product-info">
-                            <strong>Auteur:</strong> <span>{{ livre.auteur }}</span>
-                        </div>
+                            <p><strong>Auteur :</strong> {{ livre.auteur }}</p>
+                            <p><strong>Description :</strong> {{ livre.description }}</p>
+                            <p><strong>Genre :</strong> {{ livre.genre }}</p>
 
-                        <div class="product-info">
-                            <strong>Description:</strong> <span>{{ livre.description }}</span>
-                        </div>
+                            <div class="mt-3">
+                                {% if livre.fichierUrl %}
+                                    <a href="{{ asset('uploads/files/' ~ livre.fichierUrl) }}" class="btn-action">Télécharger le fichier</a>
+                                {% else %}
+                                    <p class="text-muted">Aucun fichier disponible</p>
+                                {% endif %}
+                            </div>
 
-                        <div class="product-info">
-                            <strong>Fichier:</strong>
-                            {% if livre.fichierUrl %}
-                                <a href="{{ asset('uploads/files/' ~ livre.fichierUrl) }}" target="_blank" class="btn btn-primary">Télécharger le fichier</a>
-                            {% else %}
-                                <span>Aucun fichier disponible.</span>
+                            <!-- Accéder Quiz Button (Only show if quiz has 10 questions) -->
+                            {% if livre.quiz and livre.quiz.questions|length == 10 %}
+                                <a href="{{ path('app_quiz_show', {'id': livre.quiz.id}) }}" class="btn-action">Accéder au Quiz</a>
                             {% endif %}
-                        </div>
-
-                        <div class="product-info">
-                            <strong>Genre:</strong> <span>{{ livre.genre }}</span>
-                        </div>
-
-                        <!-- Quiz Section -->
-                        <div class="product-info">
-                            <strong>Quiz:</strong>
-                            {% if quiz %}
-                                <p>
-                                    <a href="{{ path('app_quiz_show', {'id': quiz.id}) }}" class="btn btn-quiz">
-                                        Go to Quiz
-                                    </a>
-                                </p>
-                            {% else %}
-                                <p>No quiz associated with this book.</p>
-                            {% endif %}
-                        </div>
-
-                        <!-- Actions -->
-                        <div class="product-actions mt-5">
-                            <a href="{{ path('app_livre_index') }}" class="btn btn-back">Retour à la liste</a>
-                            <a href="{{ path('app_livre_edit', {'id': livre.id}) }}" class="btn btn-edit">Modifier</a>
-                            {{ include('livre/_delete_form.html.twig') }}
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
+    
+
+        <div class="text-center mt-4">
+            <a href="{{ path('app_livre_index') }}" class="back-btn">Retour</a>
+        </div>
     </main>
-
-
 {% endblock %}
 
 {% block stylesheets %}
     <style>
+        /* Styles généraux de la page */
         body {
             background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Montserrat', sans-serif;
             color: #333;
             margin: 0;
             padding: 0;
+        }
+
+        .details-box {
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+        }
+
+        .back-btn {
+            background-color: var(--primary-color);
+            border: 0;
+            border-radius: var(--border-radius-large) !important;
+            color: var(--white-color);
+            max-width: 150px;
+            padding: 10px 20px;
+            text-align: center;
+            display: inline-block;
+            text-decoration: none;
+            margin: 20px auto;
         }
 
         .site-header {
@@ -127,50 +130,77 @@
             height: auto;
         }
 
-        .product-info {
-            margin-bottom: 20px;
-            font-size: 1.1rem;
-            color: #555;
-            line-height: 1.6;
+        /* Styles du formulaire */
+        .custom-form {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            max-width: 800px;
+            margin: 40px auto;
         }
 
-        .product-info strong {
-            font-weight: 600;
-            color: #34495e;
+        .custom-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
-        .product-info a {
-            color: #3498db;
-            text-decoration: none;
-            transition: color 0.3s ease;
+        .book-details-section {
+            padding: 40px 0;
         }
 
-        .product-info a:hover {
-            color: #2980b9;
-        }
-
-        .product-actions {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            justify-content: center;
-        }
-
-        .btn {
-            padding: 12px 20px;
-            font-size: 1rem;
-            border-radius: 8px;
-            text-decoration: none;
-            display: inline-block;
+        .btn-action, .back-btn {
+            background-color: var(--primary-color);
+            border: 0;
+            border-radius: var(--border-radius-large) !important;
+            color: var(--white-color);
+            width: 250px;  /* Increased width */
+            padding: 12px 24px; /* More padding for a balanced look */
             text-align: center;
+            display: inline-block;
+            text-decoration: none;
+            font-weight: bold;
             transition: background-color 0.3s ease, transform 0.3s ease;
-            border: none;
-            cursor: pointer;
+            margin: 10px auto;
+        }
+
+        .btn-action:hover, .back-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .book-details-box {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .book-details-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .book-details-box p {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .text-muted {
+            color: #777;
         }
 
         .btn-back {
             background-color: #27ae60;
             color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         .btn-back:hover {
@@ -178,43 +208,54 @@
             transform: translateY(-2px);
         }
 
-        .btn-edit {
-            background-color: #3498db;
+        .btn-quiz {
+            background-color: #f39c12;
             color: white;
-        }
-
-        .btn-edit:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-        }
-
-        .btn-delete {
-            background-color: #e74c3c;
-            color: white;
-        }
-
-        .btn-delete:hover {
-            background-color: #c0392b;
-            transform: translateY(-2px);
-        }
-
-        .delete-form {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .delete-form button {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
+            border-radius: 8px;
             padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
-        .delete-form button:hover {
-            background-color: #c0392b;
+        .btn-quiz:hover {
+            background-color: #e67e22;
+            transform: translateY(-2px);
+        }
+
+        /* Styles pour les messages d'erreur */
+        .error-message {
+            color: #dc3545; /* Rouge pour les erreurs */
+            font-size: 0.875rem; /* Taille de police plus petite */
+            margin-top: 0.25rem; /* Espace au-dessus du message */
+            display: none; /* Masqué par défaut */
+        }
+
+        .is-invalid {
+            border-color: #dc3545 !important; /* Bordure rouge pour les champs invalides */
+        }
+
+        /* Ajustements pour les écrans mobiles */
+        @media (max-width: 768px) {
+            .custom-form {
+                padding: 20px;
+            }
+
+            .form-floating .form-control {
+                padding: 10px;
+            }
+
+            button.btn {
+                padding: 10px 20px;
+            }
         }
     </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        // Function to show a popup alert when the quiz has 10 questions
+        function showMaxQuestionsAlert() {
+            alert("Vous ne pouvez pas ajouter plus de 10 questions à ce quiz.");
+        }
+    </script>
 {% endblock %}

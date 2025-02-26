@@ -16,7 +16,6 @@
                 <td>{{ quiz.question }}</td>
             </tr>
            <tr>
-    <th>Options</th>
     <td>
         <ul>
             {% for option in quiz.options %}
@@ -35,7 +34,6 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_quiz_index') }}">back to list</a>
 
     <a href="{{ path('app_quiz_edit', {'id': quiz.id}) }}">edit</a>
 
