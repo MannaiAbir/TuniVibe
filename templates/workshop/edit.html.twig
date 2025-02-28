@@ -67,6 +67,10 @@
 
               document.querySelectorAll('.error-message').forEach(el => el.innerHTML = '');
 
+              
+             if (!/^[a-zA-Z\s]+$/.test(titre.value)) {
+                errors.push({ field: 'titre', message: "Le titre ne peut contenir que des lettres et des espaces." });
+            }
               if (titre.value.length < 5) {
                   errors.push({ field: 'titre', message: "Le titre doit contenir au moins 5 caractères." });
               }

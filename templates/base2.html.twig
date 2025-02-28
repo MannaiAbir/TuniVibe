@@ -67,13 +67,13 @@ https://templatemo.com/tm-590-topic-listing
                         <a class="nav-link click-scroll" href="{{ path('app_acceuil') }}">Acceuil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link click-scroll" href="#">Workshops</a>
+                        <a class="nav-link click-scroll" href="{{ path('atelier_index') }}">Workshops</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link click-scroll" href="#">Événements</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link click-scroll" href="{{ path('gestionhebergement_index') }}">Hébergements</a>
+                        <a class="nav-link click-scroll" href="#">Hébergements</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link click-scroll" href="#">Vlogs</a>
@@ -107,13 +107,13 @@ https://templatemo.com/tm-590-topic-listing
                         </li>
                         {% if is_granted('ROLE_EDITOR') %}
                             <li class="nav-item">
-                                <a href="#" class="nav-link">Mes Workshops</a>
+                                <a href="{{ path('workshop_index') }}" class="nav-link">Mes Workshops</a>
                             </li>
                             <li class="nav-item">
                                 <a href="#" class="nav-link">Mes Événements</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ path('hebergement_index') }}" class="nav-link">Mes Hébergements</a>
+                                <a href="#" class="nav-link">Mes Hébergements</a>
                             </li>
                         {% endif %}
                         <li class="nav-item">

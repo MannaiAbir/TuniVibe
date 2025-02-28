@@ -1,0 +1,57 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+    <div class="container" style="max-width: 1000px;">
+        <div class="row">
+            {% for workshop in workshops %}
+                <div class="col-12 mb-4">
+                    <div class="card shadow-lg border-2 rounded-lg p-3">
+                        <!-- Conteneur global avec deux sous-conteneurs -->
+                        <div class="row">
+                            <!-- Conteneur pour l'image (gauche) -->
+                            <div class="col-md-6">
+                                <div class="image-container">
+                                    <a">
+                                        <img src="{{ asset('uploads/images/' ~ workshop.image) }}" 
+                                             class="img-fluid rounded" 
+                                             alt="{{ workshop.titre }}"
+                                             style="width: 100%; height: 250px; object-fit: cover;">
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- Conteneur pour les informations (droite) -->
+                            <div class="col-md-6">
+                                <div class="info-container">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="user-placeholder rounded-circle bg-secondary d-flex align-items-center justify-content-center" 
+                                             style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px;">
+                                           <i class="bi bi-person text-white" style="font-size: 25px;"></i>
+                                       </div>
+                                       <p class="card-text mb-0"><strong>Créé par :</strong> {{ workshop.user.username }}</p>
+                                    </div>
+                                    <h5 class="card-title font-weight-bold">{{ workshop.titre }}</h5>
+                                    <p class="card-text"><strong>Catégorie :</strong> <span class="text-muted">{{ workshop.categorie.nom }}</span></p>
+                                    <p><strong>Date de début :</strong> {{ workshop.dateDebut|date('d-m-Y') }}</p>
+                                    <p><strong>Date de fin :</strong> {{ workshop.dateFin|date('d-m-Y') }}</p>
+                                    <p><strong>Description :</strong> {{ workshop.description }}</p>
+
+                                    <!-- Bouton Supprimer -->
+                                    <form action="{{ path('adminatelier_delete', {'id': workshop.id}) }}" method="post" style="display:inline;">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ workshop.id) }}">
+                                        <button type="submit" class="btn btn-danger mt-2" onclick="return confirm('Voulez-vous vraiment supprimer ce workshop ?');">
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- End Workshop Card -->
+            {% else %}
+                <div class="col-12">
+                    <p class="text-center">Aucun workshop trouvé.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

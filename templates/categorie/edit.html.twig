@@ -5,13 +5,66 @@
         <h2>Modifier la Catégorie</h2>
 
         {{ form_start(form) }}
+        
             <div class="mb-3">
                 {{ form_label(form.nom) }}
                 {{ form_widget(form.nom, { 'attr': {'class': 'form-control'} }) }}
-                {{ form_errors(form.nom) }}
+                {% if form.nom.vars.errors|length > 0 %}
+                    {% for error in form.nom.vars.errors %}
+                        <div class="text-danger mt-1">
+                            {{ error.message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
+
+
             <a href="{{ path('categorie_index') }}" class="btn btn-secondary">Retour à la liste</a>
             <button type="submit" class="btn btn-primary">Modifier</button>
         {{ form_end(form) }}
     </div>
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            let errors = [];
+
+            const titre = document.querySelector('#categorie_titre');
+
+
+            // Effacer les erreurs affichées
+            const errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach(function(element) {
+                element.innerHTML = '';
+            });
+
+
+
+            // Validation des champs
+             if (!/^[a-zA-Z\s]+$/.test(titre.value)) {
+                errors.push({ field: 'titre', message: "Le titre ne peut contenir que des lettres et des espaces." });
+            }
+             if  (titre.value.length < 5) {
+                errors.push({ field: 'titre', message: "Le titre doit contenir au moins 5 caractères." });
+            }
+
+
+
+
+
+            // Si des erreurs existent, les afficher devant les champs
+            if (errors.length > 0) {
+                event.preventDefault(); // Bloquer la soumission du formulaire
+                errors.forEach(function(error) {
+                    const errorContainer = document.querySelector(`#categorie_${error.field}`).parentNode.querySelector('.error-message');
+                    if (errorContainer) {
+                        errorContainer.innerHTML = error.message;
+                    }
+                });
+            }
+        });
+    });
+  </script>
 {% endblock %}

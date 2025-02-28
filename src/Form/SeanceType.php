@@ -30,12 +30,16 @@ class SeanceType extends AbstractType
         ->add('titre', TextType::class, [
             'label' => 'Titre',
             'constraints' => [
+                new Assert\NotBlank([
+                    'message' => 'Ce champ ne doit pas être vide.',
+                ]),
                 new Length([
                     'min' => 5,
                     'minMessage' => 'Le titre doit contenir au moins {{ limit }} caractères.',
                 ]),
             ],
         ])
+
             ->add('date', DateType::class, [
                 'widget' => 'single_text',
                 'constraints' => [

@@ -24,4 +24,50 @@
         {{ form_end(form) }}
 
     </div>
-{% endblock %}
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            let errors = [];
+
+            const titre = document.querySelector('#categorie_titre');
+
+
+            // Effacer les erreurs affichées
+            const errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach(function(element) {
+                element.innerHTML = '';
+            });
+
+
+
+            // Validation des champs
+             if (!/^[a-zA-Z\s]+$/.test(titre.value)) {
+                errors.push({ field: 'titre', message: "Le titre ne peut contenir que des lettres et des espaces." });
+            }
+             if  (titre.value.length < 5) {
+                errors.push({ field: 'titre', message: "Le titre doit contenir au moins 5 caractères." });
+            }
+
+
+
+
+
+            // Si des erreurs existent, les afficher devant les champs
+            if (errors.length > 0) {
+                event.preventDefault(); // Bloquer la soumission du formulaire
+                errors.forEach(function(error) {
+                    const errorContainer = document.querySelector(`#categorie_${error.field}`).parentNode.querySelector('.error-message');
+                    if (errorContainer) {
+                        errorContainer.innerHTML = error.message;
+                    }
+                });
+            }
+        });
+    });
+  </script>
+
+  {% endblock %}
+  

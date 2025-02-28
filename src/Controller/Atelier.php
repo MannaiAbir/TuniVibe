@@ -19,6 +19,16 @@ class Atelier extends AbstractController
     #[Route('/', name: 'atelier_index', methods: ['GET'])]
     public function index(WorkshopRepository $workshopRepository): Response
     {
+
+        $user = $this->getUser(); // Récupère l'utilisateur connecté
+
+        // Exclure les workshops de l'utilisateur connecté
+        $workshops = $workshopRepository->createQueryBuilder('w')
+            ->where('w.user != :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+            
         return $this->render('atelier/index.html.twig', [
             'workshops' => $workshopRepository->findAll(),
         ]);
@@ -33,5 +43,10 @@ class Atelier extends AbstractController
             'workshop' => $workshop,
         ]);
     }
+
+
+
+    
+ 
 }
 

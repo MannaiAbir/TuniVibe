@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+
+    {% block header %}
+        <a href="{{ path('workshop_index') }}" class="btn btn-secondary mt-3">Retour</a>
+        <h2 class="text-white">Liste des inscriptions de : {{ workshop.titre }}</h2>
+    {% endblock %}
+
+    
+
+{% block body %}
+<div class="container mt-4">
+   
+
+    {% if inscriptions is empty %}
+        <p>Aucune demande d'inscription pour le moment.</p>
+    {% else %}
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>Utilisateur</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inscription in inscriptions %}
+                    <tr>
+                        <td>{{ inscription.user.username }}</td>
+                        <td>
+                            {% if inscription.statut == 'en attente' %}
+                                <span class="badge bg-warning "  style="width: 120px; height: 40px; ">En attente</span>
+                            {% elseif inscription.statut == 'accepté' %}
+                                <span class="badge bg-success" style="width: 120px; height: 40px; ">Accepté</span>
+                            {% else %}
+                                <span class="badge bg-danger" style="width: 120px; height: 40px; ">Refusé</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if inscription.statut == 'en attente' %}
+                                <a href="{{ path('inscription_statut', {'id': inscription.id, 'statut': 'accepté'}) }}" class="btn btn-success btn-sm" style="width: 120px; height: 40px; ">Accepter</a>
+                                <a href="{{ path('inscription_statut', {'id': inscription.id, 'statut': 'refusé'}) }}" class="btn btn-danger btn-sm" style="width: 120px; height: 40px;">Refuser</a>
+
+                            {% else %}
+                                <span class="text-muted">Aucune action possible</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+
+</div>
+{% endblock %}

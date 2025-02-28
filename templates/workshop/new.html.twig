@@ -91,17 +91,25 @@
             });
 
             // Validation des champs
-            if (titre.value.length < 5) {
+             if (!/^[a-zA-Z\s]+$/.test(titre.value)) {
+                errors.push({ field: 'titre', message: "Le titre ne peut contenir que des lettres et des espaces." });
+            }
+             if  (titre.value.length < 5) {
                 errors.push({ field: 'titre', message: "Le titre doit contenir au moins 5 caractères." });
             }
+
+
+
 
             if (description.value.length < 10) {
                 errors.push({ field: 'description', message: "La description doit contenir au moins 10 caractères." });
             }
 
+
             if (dateFin <= dateDebut) {
                 errors.push({ field: 'dateFin', message: "La date de fin doit être postérieure à la date de début." });
             }
+
 
             // Si des erreurs existent, les afficher devant les champs
             if (errors.length > 0) {

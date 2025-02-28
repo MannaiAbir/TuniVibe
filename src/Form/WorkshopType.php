@@ -15,8 +15,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
-use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class WorkshopType extends AbstractType
@@ -24,24 +25,35 @@ class WorkshopType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('titre', TextType::class, [
-                'label' => 'Titre',
-                'constraints' => [
-                    new Length([
-                        'min' => 5,
-                        'minMessage' => 'Le titre doit contenir au moins {{ limit }} caractères.',
-                    ]),
-                ],
-            ])
-            ->add('description', TextareaType::class, [
-                'label' => 'Description',
-                'constraints' => [
-                    new Length([
-                        'min' => 10,
-                        'minMessage' => 'La description doit contenir au moins {{ limit }} caractères.',
-                    ]),
-                ],
-            ])
+        ->add('titre', TextType::class, [
+            'label' => 'Titre',
+            'constraints' => [
+                new NotBlank([
+                    'message' => 'Ce champ ne doit pas être vide.',
+                ]),
+                new Length([
+                    'min' => 5,
+                    'minMessage' => 'Le titre doit contenir au moins {{ limit }} caractères.',
+                ]),
+                new Regex([
+                    'pattern' => '/^[a-zA-Z\s]+$/',
+                    'message' => 'Le titre ne peut contenir que des lettres et des espaces.',
+                ]),
+            ],
+        ])
+        
+        ->add('description', TextareaType::class, [
+            'label' => 'Description',
+            'constraints' => [
+                new NotBlank([
+                    'message' => 'Ce champ ne doit pas être vide.',
+                ]),
+                new Length([
+                    'min' => 10,
+                    'minMessage' => 'La description doit contenir au moins {{ limit }} caractères.',
+                ]),
+            ],
+        ])
             ->add('dateDebut', DateType::class, [
                 'widget' => 'single_text',
                 'html5' => true, // Active le rendu HTML5
@@ -50,6 +62,9 @@ class WorkshopType extends AbstractType
                     'min' => (new \DateTime())->format('Y-m-d'), // Bloque les dates antérieures à aujourd'hui
                 ],
                 'constraints' => [
+                    new NotBlank([
+                        'message' => 'Ce champ ne doit pas être vide.',
+                    ]),
                     new GreaterThanOrEqual([
                         'value' => 'today',
                         'message' => 'La date de début doit être aujourd\'hui ou une date future.',
@@ -64,6 +79,9 @@ class WorkshopType extends AbstractType
                     'min' => (new \DateTime('tomorrow'))->format('Y-m-d'), // Initialise avec demain
                 ],
                 'constraints' => [
+                    new NotBlank([
+                        'message' => 'Ce champ ne doit pas être vide.',
+                    ]),
                     new Callback([$this, 'validateDateFin']),
                 ],
             ])

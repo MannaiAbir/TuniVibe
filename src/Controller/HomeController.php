@@ -26,4 +26,12 @@ final class HomeController extends AbstractController
     }
 
 
+    #[Route('/adminpage', name: 'app_adminpage')]
+    public function adminpage(): Response
+    {
+        return $this->render('home/adminpage.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
 }

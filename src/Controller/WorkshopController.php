@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Workshop;
 use App\Entity\User;
+use App\Entity\Inscription;
 use App\Form\WorkshopType;
 use App\Repository\WorkshopRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -122,6 +123,7 @@ class WorkshopController extends AbstractController
         return $this->redirectToRoute('workshop_index');
     }
     
+
 
 
 

@@ -176,4 +176,48 @@ public function removeSeance(Seance $seance): static
 
 
 
+
+
+
+
+
+
+
+
+#[ORM\OneToMany(mappedBy: 'workshop', targetEntity: Inscription::class, cascade: ['persist', 'remove'])]
+    private Collection $inscriptions;
+
+
+
+    /**
+     * @return Collection<int, Inscription>
+     */
+    public function getInscriptions(): Collection
+    {
+        return $this->inscriptions;
+    }
+
+    public function addInscription(Inscription $inscription): self
+    {
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions->add($inscription);
+            $inscription->setWorkshop($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInscription(Inscription $inscription): self
+    {
+        if ($this->inscriptions->removeElement($inscription)) {
+            if ($inscription->getWorkshop() === $this) {
+                $inscription->setWorkshop(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+
 }

@@ -1,0 +1,12 @@
+
+
+  {% block body %}
+    <a href="javascript:history.back()" class="btn btn-secondary mt-3">Retour</a>
+
+
+
+    <iframe src="https://{{template_subdomain}}.app.100ms.live/meeting/{$room_id}?name={{username}}&auth_token={{token}}" allow="camera; microphone; fullscreen; autoplay; display-capture; clipboard-write;" style="width: 100vw; height: 100vh; border: none; margin: 0; padding: 0; overflow: hidden;" 
+        scrolling="no">
+        Your browser does not support iframes.
+    </iframe>
+  {% endblock %}

@@ -31,6 +31,9 @@ class Seance
     #[ORM\ManyToOne]
     private ?Workshop $workshop = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $room_id = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -92,6 +95,18 @@ class Seance
     public function setWorkshop(?Workshop $workshop): static
     {
         $this->workshop = $workshop;
+
+        return $this;
+    }
+
+    public function getRoomId(): ?string
+    {
+        return $this->room_id;
+    }
+
+    public function setRoomId(string $room_id): static
+    {
+        $this->room_id = $room_id;
 
         return $this;
     }

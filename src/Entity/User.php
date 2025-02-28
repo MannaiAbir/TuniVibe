@@ -6,6 +6,8 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -137,14 +139,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
 
-
-
-
-
-
-
-
-
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Workshop::class, orphanRemoval: true)]
     private Collection $workshops;
     
@@ -176,5 +170,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
         return $this;
     }
+
+
+
+
+
+
+
+
+
+
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Inscription::class)]
+private Collection $inscriptions;
+
+
+
+
+
 
 }
