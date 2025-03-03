@@ -5,6 +5,9 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\UserRepository;
+use App\Entity\User;
+use App\Form\UserType;
 
 final class HomeController extends AbstractController
 {
@@ -27,10 +30,17 @@ final class HomeController extends AbstractController
 
 
     #[Route('/adminpage', name: 'app_adminpage')]
-    public function adminpage(): Response
+    public function adminpage(UserRepository $userRepository): Response
     {
+                // Fetch all users
+                $users = $userRepository->findAll();
+
+              
+                  
+
         return $this->render('home/adminpage.html.twig', [
             'controller_name' => 'HomeController',
+            'users' => $users,
         ]);
     }
 

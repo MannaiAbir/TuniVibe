@@ -35,7 +35,10 @@ class UserController extends AbstractController
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         // Create the form for editing the user
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user, [
+            'allow_password' => true // Cache le champ mot de passe lors de l'édition
+        ]);
+        
         $form->handleRequest($request);
 
         // Handle form submission
