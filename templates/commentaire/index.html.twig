@@ -1,0 +1,131 @@
+{% extends 'base4.html.twig' %}
+
+{% block title %}Liste des commentaires{% endblock %}
+
+{% block body %}
+    <h1 class="text-center mb-4">Liste des commentaires</h1>
+
+    <a href="{{ path('app_commentaire_new') }}" class="btn btn-primary mb-3">Ajouter un commentaire</a>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>ContentC</th>
+                    <th>PostedAt</th>
+                    <th>AuthorC</th>
+                    <th>Actions</th>
+                    <th>Article</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for commentaire in commentaires %}
+                    <tr>
+                        <td>{{ commentaire.id }}</td>
+                        <td>{{ commentaire.contentC }}</td>
+                        <td>{{ commentaire.postedAt ? commentaire.postedAt|date('d/m/Y H:i') : '' }}</td>
+                        <td>{{ commentaire.authorC }}</td>
+                        <td>
+                            <a href="{{ path('app_commentaire_show', {'id': commentaire.id}) }}" class="btn btn-info btn-sm">Voir</a>
+                            <a href="{{ path('app_commentaire_edit', {'id': commentaire.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+
+                            <form method="post" action="{{ path('app_commentaire_delete', {'id': commentaire.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
+                                <button class="btn btn-danger btn-sm" type="submit">Supprimer</button>
+                            </form>
+                        </td>
+                        <td>{{ commentaire.article.title }}</td>
+
+
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">Aucun commentaire trouvé</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <style>
+        /* CSS amélioré pour personnaliser l'apparence de la table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            text-align: center;
+            padding: 12px;
+            vertical-align: middle;
+        }
+
+        table th {
+            background-color: #4CAF50; /* Couleur plus moderne */
+            color: rgb(198, 79, 42);
+            font-weight: bold;
+        }
+
+        table td {
+            background-color: #f9f9f9;
+        }
+
+        /* Style pour les images avec bordure arrondie */
+        img.img-thumbnail {
+            border-radius: 5px;
+            width: 100px;
+            height: auto;
+        }
+
+        /* Style pour les boutons */
+        .btn {
+            margin: 5px;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+        }
+
+        /* Personnalisation des lignes de la table */
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        /* Message quand il n'y a pas de commentaire */
+        .text-center {
+            font-size: 16px;
+            font-weight: bold;
+            color: #888;
+        }
+
+        /* Mise en page responsive */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        /* Amélioration de l'affichage des actions */
+        td a {
+            text-decoration: none;
+        }
+
+        td a:hover {
+            opacity: 0.8;
+        }
+
+        /* Animation pour les boutons */
+        .btn {
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+
+{% endblock %}

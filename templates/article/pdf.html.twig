@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* CSS simple et compatible Dompdf */
+        body { font-family: Arial; font-size: 12pt }
+        img { max-width: 100%; height: auto }
+        .header { margin-bottom: 20px }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>{{ article.title }}</h1>
+        <p>Date : {{ article.createdAt|date('d/m/Y') }}</p>
+    </div>
+
+    <div class="content">
+        {{ article.content|raw }}
+    </div>
+</body>
+</html>

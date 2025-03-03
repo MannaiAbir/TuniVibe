@@ -1,0 +1,299 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Article{% endblock %}
+
+{% block body %}
+    <div class="container my-4">
+        <h1 class="text-center text-primary">Détails de l'Article</h1>
+
+        <table class="table table-bordered table-striped">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ article.id }}</td>
+                </tr>
+                <tr>
+                    <th>Titre</th>
+                    <td>{{ article.title }}</td>
+                </tr>
+                <tr>
+                    <th>Contenu</th>
+                    <td>{{ article.content }}</td>
+                </tr>
+                <tr>
+                    <th>Image</th>
+                    <td><img src="{{ asset(article.image) }}" alt="{{ article.title }}" style="max-width: 150px; height: auto;"></td>
+                </tr>
+                <tr>
+                    <th>Créé le</th>
+                    <td>{{ article.createdAt ? article.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Mis à jour le</th>
+                    <td>{{ article.updatedAt ? article.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Auteur</th>
+                    <td>{{ article.author }}</td>
+                </tr>
+                <tr>
+                    <th>Catégorie</th>
+                    <td>{{ article.category }}</td>
+                </tr>
+                <tr>
+                    <th>Statut</th>
+                    <td>{{ article.status }}</td>
+                </tr>
+                <tr>
+    <th>Résumé</th>
+    <td id="article-summary">
+        {% if article.summary %}
+            {{ article.summary }}
+        {% else %}
+            <em>Aucun résumé disponible</em>
+        {% endif %}
+    </td>
+</tr>
+
+            </tbody>
+        </table>
+
+<!-- Bouton pour générer le résumé -->
+<div class="text-center">
+    <button id="generate-summary" class="btn btn-warning">📝 Générer un résumé</button>
+</div>
+
+
+
+        <div class="text-center">
+            <a href="{{ path('app_article_index') }}" class="btn btn-primary">Retour à la liste</a>
+        </div>
+
+       <!-- Bouton pour télécharger le PDF -->
+<div class="text-center">
+    <a href="{{ path('app_article_pdf', {id: article.id}) }}" class="btn btn-pdf">📄 Télécharger PDF</a>
+</div>
+
+<style>
+    /* Style de base pour la page d'article */
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Table design */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table th, table td {
+        padding: 15px;
+        text-align: left;
+    }
+
+    table th {
+        background-color: #007bff;
+        color: white;
+        width: 30%;
+    }
+
+    table td {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+    }
+
+    /* Images dans la table */
+    img {
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Boutons de navigation */
+    .btn {
+        margin: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        border-radius: 8px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
+
+    .btn-pdf {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-pdf:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+        opacity: 0.9;
+    }
+
+    .btn-primary:hover, .btn-warning:hover {
+        opacity: 0.8;
+    }
+
+    /* Espacement entre les éléments */
+    .mt-3 {
+        margin-top: 20px;
+    }
+
+    #generate-summary {
+        padding: 12px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+        background: linear-gradient(135deg, #ffc107, #ff9800);
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+    }
+
+    #generate-summary:hover {
+        opacity: 0.8;
+    }
+        /* Style de base pour la page d'article */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Table design */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #007bff;
+            color: black;
+            width: 30%;
+        }
+
+        table td {
+            background-color:rgb(240, 238, 238);
+            border: 1px solid #ddd;
+        }
+
+        /* Images dans la table */
+        img {
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Boutons de navigation */
+        .btn {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        .btn-primary:hover, .btn-warning:hover {
+            opacity: 0.8;
+        }
+
+        /* Espacement entre les éléments */
+        .mt-3 {
+            margin-top: 20px;
+        }
+
+
+
+        #generate-summary {
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #ffc107, #ff9800);
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+#generate-summary:hover {
+    opacity: 0.8;
+}
+
+    </style>
+
+
+
+
+
+<script>
+document.getElementById("generate-summary").addEventListener("click", async () => {
+    const button = document.getElementById("generate-summary");
+    try {
+        button.disabled = true;
+        button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Génération...';
+
+        // Effectuer la requête GET pour récupérer le résumé
+        const response = await fetch("{{ path('article_summary', {id: article.id}) }}", {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+
+        // Traiter la réponse JSON
+        const data = await response.json(); // Nous attendons une réponse JSON ici
+
+        // Vérifier si la réponse contient une erreur
+        if (data.error) {
+            throw new Error(data.error);
+        }
+
+        // Afficher le résumé dans l'élément HTML avec l'id "article-summary"
+        document.getElementById('article-summary').textContent = data.summary;
+
+        // Mettre à jour le bouton pour indiquer que le résumé a été généré
+        button.innerHTML = '✅ Résumé généré';
+
+    } catch (error) {
+        console.error('Erreur:', error);
+        button.innerHTML = '⚠️ Échec - Réessayer';
+        alert(error.message);
+    } finally {
+        setTimeout(() => {
+            button.disabled = false;
+            button.innerHTML = '📝 Générer un résumé';
+        }, 5000);
+    }
+});
+
+</script>
+
+{% endblock %}
