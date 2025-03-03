@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\UtilisateurRepository;
+use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-class Utilisateur
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+class User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -31,13 +31,13 @@ class Utilisateur
     /**
      * @var Collection<int, Telechargement>
      */
-    #[ORM\OneToMany(targetEntity: Telechargement::class, mappedBy: 'utilisateur')]
+    #[ORM\OneToMany(targetEntity: Telechargement::class, mappedBy: 'user')]
     private Collection $telechargements;
 
     /**
      * @var Collection<int, TentativeQuiz>
      */
-    #[ORM\OneToMany(targetEntity: TentativeQuiz::class, mappedBy: 'utilisateur')]
+    #[ORM\OneToMany(targetEntity: TentativeQuiz::class, mappedBy: 'user')]
     private Collection $tentativeQuizzes;
 
     public function __construct()
@@ -111,7 +111,7 @@ class Utilisateur
     {
         if (!$this->telechargements->contains($telechargement)) {
             $this->telechargements->add($telechargement);
-            $telechargement->setUtilisateur($this);
+            $telechargement->setUser($this);
         }
 
         return $this;
@@ -121,8 +121,8 @@ class Utilisateur
     {
         if ($this->telechargements->removeElement($telechargement)) {
             // set the owning side to null (unless already changed)
-            if ($telechargement->getUtilisateur() === $this) {
-                $telechargement->setUtilisateur(null);
+            if ($telechargement->getUser() === $this) {
+                $telechargement->setUser(null);
             }
         }
 
@@ -141,7 +141,7 @@ class Utilisateur
     {
         if (!$this->tentativeQuizzes->contains($tentativeQuiz)) {
             $this->tentativeQuizzes->add($tentativeQuiz);
-            $tentativeQuiz->setUtilisateur($this);
+            $tentativeQuiz->setUser($this);
         }
 
         return $this;
@@ -151,8 +151,8 @@ class Utilisateur
     {
         if ($this->tentativeQuizzes->removeElement($tentativeQuiz)) {
             // set the owning side to null (unless already changed)
-            if ($tentativeQuiz->getUtilisateur() === $this) {
-                $tentativeQuiz->setUtilisateur(null);
+            if ($tentativeQuiz->getUser() === $this) {
+                $tentativeQuiz->setUser(null);
             }
         }
 

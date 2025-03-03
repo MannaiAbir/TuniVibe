@@ -21,7 +21,7 @@ class TentativeQuiz
     private ?\DateTimeInterface $dateTentative = null;
 
     #[ORM\ManyToOne(inversedBy: 'tentativeQuizzes')]
-    private ?Utilisateur $utilisateur = null;
+    private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'tentativeQuizzes')]
     private ?Livre $livre = null;
@@ -58,14 +58,14 @@ class TentativeQuiz
         return $this;
     }
 
-    public function getUtilisateur(): ?Utilisateur
+    public function getUser(): ?User
     {
-        return $this->utilisateur;
+        return $this->user;
     }
 
-    public function setUtilisateur(?Utilisateur $utilisateur): static
+    public function setUser(?User $user): static
     {
-        $this->utilisateur = $utilisateur;
+        $this->user = $user;
 
         return $this;
     }

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Service\NYTReviewService;
 use App\Entity\Livre;
 use App\Form\LivreType;
 use App\Entity\Quiz;
@@ -101,16 +101,19 @@ public function index(LivreRepository $livreRepository): Response
     }
 
     #[Route('/{id}', name: 'app_livre_show', methods: ['GET'])]
-    public function show(Livre $livre, EntityManagerInterface $entityManager): Response
-    {
-        // Fetch the quiz associated with the Livre
-        $quiz = $livre->getQuiz(); // Assuming you have a relationship set up on Livre for Quiz
+    public function show(Livre $livre, EntityManagerInterface $entityManager, NYTReviewService $nytReviewService): Response
+{
+    // Fetch reviews from the NY Times API using the book title or another identifier
+    $reviews = $nytReviewService->getReviews($livre->getTitre()); // Assuming getTitle() returns the book title
     
-        return $this->render('livre/show.html.twig', [
-            'livre' => $livre,
-            'quiz' => $quiz, // Pass the associated quiz to the template
-        ]);
-    }
+    return $this->render('livre/show.html.twig', [
+        'livre' => $livre,
+        'quiz' => $livre->getQuiz(), // Pass the associated quiz to the template
+        'reviews' => $reviews['results'] ?? [], // Handle cases where no reviews are found
+    ]);
+}
+
+    
     
 
     #[Route('/{id}/edit', name: 'app_livre_edit', methods: ['GET', 'POST'])]

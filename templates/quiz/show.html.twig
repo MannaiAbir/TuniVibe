@@ -95,6 +95,59 @@
             border-radius: 10px;
             margin-top: 20px;
         }
+
+        /* Timer Styling */
+        #timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #e74c3c;
+        }
+
+        /* Warning Message Styling */
+        #warning-message {
+            display: none;
+            font-size: 1.2rem;
+            color: #e74c3c;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Gaze Tracking Styling */
+        #gaze-tracking {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        #gaze-direction, #is-blinking {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        /* Webcam Feed Styling */
+        #webcam-feed {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+            height: 150px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        #webcam-feed img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 {% endblock %}
 
@@ -122,14 +175,32 @@
         <section class="section-padding section-bg">
             <div class="container">
                 <div class="row">
-
                     <div class="col-lg-8 col-12 m-auto">
+                        <!-- Timer Display -->
+                        <div id="timer">Time remaining: 10:00</div>
+
+                        <!-- Gaze Tracking Display -->
+                        <div id="gaze-tracking">
+                            <div id="gaze-direction">Gaze Direction: Unknown</div>
+                            <div id="is-blinking">Is Blinking: No</div>
+                        </div>
+
+                        <button id="play-all-audio" class="btn btn-secondary mb-3">
+                            <i class="fas fa-volume-up"></i> Listen to All Questions
+                        </button>
+                        <button id="stop-audio" class="btn btn-danger mb-3">
+                            <i class="fas fa-stop"></i> Stop
+                        </button>
+
+                        <!-- Warning Message -->
+                        <div id="warning-message">Warning: You _are not allowed to switch tabs or leave this page. Please return to the quiz immediately.</div>
+
                         {% if questions is empty %}
                             <div class="no-questions">
                                 <p>No questions available for this quiz.</p>
                             </div>
                         {% else %}
-                            <form method="post" action="{{ path('app_quiz_submit', {'id': quiz.id}) }}" class="custom-form">
+                            <form id="quiz-form" method="post" action="{{ path('app_quiz_submit', {'id': quiz.id}) }}" class="custom-form">
                                 {% for question in questions %}
                                     <div class="question">
                                         <p>{{ question.question }}</p>
@@ -151,4 +222,222 @@
             </div>
         </section>
     </main>
+
+    <!-- Consent Modal -->
+    <div id="consent-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; padding: 20px; border-radius: 8px; text-align: center;">
+            <p>Do you agree to use your webcam for gaze tracking?</p>
+            <button id="consent-yes" class="btn btn-primary">Yes</button>
+            <button id="consent-no" class="btn btn-danger">No</button>
+        </div>
+    </div>
+
+    <!-- Webcam Feed -->
+    <div id="webcam-feed">
+        <img id="video-frame" src="http://127.0.0.1:5000/video_feed" alt="Webcam Feed">
+    </div>
+
+    <!-- JavaScript for Timer, Auto-Submit, Anti-Cheating, and Gaze Tracking -->
+    <script>
+        // Function to speak text using the Web Speech API
+        function speakText(text, callback) {
+            const utterance = new SpeechSynthesisUtterance(text);
+
+            // Set voice options (optional)
+            const voices = window.speechSynthesis.getVoices();
+            utterance.voice = voices.find(voice => voice.lang === 'en-US'); // Use an English voice
+
+            // Speak the text
+            utterance.onstart = () => {
+                console.log('Speech started:', text);
+                document.getElementById('stop-audio').disabled = false; // Enable the "Stop" button
+            };
+
+            utterance.onend = () => {
+                console.log('Speech ended:', text);
+                if (callback) callback();
+            };
+
+            utterance.onerror = (event) => {
+                console.error('Speech error:', event.error);
+                if (callback) callback();
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Function to read all questions and options
+        function readAllQuestions(questions) {
+            let index = 0;
+
+            function readNextQuestion() {
+                if (index >= questions.length) {
+                    console.log('All questions read.');
+                    document.getElementById('stop-audio').disabled = true; // Disable the "Stop" button
+                    return;
+                }
+
+                const question = questions[index];
+                const questionText = `Question ${index + 1}: ${question.question}`;
+                const optionsText = `Options: ${question.options.join(', ')}`;
+
+                // Read the question
+                speakText(questionText, () => {
+                    // Read the options
+                    speakText(optionsText, () => {
+                        // Move to the next question
+                        index++;
+                        readNextQuestion();
+                    });
+                });
+            }
+
+            // Start reading the first question
+            readNextQuestion();
+        }
+
+        // Event listener for the "Listen to All Questions" button
+        document.getElementById('play-all-audio').addEventListener('click', () => {
+            // Get all questions and their options
+            const questions = [
+                {% for question in questions %}
+                    {
+                        question: "{{ question.question }}",
+                        options: {{ question.options|json_encode|raw }}
+                    },
+                {% endfor %}
+            ];
+
+            // Start reading all questions
+            readAllQuestions(questions);
+        });
+
+        // Event listener for the "Stop" button
+        document.getElementById('stop-audio').addEventListener('click', () => {
+            // Stop the speech
+            window.speechSynthesis.cancel();
+            console.log('Speech stopped.');
+            document.getElementById('stop-audio').disabled = true; // Disable the "Stop" button
+        });
+
+        // Disable the "Stop" button by default
+        document.getElementById('stop-audio').disabled = true;
+
+        // Ensure voices are loaded before allowing speech
+        window.speechSynthesis.onvoiceschanged = () => {
+            console.log('Voices loaded:', window.speechSynthesis.getVoices());
+        };
+
+        // Timer logic
+        const timeLimit = 10 * 60; // 10 minutes in seconds
+        let remainingTime = timeLimit;
+
+        function updateTimer() {
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+            document.getElementById('timer').textContent = `Time remaining: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            if (remainingTime <= 0) {
+                // Time is up, submit the form
+                document.getElementById('quiz-form').submit();
+            } else {
+                remainingTime--;
+            }
+        }
+
+        // Start the timer
+        setInterval(updateTimer, 1000);
+
+        // Anti-Cheating Logic
+        const warningMessage = document.getElementById('warning-message');
+
+        // Detect tab/window switch
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // User switched tabs or minimized the window
+                warningMessage.style.display = 'block';
+                setTimeout(() => {
+                    // Automatically submit the quiz if the user doesn't return
+                    document.getElementById('quiz-form').submit();
+                }, 5000); // 5 seconds grace period
+            } else {
+                // User returned to the quiz
+                warningMessage.style.display = 'none';
+            }
+        });
+
+        // Prevent right-click (optional)
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            alert('Right-click is disabled during the quiz.');
+        });
+
+        // Prevent keyboard shortcuts (optional)
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                e.preventDefault();
+                alert('Keyboard shortcuts are disabled during the quiz.');
+            }
+        });
+
+        // Show the consent modal when the page loads
+        const consentModal = document.getElementById('consent-modal');
+        const webcamFeed = document.getElementById('webcam-feed');
+
+        consentModal.style.display = 'block';
+
+        // Handle consent
+        document.getElementById('consent-yes').addEventListener('click', () => {
+            consentModal.style.display = 'none';
+            webcamFeed.style.display = 'block';
+        });
+
+        document.getElementById('consent-no').addEventListener('click', () => {
+            consentModal.style.display = 'none';
+            alert('Gaze tracking will not be enabled.');
+        });
+
+          function updateGazeDisplay(direction, isBlinking, x, y) {
+            document.getElementById('gaze-direction').textContent = 'Gaze Direction: ' + direction;
+            document.getElementById('is-blinking').textContent = 'Is Blinking: ' + (isBlinking ? 'Yes' : 'No');
+            document.getElementById('gaze-coordinates').textContent = 'Coordinates: (' + x.toFixed(2) + ', ' + y.toFixed(2) + ')';
+        }
+
+        function sendGazeData(gazeDirection, isBlinking, x, y) {
+            const data = {
+                gaze_direction: gazeDirection,
+                is_blinking: isBlinking,
+                x: x,
+                y: y
+            };
+
+            fetch('/api/gaze-tracking', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                updateGazeDisplay(gazeDirection, isBlinking, x, y); // Update the display
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Simulate gaze data every 2 seconds (replace this with real gaze data later)
+        setInterval(() => {
+            const gazeDirections = ['left', 'right', 'center'];
+            const randomDirection = gazeDirections[Math.floor(Math.random() * gazeDirections.length)];
+            const randomBlinking = Math.random() > 0.5; // Random true/false
+            const randomX = Math.random(); // Random value between 0 and 1
+            const randomY = Math.random(); // Random value between 0 and 1
+
+            sendGazeData(randomDirection, randomBlinking, randomX, randomY);
+        }, 2000);
+
+    </script>
 {% endblock %}

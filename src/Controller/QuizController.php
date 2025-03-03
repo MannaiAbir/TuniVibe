@@ -3,11 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Quiz;
+use App\Service\GazeTrackingService;
 use App\Form\QuizType;
 use App\Form\QuestionType;
 use App\Entity\Question;
 use App\Entity\TentativeQuiz;
+use App\Service\TextToSpeechService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse; // Add this line
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,6 +69,16 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
         'form' => $form,
     ]);
 }
+
+#[Route('/{id}/start', name: 'app_quiz_start', methods: ['GET'])]
+public function start(Quiz $quiz, Request $request): Response
+{
+    // Store the start time in the session
+    $request->getSession()->set('quiz_start_time', time());
+
+    return $this->redirectToRoute('app_quiz_show', ['id' => $quiz->getId()]);
+}
+
 #[Route('/setup', name: 'app_quiz_setup')]
 public function setup(Request $request, EntityManagerInterface $entityManager): Response
 {
@@ -132,7 +145,7 @@ public function submit(Quiz $quiz, Request $request, EntityManagerInterface $ent
 
     // Save attempt
     $tentativeQuiz = new TentativeQuiz();
-    $tentativeQuiz->setUtilisateur($this->getUser());
+    $tentativeQuiz->setUser($this->getUser());
     $tentativeQuiz->setLivre($quiz->getLivre());
     $tentativeQuiz->setDateTentative(new \DateTime());
     $tentativeQuiz->setScore($score);
@@ -148,8 +161,11 @@ public function submit(Quiz $quiz, Request $request, EntityManagerInterface $ent
 }
 
 #[Route('/quiz/score/{id}/{score}/{totalQuestions}', name: 'app_quiz_score')]
-public function quizScore(int $id, int $score, int $totalQuestions, EntityManagerInterface $entityManager): Response
+public function quizScore(int $id, int $score, int $totalQuestions, EntityManagerInterface $entityManager, Request $request): Response
 {
+    // Clear the quiz start time from the session
+    $request->getSession()->remove('quiz_start_time');
+
     // Fetch the TentativeQuiz by ID
     $tentativeQuiz = $entityManager->getRepository(TentativeQuiz::class)->find($id);
 
@@ -168,7 +184,7 @@ public function quizScore(int $id, int $score, int $totalQuestions, EntityManage
 
 
 #[Route('/{id}', name: 'app_quiz_show', methods: ['GET'])]
-public function show(Quiz $quiz, EntityManagerInterface $entityManager): Response
+public function show(Quiz $quiz, Request $request, EntityManagerInterface $entityManager): Response
 {
     // Fetch questions related to this quiz
     $questions = $entityManager->getRepository(Question::class)->findBy(['quiz' => $quiz]);
@@ -181,9 +197,15 @@ public function show(Quiz $quiz, EntityManagerInterface $entityManager): Respons
         }
     }
 
+    // Get the start time from the session
+    $startTime = $request->getSession()->get('quiz_start_time', time());
+    $timeLimit = 10 * 60; // 10 minutes in seconds
+
     return $this->render('quiz/show.html.twig', [
         'quiz' => $quiz,
-        'questions' => $questions, // Pass the decoded options to the template
+        'questions' => $questions,
+        'startTime' => $startTime,
+        'timeLimit' => $timeLimit,
     ]);
 }
 
@@ -206,6 +228,7 @@ public function show(Quiz $quiz, EntityManagerInterface $entityManager): Respons
             'form' => $form,
         ]);
     }
+
 
     #[Route('/{id}', name: 'app_quiz_delete', methods: ['POST', 'DELETE'])]
     public function delete(Request $request, Quiz $quiz, EntityManagerInterface $entityManager): Response

@@ -68,12 +68,31 @@
                 </div>
             </div>
         </section>
-
-    
-
         <div class="text-center mt-4">
             <a href="{{ path('app_livre_index') }}" class="back-btn">Retour</a>
         </div>
+<!-- Section des avis -->
+        <section class="reviews-section section-padding">
+            <div class="container">
+                <h3 class="mb-4 text-center">Avis du New York Times</h3>
+{% if reviews is not empty %}
+    <ul class="list-unstyled">
+        {% for review in reviews %}
+            <li class="review-item mb-3">
+                <h4>{{ review.book_title }}</h4> {# Use book_title instead of title #}
+                <p><strong>Auteur :</strong> {{ review.byline }}</p>
+                <p>{{ review.summary }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="text-center">Aucun avis trouvé pour ce livre.</p>
+{% endif %}
+            </div>
+        </section>
+
+        
+        
     </main>
 {% endblock %}
 
@@ -130,123 +149,26 @@
             height: auto;
         }
 
-        /* Styles du formulaire */
-        .custom-form {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            max-width: 800px;
-            margin: 40px auto;
-        }
-
-        .custom-form:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
         .book-details-section {
             padding: 40px 0;
         }
 
-        .btn-action, .back-btn {
-            background-color: var(--primary-color);
-            border: 0;
-            border-radius: var(--border-radius-large) !important;
-            color: var(--white-color);
-            width: 250px;  /* Increased width */
-            padding: 12px 24px; /* More padding for a balanced look */
-            text-align: center;
-            display: inline-block;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            margin: 10px auto;
+        .reviews-section {
+            padding: 40px 0;
+            background-color: #f1f1f1; /* Optional background color for reviews */
         }
 
-        .btn-action:hover, .back-btn:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
+        .review-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        .book-details-box {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .book-details-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .book-details-box p {
-            font-size: 1rem;
-            margin-bottom: 10px;
-            color: #333;
-        }
+        /* Other existing styles... */
 
         .text-muted {
             color: #777;
-        }
-
-        .btn-back {
-            background-color: #27ae60;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .btn-back:hover {
-            background-color: #219653;
-            transform: translateY(-2px);
-        }
-
-        .btn-quiz {
-            background-color: #f39c12;
-            color: white;
-            border-radius: 8px;
-            padding: 10px 20px;
-            text-decoration: none;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .btn-quiz:hover {
-            background-color: #e67e22;
-            transform: translateY(-2px);
-        }
-
-        /* Styles pour les messages d'erreur */
-        .error-message {
-            color: #dc3545; /* Rouge pour les erreurs */
-            font-size: 0.875rem; /* Taille de police plus petite */
-            margin-top: 0.25rem; /* Espace au-dessus du message */
-            display: none; /* Masqué par défaut */
-        }
-
-        .is-invalid {
-            border-color: #dc3545 !important; /* Bordure rouge pour les champs invalides */
-        }
-
-        /* Ajustements pour les écrans mobiles */
-        @media (max-width: 768px) {
-            .custom-form {
-                padding: 20px;
-            }
-
-            .form-floating .form-control {
-                padding: 10px;
-            }
-
-            button.btn {
-                padding: 10px 20px;
-            }
         }
     </style>
 {% endblock %}
