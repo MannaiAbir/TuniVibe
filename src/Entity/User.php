@@ -38,7 +38,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Hebergement::class, orphanRemoval: true)]
     private Collection $hebergements;
     
-   
+    
+  
 
     public function getId(): ?int
     {

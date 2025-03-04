@@ -13,7 +13,7 @@ class Hebergement
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(name: "idhebergement")]
     private ?int $idhebergement = null;
 
     #[ORM\Column(length: 255)]
@@ -37,12 +37,18 @@ class Hebergement
     #[ORM\OneToMany(mappedBy: 'hebergement', targetEntity: Programme::class)]
     private Collection $programmes;
 
+    #[ORM\OneToMany(mappedBy: "hebergement", targetEntity: Reservation::class)]
+    private Collection $reservations;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'hebergements')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->programmes = new ArrayCollection();
+        $this->reservations = new ArrayCollection(); // Initialize the reservations collection
     }
-
-    // Getters et setters...
 
     public function getIdhebergement(): ?int
     {
@@ -71,12 +77,12 @@ class Hebergement
         return $this;
     }
 
-    public function getAdresse(): ?string // Correction de 'getAdress' à 'getAdresse'
+    public function getAdresse(): ?string
     {
         return $this->adresse;
     }
 
-    public function setAdresse(string $adresse): static // Correction de 'setAdress' à 'setAdresse'
+    public function setAdresse(string $adresse): static
     {
         $this->adresse = $adresse;
         return $this;
@@ -119,13 +125,10 @@ class Hebergement
     {
         return $this->programmes;
     }
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'hebergements')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
 
-    public function getId(): ?int
+    public function getReservations(): Collection
     {
-        return $this->id;
+        return $this->reservations;
     }
 
     public function getUser(): ?User
@@ -139,4 +142,33 @@ class Hebergement
         return $this;
     }
 
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations[] = $reservation;
+            $reservation->setHebergement($this);
+        }
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        $this->reservations->removeElement($reservation);
+        return $this;
+    }
+
+    public function addProgramme(Programme $programme): static
+    {
+        if (!$this->programmes->contains($programme)) {
+            $this->programmes[] = $programme;
+            $programme->setHebergement($this);
+        }
+        return $this;
+    }
+
+    public function removeProgramme(Programme $programme): static
+    {
+        $this->programmes->removeElement($programme);
+        return $this;
+    }
 }

@@ -23,6 +23,10 @@ class ProgrammeType extends AbstractType
                     new Assert\NotBlank([
                         'message' => 'Le nom du programme ne peut pas être vide.',
                     ]),
+                    new Assert\Regex([
+                        'pattern' => '/^[a-zA-Z\s]+$/',
+                        'message' => 'Le nom du programme doit contenir uniquement des lettres (a-z) et des espaces.',
+                    ]),
                 ],
             ])
             ->add('description', TextareaType::class, [
@@ -42,8 +46,11 @@ class ProgrammeType extends AbstractType
             ->add('lieu', TextType::class, [
                 'label' => 'Lieu',
                 'attr' => ['placeholder' => 'Entrez le lieu'],
-                'required' => false,
+                'required' => true,  // Rendre ce champ obligatoire
                 'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => 'Le lieu ne peut pas être vide.',
+                    ]),
                     new Assert\Length([
                         'max' => 255,
                         'maxMessage' => 'Le lieu ne peut pas dépasser {{ limit }} caractères.',

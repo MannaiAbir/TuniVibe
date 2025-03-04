@@ -1,0 +1,132 @@
+{% extends 'baseprogramme.html.twig' %}
+
+{% block title %}Détails de l'Hébergement{% endblock %}
+
+{% block body %}
+
+
+
+    <div class="container-fluid">
+
+        <h1>Détails de l'Hébergement</h1>
+                    <a href="{{ path('adminhebergement') }}" class="btn btn-primary">Retour</a>
+
+
+        <!-- Table principale des hébergements -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Capacité</th>
+                    <th>Adresse</th>
+                    <th>Description</th>
+                    <th>Utilisateur</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for hebergement in hebergements %}
+                    <tr>
+                        <td>{{ hebergement.nom }}</td>
+                        <td>{{ hebergement.capacite }}</td>
+                        <td>{{ hebergement.adresse }}</td>
+                        <td>{{ hebergement.description }}</td>
+                        <td>{{ hebergement.user.username }}</td>
+                        <td>
+                            {% if hebergement.image %}
+                                <img src="{{ asset('uploads/images/' ~ hebergement.image) }}" alt="Image de {{ hebergement.nom }}" width="100">
+                            {% else %}
+                                <span>Aucune image disponible</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <!-- Correction ici : Ajout du bon lien pour l'édition -->
+                            <a href="{{ path('hebergement_edit', {'idhebergement': hebergement.idhebergement}) }}" class="btn btn-warning">
+                                Modifier
+                            </a>
+                            <form method="post" action="{{ path('hebergement_delete', {'idhebergement': hebergement.idhebergement}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer cet hébergement ?');" style="display:inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ hebergement.idhebergement) }}">
+                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                            </form>
+                            <button class="btn btn-info toggle-btn" data-id="{{ hebergement.idhebergement }}">
+                                Voir Programmes
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Section des programmes associés -->
+                    <tr id="programmes-{{ hebergement.idhebergement }}" class="programmes-row" style="display: none;">
+                        <td colspan="7">
+                            <h5>Programmes associés à {{ hebergement.nom }}</h5>
+
+                            {% if hebergement.programmes is empty %}
+                                <p>Aucun programme trouvé.</p>
+                            {% else %}
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Nom</th>
+                                            <th>Lieu</th>
+                                            <th>Date Début</th>
+                                            <th>Date Fin</th>
+                                            <th>Description</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for programme in hebergement.programmes %}
+                                            <tr>
+                                                <td>{{ programme.nom }}</td>
+                                                <td>{{ programme.lieu }}</td>
+                                                <td>{{ programme.dateDebut | date('d/m/Y H:i') }}</td>
+                                                <td>{{ programme.dateFin | date('d/m/Y H:i') }}</td>
+                                                <td>{{ programme.description }}</td>
+                                                <td>
+                                                    <a href="{{ path('programme_edit', {'id': programme.id}) }}" class="btn btn-warning">
+                                                        Modifier
+                                                    </a>
+                                                    <form method="post" action="{{ path('programme_delete', {'id': programme.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce programme ?');" style="display:inline;">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ programme.id) }}">
+                                                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7">Aucun hébergement trouvé.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".toggle-btn").forEach(button => {
+                button.addEventListener("click", function () {
+                    let hebergementId = this.getAttribute("data-id");
+                    let programmesRow = document.getElementById("programmes-" + hebergementId);
+
+                    // Change l'affichage en fonction de l'état actuel
+                    if (programmesRow.style.display === "none") {
+                        programmesRow.style.display = "table-row"; // Afficher les programmes
+                        this.textContent = "Masquer Programmes";  // Mettre à jour le texte du bouton
+                    } else {
+                        programmesRow.style.display = "none";  // Masquer les programmes
+                        this.textContent = "Voir Programmes";  // Mettre à jour le texte du bouton
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

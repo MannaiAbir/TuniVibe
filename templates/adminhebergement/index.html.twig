@@ -1,0 +1,47 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block title %}Admin Hébergements{% endblock %}
+
+{% block body %}
+    <h1>Liste des Utilisateurs et leurs Hébergements</h1>
+
+    <table border="1" class="table">
+        <thead>
+            <tr>
+                <th>Nom Utilisateur</th>
+                <th>Nombre d'Hébergements</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+   <tbody>
+    {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.hebergements|length }}</td>
+            <td>
+                {% if user.hebergements|length > 0 %}
+                    <a href="{{ path('adminhebergement_detail', {'idhebergement': user.hebergements[0].idhebergement}) }}">Voir Détails</a>
+                {% else %}
+                    Aucun hébergement
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+</tbody>
+    </table>
+
+    <div id="hebergements-container">
+    </div>
+
+    <script>
+        function loadHebergements(userId) {
+            fetch('/adminhebergement/details/' + userId)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('hebergements-container').innerHTML = html;
+                })
+                .catch(error => console.error('Erreur de chargement des hébergements:', error));
+        }
+    </script>
+
+{% endblock %}

@@ -1,4 +1,4 @@
-<?php   
+<?php
 
 namespace App\Form;
 
@@ -6,7 +6,6 @@ use App\Entity\Hebergement;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\File;
-
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -27,8 +26,16 @@ class HebergementType extends AbstractType
                     new Assert\Length([
                         'max' => 100,
                         'maxMessage' => 'Le nom ne doit pas dépasser 100 caractères.'
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/^[a-zA-ZÀ-ÿ\s]+$/u',
+                        'message' => 'Le nom ne doit contenir que des lettres et des espaces.'
                     ])
                 ],
+                'attr' => [
+                    'class' => 'form-control',
+                    'oninput' => "this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '')"
+                ]
             ])
             ->add('type', TextType::class, [
                 'label' => 'Type',
@@ -40,6 +47,7 @@ class HebergementType extends AbstractType
                         'maxMessage' => 'Le type ne doit pas dépasser 50 caractères.'
                     ])
                 ],
+                'attr' => ['class' => 'form-control']
             ])
             ->add('adresse', TextType::class, [
                 'label' => 'Adresse',
@@ -51,44 +59,50 @@ class HebergementType extends AbstractType
                         'maxMessage' => 'L\'adresse ne doit pas dépasser 255 caractères.'
                     ])
                 ],
+                'attr' => ['class' => 'form-control']
             ])
             ->add('capacite', IntegerType::class, [
                 'label' => 'Capacité',
                 'required' => true,
                 'constraints' => [
                     new Assert\NotBlank(['message' => 'La capacité est obligatoire.']),
-                    new Assert\Positive(['message' => 'La capacité doit être un nombre positif.']),
-                    new Assert\Type([
-                        'type' => 'integer',
-                        'message' => 'Veuillez entrer un nombre valide sans lettres.'
-                    ]),
+                    new Assert\GreaterThan([
+                        'value' => 0,
+                        'message' => 'Merci d\'entrer un chiffre positif.'
+                    ])
                 ],
                 'attr' => [
-                    'oninput' => "this.value = this.value.replace(/[^0-9]/g, '');",
+                    'class' => 'form-control',
+                    'oninput' => "this.value = this.value.replace(/[^0-9]/g, '')",
+                    'min' => 1,
                     'maxlength' => 4
                 ],
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
-                'required' => false,
+                'required' => true,
                 'constraints' => [
+                    new Assert\NotBlank(['message' => 'La description est obligatoire.']),
                     new Assert\Length([
                         'max' => 1000,
                         'maxMessage' => 'La description ne doit pas dépasser 1000 caractères.'
                     ])
                 ],
+                'attr' => ['class' => 'form-control']
             ])
             ->add('image', FileType::class, [
-                'label' => 'Télécharger une nouvelle image',
+                'label' => 'Télécharger une image',
                 'mapped' => false, // Ne pas mapper directement avec l'entité
-                'required' => false, // Permet d'éviter d'exiger une image à chaque modification
+                'required' => true,
                 'constraints' => [
+                    new Assert\NotBlank(['message' => 'L\'image est obligatoire.']),
                     new File([
                         'maxSize' => '5M',
                         'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp'],
                         'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG, PNG, WEBP).',
                     ])
                 ],
+                'attr' => ['class' => 'form-control']
             ]);
     }
 

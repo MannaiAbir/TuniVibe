@@ -23,3 +23,16 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+/AppData/
+/Desktop/
+/Documents/
+/Downloads/
+/Music/
+/Pictures/
+/Videos/
+/.vscode/
+/.idea/
+vendor/
+var/
+.env
+node_modules/

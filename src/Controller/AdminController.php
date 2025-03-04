@@ -3,31 +3,85 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Attribute\Route;
-use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
-use App\Repository\UserRepository;
+use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
-use App\Form\UserType;
+
+use App\Repository\UserRepository;
+use App\Repository\HebergementRepository;
+use App\Repository\ProgrammeRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-final class AdminController extends AbstractController
+class AdminController extends AbstractController
 {
-    #[Route('/admin', name: 'app_admin', methods: ['GET'])]
+    #[Route('/adminhebergement', name: 'adminhebergement')]
     #[IsGranted('ROLE_ADMIN')]
-    public function index(UserRepository $userRepository): Response
-    {
-        // Fetch all users
+    public function index(
+        UserRepository $userRepository,
+        HebergementRepository $hebergementRepository,
+        ProgrammeRepository $programmeRepository
+    ): Response {
+        // Récupérer tous les utilisateurs
         $users = $userRepository->findAll();
 
-        // Render the admin dashboard
-        return $this->render('admin/show.html.twig', [
+        // Récupérer tous les hébergements
+        $hebergements = $hebergementRepository->findAll();
+
+        // Récupérer tous les programmes
+        $programmes = $programmeRepository->findAll();
+
+        // Passer les données à la vue
+        return $this->render('adminhebergement/index.html.twig', [
             'users' => $users,
+            'hebergements' => $hebergements,
+            'programmes' => $programmes,
+        ]);
+  }
+
+  #[Route('/adminhebergement/detail/{id}', name: 'admin_detail_hebergement')]
+  public function detailHebergement(User $user): Response
+  {
+      return $this->render('adminhebergement/detailhebergement.html.twig', [
+          'user' => $user,
+          'hebergements' => $user->getHebergements(),
+      ]);
+  }
+    
+
+    #[Route('/adminhebergement/delete/{id}', name: 'admin_delete_hebergement', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function deleteHebergement(int $id, HebergementRepository $hebergementRepository): Response
+    {
+        $hebergement = $hebergementRepository->find($id);
+        
+        if ($hebergement) {
+            // Supprimer l'hébergement
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($hebergement);
+            $entityManager->flush();
+            
+            $this->addFlash('success', 'Hébergement supprimé avec succès!');
+        } else {
+            $this->addFlash('error', 'Hébergement non trouvé!');
+        }
+
+        return $this->redirectToRoute('adminhebergement');
+    }
+
+
+    #[Route('/adminhebergement/show_program/{id}', name: 'admin_show_program', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function showProgramme(int $id, ProgrammeRepository $programmeRepository): Response
+    {
+        // Récupérer les programmes associés à cet hébergement
+        $programmes = $programmeRepository->findBy(['hebergement' => $id]);
+
+        return $this->render('adminhebergement/show_program.html.twig', [
+            'programmes' => $programmes,
         ]);
     }
+
+
 
     #[Route('/edit/{id}', name: 'app_edit', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]

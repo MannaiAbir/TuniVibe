@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
@@ -12,45 +12,44 @@ class SecurityController extends AbstractController
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // If the user is already logged in, redirect them to their respective page
+        // Si l'utilisateur est déjà connecté, redirige-le en fonction de son rôle
         if ($this->getUser()) {
             return $this->redirectToRoute($this->getRedirectRouteBasedOnRole());
         }
-    
-        // Get the login error if there is one
+
+        // Récupère l'erreur de connexion si elle existe
         $error = $authenticationUtils->getLastAuthenticationError();
-        // Get the last username entered by the user
+        // Récupère le dernier nom d'utilisateur saisi
         $lastUsername = $authenticationUtils->getLastUsername();
-    
+
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
         ]);
     }
-    
+
     /**
-     * Determine the redirect route based on the user's role.
+     * Détermine la route de redirection en fonction du rôle de l'utilisateur.
      */
     private function getRedirectRouteBasedOnRole(): string
     {
         $user = $this->getUser();
-    
-        // Check if the user has the ROLE_ADMIN
+
+        // Vérifie si l'utilisateur a le rôle ROLE_ADMIN
         if (in_array('ROLE_ADMIN', $user->getRoles())) {
-            return 'app_admin'; // Route for the admin
+            return 'app_admin'; // Route pour les admins
         }
-          // Check if the user has the ROLE_EDITOR
-         if (in_array('ROLE_EDITOR', $user->getRoles())) {
-             return 'app_editor'; // Route for the editor
-        }   
-        // Default route for regular users
-        return 'app_user'; // Route for regular users
+        // Vérifie si l'utilisateur a le rôle ROLE_EDITOR
+        if (in_array('ROLE_EDITOR', $user->getRoles())) {
+            return 'app_editor'; // Route pour les éditeurs
+        }
+        // Retourne la route pour les utilisateurs réguliers (si nécessaire)
+        return 'app_user'; // Route pour les utilisateurs réguliers
     }
 
-    #[Route(path: '/logout', name: 'app_logout')]
+    #[Route('/logout', name: 'app_logout')]
     public function logout(): void
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new \LogicException('Cette méthode est interceptée par la clé de déconnexion sur ton pare-feu.');
     }
-    
 }

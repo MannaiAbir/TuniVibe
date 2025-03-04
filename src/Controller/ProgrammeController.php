@@ -19,7 +19,13 @@ class ProgrammeController extends AbstractController
     {
         $this->entityManager = $entityManager;
     }
-
+    #[Route('/programme/show/{id}', name: 'programme_show')]
+    public function show(Programme $programme): Response
+    {
+        return $this->render('programme/show.html.twig', [
+            'programme' => $programme,
+        ]);
+    }
     // Ajouter un nouveau programme
     #[Route('/programme/new/{hebergementId}', name: 'programme_new')]
     public function new(Request $request, EntityManagerInterface $entityManager, $hebergementId): Response
@@ -69,32 +75,52 @@ class ProgrammeController extends AbstractController
     #[Route('/programme/edit/{id}', name: 'programme_edit')]
     public function edit(Request $request, Programme $programme): Response
     {
+        // Créer le formulaire pour l'entité Programme
         $form = $this->createForm(ProgrammeType::class, $programme);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
+            // Sauvegarde des modifications
             $this->entityManager->flush();
-
-            return $this->redirectToRoute('hebergement_show', [
-                'idhebergement' => $programme->getHebergement()->getIdhebergement()
-            ]);
+    
+            // Vérifier si l'utilisateur est un administrateur
+            if ($this->isGranted('ROLE_ADMIN')) {
+                // Rediriger l'administrateur vers la page de détails dans l'admin
+                return $this->redirectToRoute('adminhebergement_detail', [
+                    'idhebergement' => $programme->getHebergement()->getIdhebergement()
+                ]);
+            } else {
+                // Rediriger l'éditeur vers la page de détails de l'hébergement dans l'espace utilisateur
+                return $this->redirectToRoute('hebergement_show', [
+                    'idhebergement' => $programme->getHebergement()->getIdhebergement()
+                ]);
+            }
         }
-
+    
         return $this->render('programme/edit.html.twig', [
             'form' => $form->createView(),
             'programme' => $programme,
         ]);
     }
+    
+// Supprimer un programme
+#[Route('/programme/delete/{id}', name: 'programme_delete')]
+public function delete(Programme $programme): Response
+{
+    $hebergement = $programme->getHebergement();
+    $hebergementId = $hebergement->getIdhebergement();
 
-    // Supprimer un programme
-    #[Route('/programme/delete/{id}', name: 'programme_delete')]
-    public function delete(Programme $programme): Response
-    {
-        $hebergementId = $programme->getHebergement()->getIdhebergement();
-
-        $this->entityManager->remove($programme);
-        $this->entityManager->flush();
-
-        return $this->redirectToRoute('hebergement_show', ['idhebergement' => $hebergementId]);
+    // Vérifier si l'utilisateur est le propriétaire de l'hébergement ou un administrateur
+    if ($this->getUser() !== $hebergement->getUser() && !$this->isGranted('ROLE_ADMIN')) {
+        throw $this->createAccessDeniedException('Vous ne pouvez supprimer que les programmes de vos propres hébergements ou ceux auxquels vous avez accès en tant qu\'administrateur.');
     }
+
+    // Supprimer le programme
+    $this->entityManager->remove($programme);
+    $this->entityManager->flush();
+
+    // Redirection après la suppression
+    return $this->redirectToRoute('hebergement_show', ['idhebergement' => $hebergementId]);
+}
+
 }

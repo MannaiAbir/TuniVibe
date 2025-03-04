@@ -16,7 +16,7 @@ final class EditorController extends AbstractController
         $user = $this->getUser();
 
         // Pass the user to the template
-        return $this->render('editor/index.html.twig', [
+        return $this->render('adminhebergement/index.html.twig', [
             'user' => $user,
         ]);
     }

@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>Topic Listing Contact Page</title>
+
+
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans&display=swap" rel="stylesheet">
+
+         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                         
+
+
+
+
+
+
+        <link href="{{ asset('content/css/bootstrap.min.css')}}" rel="stylesheet">
+
+        <link href="{{ asset('content/css/bootstrap-icons.css')}}" rel="stylesheet">
+
+        <link href="{{ asset('content/css/templatemo-topic-listing.css')}}" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('front/css/style.css') }}">
+        
+
+<!--
+
+TemplateMo 590 topic listing
+
+https://templatemo.com/tm-590-topic-listing
+
+-->
+    </head>
+    
+    <body class="topics-listing-page" id="top">
+
+        <main>
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="logo"><img src="{{ asset('front/img/tunivibe.png') }}" alt="TuniVibe Logo" class="logo-img"></a>
+        <a class="navbar-brand" href="{{ path('app_home') }}">
+            <span>TuniVibe</span>
+        </a>
+
+        <div class="d-lg-none ms-auto me-4">
+            <a href="#top" class="navbar-icon bi-person smoothscroll"></a>
+        </div>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-lg-5 me-lg-auto">
+                {% if app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="{{ path('app_acceuil') }}">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="#>Workshops</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="#">Événements</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="{{ path('gestionhebergement_index') }}">Hébergements</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="#">Vlogs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="#">Bibliothèque</a>
+                    </li>
+                {% else %}
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_home') }}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_login') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                             <a class="nav-link" href="{{ path('app_register') }}">Register</a>
+                       </li>
+</ul>
+                {% endif %}
+            </ul>
+
+            {% if app.user %}
+                <button id="toggleSidebar" class="toggle-btn">☰</button>
+                <div id="sidebar" class="sidebar">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a href="{{ path('app_user') }}" class="nav-link">
+                                <i class="bi bi-person"></i> Profile
+                            </a>
+                        </li>
+                       
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">Mes Workshops</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">Mes Événements</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ path('hebergement_index') }}" class="nav-link">Mes Hébergements</a>
+                            </li>
+                     
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Mes Vlogs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Ma Bibliothèque</a>
+                        </li>
+                        <li class="nav-item">
+                            <form action="{{ path('app_logout') }}" method="post" class="d-inline">
+                                <button type="submit" class="nav-link btn btn-link" >
+                                    Déconnexion
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+             {% block header %}
+
+
+
+               {% endblock %}
+
+            <section class="section-padding section-bg">
+              {% block body %}
+
+
+
+               {% endblock %}
+            </section>
+        </main>
+
+        <footer class="site-footer section-padding">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-3 col-12 mb-4 pb-2">
+                     <a class="logo"><img src="{{ asset('front/img/tunivibe.png') }}" alt="TuniVibe Logo" class="logo-img"></a>
+                    <a class="navbar-brand" href="#">
+                        
+                        <span>TuniVibe</span>
+                    </a>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4 col-6">
+                        <h6 class="site-footer-title mb-3">Resources</h6>
+
+                        <ul class="site-footer-links">
+                            <li class="site-footer-link-item">
+                                <a href="#" class="site-footer-link">Home</a>
+                            </li>
+
+                            <li class="site-footer-link-item">
+                                <a href="#" class="site-footer-link">How it works</a>
+                            </li>
+
+                            <li class="site-footer-link-item">
+                                <a href="#" class="site-footer-link">Contact</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-3 col-md-4 col-6 mb-4 mb-lg-0">
+                        <h6 class="site-footer-title mb-3">Information</h6>
+
+                        <p class="text-white d-flex mb-1">
+                            <a href="tel: 305-240-9671" class="site-footer-link">
+                                55-760-128
+                            </a>
+                        </p>
+
+                        <p class="text-white d-flex">
+                            <a href="mailto:info@company.com" class="site-footer-link">
+                                tunivibe@gmail.com
+                            </a>
+                        </p>
+
+
+
+                </div>
+            </div>
+        </footer>
+
+        <script src="{{ asset('content/js/jquery.min.js')}}"></script>
+        <script src="{{ asset('content/js/bootstrap.bundle.min.js')}}"></script>
+        <script src="{{ asset('content/js/jquery.sticky.js')}}"></script>
+        <script src="{{ asset('content/js/custom.js')}}"></script>
+        {% block javascripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let selectedHebergement = "";
+
+        document.querySelectorAll(".btn-reserver").forEach(button => {
+            button.addEventListener("click", function () {
+                selectedHebergement = this.getAttribute("data-nom");
+                document.getElementById("confirmationMessage").textContent = "Voulez-vous vraiment réserver l'hébergement '" + selectedHebergement + "' ?";
+                $('#confirmationModal').modal('show'); // Ouvre la pop-up de confirmation
+            });
+        });
+
+        document.getElementById("confirmReservation").addEventListener("click", function () {
+            $('#confirmationModal').modal('hide'); // Ferme la confirmation
+            document.getElementById("successMessage").textContent = "Votre demande de réservation pour '" + selectedHebergement + "' a été envoyée avec succès !";
+            $('#successModal').modal('show'); // Ouvre la pop-up de succès
+        });
+    });
+</script>
+
+<!-- Assure-toi que jQuery et Bootstrap JS sont bien chargés -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+<!-- Pop-up de confirmation -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Confirmer la réservation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <p id="confirmationMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-success" id="confirmReservation">Oui</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pop-up de succès -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content text-center">
+            <div class="modal-body p-4">
+                <h5 class="modal-title mb-3 text-success">✅ Réservation réussie</h5>
+                <p id="successMessage"></p>
+                <button type="button" class="btn btn-primary mt-3" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    </body>
+</html>
