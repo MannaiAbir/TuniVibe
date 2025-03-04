@@ -11,6 +11,10 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Entity\InscriptionEvenement; 
+use App\Form\InscriptionEvenementType;
+use App\Repository\InscriptionEvenementRepository;
+
 
 final class EvenementsController extends AbstractController
 {
@@ -64,7 +68,8 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
         $entityManager->persist($evenement);
         $entityManager->flush();
 
-        $this->addFlash('success', 'L\'événement a été créé avec succès.');
+            // Notification spécifique pour la création
+        $this->addFlash('success', 'Nouvel événement créé avec succès !');
         return $this->redirectToRoute('app_evenements_index');
     }
 
@@ -92,7 +97,11 @@ public function delete(Request $request, Evenements $evenement, EntityManagerInt
         // Supprime l'événement de la base de données
         $entityManager->remove($evenement);
         $entityManager->flush();
-    }
+        $this->addFlash('warning', 'L\'événement a été supprimé définitivement.');
+        } else {
+        $this->addFlash('danger', 'Erreur de sécurité lors de la suppression.');
+        }
+    
 
     // Redirige vers la liste des événements
     return $this->redirectToRoute('app_evenements_index', [], Response::HTTP_SEE_OTHER);
@@ -111,6 +120,8 @@ public function edit(Request $request, Evenements $evenement, EntityManagerInter
         // Enregistre les modifications en base de données
         //$this->getDoctrine()->getManager()->flush(); 
         $entityManager->flush(); 
+           // Notification spécifique pour la modification
+        $this->addFlash('info', 'Les modifications de l\'événement ont été enregistrées.');
 
 
         // Redirige vers la liste des événements
@@ -135,8 +146,77 @@ public function edit(Request $request, Evenements $evenement, EntityManagerInter
 #[Route('/evenements/{id}', name: 'app_evenements_show', methods: ['GET'])]
 public function show(Evenements $evenement): Response
 {
+
+    $event = [
+        'name'      => $evenement->getTitre(),
+        'latitude'  => $evenement->getLatitude(),
+        'longitude' => $evenement->getLongitude()
+    ];
     return $this->render('evenements/show.html.twig', [
         'evenement' => $evenement,
+        'event'     => $event
+
+    ]);
+}
+
+
+#[Route('/evenement/{id}/rejoindre', name: 'app_rejoindre_evenement')]
+public function rejoindreEvenement(
+    Request $request,
+    Evenements $evenement,
+    EntityManagerInterface $entityManager
+): Response {
+    $inscription = new InscriptionEvenement();
+    $inscription->setEvenement($evenement);
+// code ajouter maintenant 
+    $user = $this->getUser();
+    $inscription->setUser($user);
+
+    $form = $this->createForm(InscriptionEvenementType::class, $inscription);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $entityManager->persist($inscription);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Votre inscription à l\'événement a été confirmée !');
+        return $this->redirectToRoute('app_evenements_public');
+    }
+
+    return $this->render('evenements/rejoindre.html.twig', [
+        'form' => $form->createView(),
+        'evenement' => $evenement
+    ]);
+}
+
+
+#[Route('/events/search', name: 'event_ajax_search')]
+public function ajaxSearch(Request $request, EvenementsRepository $repository): Response
+{
+    $filters = [
+        'titre' => $request->query->get('titre'),
+        'dateDebut' => $request->query->get('dateDebut'),
+        'lieu' => $request->query->get('lieu')
+    ];
+
+    $events = $repository->advancedSearch($filters);
+
+    return $this->render('evenements/_events_list.html.twig', [
+        'evenements' => $events
+    ]);
+}
+
+#[Route('/evenements/{id}/users', name: 'app_evenements_users', methods: ['GET'])]
+public function users(
+    Evenements $evenement,
+    InscriptionEvenementRepository $inscriptionRepository
+): Response {
+    // Récupère les utilisateurs inscrits à cet événement
+    $users = $inscriptionRepository->findBy(['evenement' => $evenement]);
+
+    return $this->render('evenements/users.html.twig', [
+        'evenement' => $evenement,
+        'users' => $users,
     ]);
 }
 
@@ -145,3 +225,4 @@ public function show(Evenements $evenement): Response
 
 
 }
+

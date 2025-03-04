@@ -1,0 +1,52 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Participants de l'évènement : {{ evenement.titre }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Liste des participants pour l'évènement : {{ evenement.titre }}</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom d'utilisateur</th>
+                <th>Email</th>
+                <th>Numéro de téléphone</th>
+                <th>Adresse</th>
+                <th>Autres infos</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if users is not empty %}
+             {% for inscription in users %}
+    {% if inscription.user is not null and inscription.user.id %}
+        {% set user = inscription.user %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.numeroTelephone }}</td>
+            <td>{{ user.adresse }}</td>
+            <td>{{ user.roles|join(', ') }}</td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="6">Utilisateur introuvable pour l'inscription {{ inscription.id }}</td>
+        </tr>
+    {% endif %}
+{% endfor %}
+
+            {% else %}
+                <tr>
+                    <td colspan="6">Aucun participant pour cet évènement.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+
+
+

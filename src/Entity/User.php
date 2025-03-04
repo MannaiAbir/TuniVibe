@@ -132,47 +132,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Workshop::class, orphanRemoval: true)]
-    private Collection $workshops;
+    public function promoteToAdmin(): self
+{
+    $roles = $this->roles;
     
-    public function __construct()
-    {
-        $this->workshops = new ArrayCollection();
+    if (!in_array('ROLE_ADMIN', $roles)) {
+        $roles[] = 'ROLE_ADMIN';
+        $this->roles = $roles;
     }
     
-    public function getWorkshops(): Collection
-    {
-        return $this->workshops;
-    }
-    
-    public function addWorkshop(Workshop $workshop): static
-    {
-        if (!$this->workshops->contains($workshop)) {
-            $this->workshops->add($workshop);
-            $workshop->setUser($this);
-        }
-        return $this;
-    }
-    
-    public function removeWorkshop(Workshop $workshop): static
-    {
-        if ($this->workshops->removeElement($workshop)) {
-            if ($workshop->getUser() === $this) {
-                $workshop->setUser(null);
-            }
-        }
-        return $this;
-    }
-
+    return $this;
+}
 }

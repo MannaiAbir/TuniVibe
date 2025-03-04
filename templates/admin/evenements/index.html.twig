@@ -1,0 +1,149 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block title %}Gestion des événements{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        /* Style général de la page */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Style du titre */
+        h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Style du tableau */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table thead {
+            background-color: rgb(17, 17, 17);
+            color: white;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .table th {
+            font-weight: bold;
+        }
+
+        .table tbody tr {
+            border-bottom: 1px solid #e0e0e0;
+            transition: background-color 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        /* Style du bouton Supprimer */
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+        /* Style du message "Aucun événement trouvé" */
+        .table tbody tr td[colspan] {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        /* Espacement */
+        .mb-4 {
+            margin-bottom: 1.5rem;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Liste des événements</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Description</th>
+                <th>Date de début</th>
+                <th>Date de fin</th>
+                <th>Lieu</th>
+                <th>Image</th>
+                <th>Activités</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for evenement in evenements %}
+                <tr>
+                    <td>{{ evenement.titre }}</td>
+                    <td>{{ evenement.description }}</td>
+                    <td>{{ evenement.dateDebut ? evenement.dateDebut|date('d/m/Y') : '' }}</td>
+                    <td>{{ evenement.dateFin ? evenement.dateFin|date('d/m/Y') : '' }}</td>
+                    <td>{{ evenement.lieu }}</td>
+                    <td>
+                        {% if evenement.image starts with 'https' %}
+                           <img src="{{ evenement.image }}" alt="{{ evenement.titre }}" style="max-width: 100px; max-height: 100px;">
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if evenement.activites %}
+                            <ul style="padding-left: 20px; margin: 0;">
+                                {% for activite in evenement.activites %}
+                                    <li>{{ activite.nom }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="post" action="{{ path('admin_evenements_delete', {'id': evenement.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ evenement.id) }}">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">Aucun événement trouvé.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+
+
+

@@ -31,7 +31,11 @@ class ActivitesController extends AbstractController
             $entityManager->persist($activite);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_activites_index');
+
+               // Notification de création
+            $this->addFlash('success', 'Nouvelle activité créée avec succès !');
+
+            return $this->redirectToRoute('app_evenements_index');
         }
 
         return $this->render('activites/new.html.twig', [
@@ -48,6 +52,14 @@ class ActivitesController extends AbstractController
             // Supprimer l'activité
              $entityManager->remove($activite);
              $entityManager->flush();
+
+
+            // Notification de suppression
+            $this->addFlash('warning', 'L\'activité a été supprimée définitivement.');
+        } else {
+            // Notification d'erreur CSRF
+            $this->addFlash('danger', 'Erreur de sécurité lors de la suppression.');
+        
         } 
 
              // Rediriger vers la liste des activités
@@ -66,6 +78,8 @@ public function edit(Request $request, Activites $activite, EntityManagerInterfa
     if ($form->isSubmitted() && $form->isValid()) {
         // Enregistrer les modifications dans la base de données
         $entityManager->flush();
+          // Notification de modification
+          $this->addFlash('info', 'Les modifications de l\'activité ont été enregistrées.');
 
         // Rediriger vers la liste des activités
         return $this->redirectToRoute('app_activites_index', [], Response::HTTP_SEE_OTHER);

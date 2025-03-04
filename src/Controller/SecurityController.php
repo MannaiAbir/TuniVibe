@@ -37,7 +37,7 @@ class SecurityController extends AbstractController
     
         // Check if the user has the ROLE_ADMIN
         if (in_array('ROLE_ADMIN', $user->getRoles())) {
-            return 'app_admin'; // Route for the admin
+            return 'app_adminpage'; // Route for the admin
         }
           // Check if the user has the ROLE_EDITOR
          if (in_array('ROLE_EDITOR', $user->getRoles())) {

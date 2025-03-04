@@ -6,3 +6,7 @@ controllers:
 app_logout:
     path: /logout
     methods: [POST]
+# config/routes.yaml
+app_evenements_show:
+    path: /evenements/{id}
+    controller: App\Controller\EvenementsController::show

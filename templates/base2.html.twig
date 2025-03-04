@@ -19,7 +19,10 @@
 
          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-        <link rel="stylesheet" href="{{ asset('css/styles.css') }}">           
+        <link rel="stylesheet" href="{{ asset('css/styles.css') }}">   
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        
 
 
 
@@ -65,10 +68,10 @@ https://templatemo.com/tm-590-topic-listing
             <ul class="navbar-nav ms-lg-5 me-lg-auto">
                 {% if app.user %}
                     <li class="nav-item">
-                        <a class="nav-link click-scroll" href="{{ path('app_acceuil') }}">Acceuil</a>
+                        <a class="nav-link click-scroll" href="{{ path('app_acceuil') }}">Accueil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link click-scroll" href="{{ path('atelier_index') }}">Workshops</a>
+                        <a class="nav-link click-scroll" href="#">Workshops</a>
                     </li>
                     <li class="nav-item">
 
@@ -206,6 +209,8 @@ https://templatemo.com/tm-590-topic-listing
         <script src="{{ asset('content/js/bootstrap.bundle.min.js')}}"></script>
         <script src="{{ asset('content/js/jquery.sticky.js')}}"></script>
         <script src="{{ asset('content/js/custom.js')}}"></script>
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 
     </body>
 </html>

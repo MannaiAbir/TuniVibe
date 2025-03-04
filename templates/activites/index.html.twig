@@ -1,12 +1,99 @@
-{% extends 'base2.html.twig' %}
+{% extends 'base3.html.twig' %}
 
 {% block title %}Liste des Activités{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .container-xl {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .page-header h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .activity-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .activity-card h3 {
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+        .action-buttons {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            padding: 5px 10px;
+            font-size: 1em;
+            border-radius: 3px;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+        }
+        .alert {
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 5px solid;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: #17a2b8;
+            color: #0c5460;
+        }
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
     <div class="container-xl">
+        {# Notifications #}
+        {% for type, messages in app.flashes(['success', 'info', 'warning', 'danger']) %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
         <div class="page-header">
-            <h1><i class="fas fa-running me-2"></i>Liste des Activités</h1>
-           
+            <h1><i class="fa-solid fa-list"></i> Liste des Activités</h1>
         </div>
 
         {% if activites|length > 0 %}
@@ -21,14 +108,13 @@
                                 Modifier
                             </a>
                             <form method="post" 
-                                  action="{{ path('app_activites_delete', {'id': activite.id}) }}" 
-                                  onsubmit="return confirm('Êtes-vous sûr ?');">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ activite.id) }}">
-                                <button type="submit" class="btn btn-danger">
-                                    <i class="fas fa-trash-alt"></i>
-                                    Supprimer
-                                </button>
-                            </form>
+      action="{{ path('app_activites_delete', {'id': activite.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ activite.id) }}">
+    <button type="submit" class="btn btn-danger">
+        <i class="fas fa-trash-alt"></i>
+        Supprimer
+    </button>
+</form>
                         </div>
                     </div>
                 {% endfor %}
@@ -41,3 +127,4 @@
         {% endif %}
     </div>
 {% endblock %}
+

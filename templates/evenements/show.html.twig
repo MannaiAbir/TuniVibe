@@ -2,6 +2,8 @@
 
 {% block title %}Détails de l'événement{% endblock %}
 
+
+
 {% block stylesheets %}
 {{ parent() }}
 <style>
@@ -48,30 +50,6 @@
         box-shadow: 0 8px 25px rgba(0,191,165,0.15);
     }
 
-    .btn-join {
-        position: relative;
-        overflow: hidden;
-        border: none;
-        background: linear-gradient(135deg, #00bfa5 0%, #009688 100%);
-        letter-spacing: 0.5px;
-    }
-
-    .btn-join::after {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -50%;
-        bottom: -50%;
-        left: -50%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-        transform: rotateZ(-45deg) translateX(-300%);
-        transition: transform 0.6s ease;
-    }
-
-    .btn-join:hover::after {
-        transform: rotateZ(-45deg) translateX(300%);
-    }
-
     @media (max-width: 768px) {
         .event-content {
             margin-top: -40px;
@@ -82,18 +60,16 @@
 
 {% block body %}
 <div class="container py-5">
-    <!-- En-tête de l'événement -->
     <div class="event-header mb-5" style="height: 500px;">
         <img src="{{ evenement.image ?? 'https://via.placeholder.com/1600x600' }}" 
              class="w-100 h-100 object-fit-cover" 
-             alt="{{ evenement.titre }}">
+             alt="{{ evenement.titre }}"
+             itemprop="image">
     </div>
     
-    <!-- Contenu principal -->
     <div class="event-content bg-white p-4 p-lg-5 rounded-4 shadow-lg position-relative">
-        <h1 class="mb-4 display-5 fw-bold">{{ evenement.titre }}</h1>
+        <h1 class="mb-4 display-5 fw-bold" itemprop="name">{{ evenement.titre }}</h1>
         
-        <!-- Détails -->
         <div class="row g-4 mb-5">
             <div class="col-md-6 col-lg-4">
                 <div class="detail-card p-3 rounded-3">
@@ -132,13 +108,13 @@
             </div>
         </div>
 
-        <!-- Description -->
-        <div class="mb-5">
+        <div id="mapid" style="height: 400px; width: 100%;"></div>
+
+        <div class="mb-5" itemprop="description">
             <h4 class="mb-3 fw-semibold">Description</h4>
-            <p class="lead text-muted lh-lg">{{ evenement.description }}</p>
+            <p class="lead text-muted lh-lg">{{ evenement.description|raw }}</p>
         </div>
 
-        <!-- Activités -->
         <div class="bg-light p-4 p-lg-5 rounded-4">
             <h4 class="mb-4 fw-semibold"><i class="fas fa-tasks me-2"></i>Activités associées</h4>
             
@@ -162,18 +138,81 @@
             {% endif %}
         </div>
 
-        <!-- Boutons d'action -->
         <div class="d-flex gap-3 mt-5 flex-wrap justify-content-center justify-content-md-start">
-            <a href="{{ path('app_evenements_index') }}" 
+            <a href="{{ path('app_evenements_public') }}" 
                class="btn btn-lg btn-outline-secondary px-4 py-2 rounded-3">
                 <i class="fas fa-arrow-left me-2"></i>Retour
             </a>
-            
-            <button class="btn btn-lg btn-join text-white px-4 py-2 rounded-3">
-                <i class="fas fa-user-plus me-2"></i>
-                Rejoindre l'événement
-            </button>
+
+            <a href="{{ path('app_rejoindre_evenement', {'id': evenement.id}) }}" 
+               class="btn btn-lg btn-success text-white px-4 py-2 rounded-3 shadow-sm">
+               <i class="fas fa-user-plus me-2"></i>Rejoindre l'événement
+            </a>
+
+           
         </div>
     </div>
 </div>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Liste des coordonnées des 24 gouvernorats de Tunisie
+        var villes = {
+            "ariana": { lat: 36.8665, lon: 10.1647 },
+            "béja": { lat: 36.7333, lon: 9.1833 },
+            "ben Arous": { lat: 36.7435, lon: 10.2314 },
+            "bizerte": { lat: 37.2744, lon: 9.8739 },
+            "gabès": { lat: 33.8815, lon: 10.0982 },
+            "gafsa": { lat: 34.425, lon: 8.7842 },
+            "jendouba": { lat: 36.5011, lon: 8.7757 },
+            "kairouan": { lat: 35.6781, lon: 10.0963 },
+            "kasserine": { lat: 35.1672, lon: 8.8368 },
+            "kébili": { lat: 33.7076, lon: 8.9715 },
+            "kef": { lat: 36.167, lon: 8.7047 },
+            "mahdia": { lat: 35.5046, lon: 11.0622 },
+            "manouba": { lat: 36.8101, lon: 10.0963 },
+            "médenine": { lat: 33.3547, lon: 10.5055 },
+            "monastir": { lat: 35.7643, lon: 10.8113 },
+            "nabeul": { lat: 36.4511, lon: 10.7352 },
+            "sfax": { lat: 34.739, lon: 10.7599 },
+            "sidi Bouzid": { lat: 35.0382, lon: 9.4854 },
+            "siliana": { lat: 36.0833, lon: 9.3667 },
+            "sousse": { lat: 35.8254, lon: 10.6360 },
+            "tataouine": { lat: 32.9333, lon: 10.4500 },
+            "tozeur": { lat: 33.9197, lon: 8.1336 },
+            "tunis": { lat: 36.8065, lon: 10.1815 },
+            "zaghouan": { lat: 36.4029, lon: 10.1429 }
+        };
+
+        // Récupérer le lieu de l'événement depuis Twig
+        var lieu = "{{ evenement.lieu|escape('js') }}"; 
+
+        // Vérifier si la ville existe dans la liste, sinon prendre les coordonnées de l'événement ou par défaut
+        var latitude, longitude;
+        if (villes[lieu]) {
+            latitude = villes[lieu].lat;
+            longitude = villes[lieu].lon;
+        } else {
+            latitude = {{ evenement.latitude ?? 36.8665 }};
+            longitude = {{ evenement.longitude ?? 10.1647 }};
+        }
+
+        // Initialiser la carte avec les coordonnées obtenues
+        var map = L.map('mapid').setView([latitude, longitude], 10);
+
+        // Ajouter OpenStreetMap comme fond de carte
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Ajouter un marqueur à l'emplacement de l'événement
+        L.marker([latitude, longitude]).addTo(map)
+            .bindPopup('{{ evenement.titre|escape("js") }}')
+            .openPopup();
+    });
+</script>
+
+
 {% endblock %}

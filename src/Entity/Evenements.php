@@ -51,15 +51,31 @@ class Evenements
     #[ORM\ManyToMany(targetEntity: Activites::class, inversedBy: 'evenements')]
     private Collection $activites;
 
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'participatedEvents')]
-    #[ORM\JoinTable(name: 'evenement_participation')]
-    private Collection $participants;
+     
+    #[ORM\Column(type: 'decimal', precision: 9, scale: 6, nullable: true)]
+    private ?float $latitude = null;
+
+    #[ORM\Column(type: 'decimal', precision: 9, scale: 6, nullable: true)]
+    private ?float $longitude = null;
+
+    #[ORM\OneToMany(mappedBy: 'evenement', targetEntity: InscriptionEvenement::class, orphanRemoval: true)]
+     private Collection $inscriptions;
 
     public function __construct()
     {
         $this->activites = new ArrayCollection();
         $this->participants = new ArrayCollection();
+        $this->inscriptions = new ArrayCollection();
     }
+
+  
+
+
+
+    public function getInscriptions(): Collection
+     {
+          return $this->inscriptions;
+     }
 
     
 
@@ -178,23 +194,25 @@ public function removeActivite(Activites $activite): self
     return $this;
 }
 
-// Participants methods
-public function getParticipants(): Collection
-{
-    return $this->participants;
-}
-
-public function addParticipant(User $user): self
-{
-    if (!$this->participants->contains($user)) {
-        $this->participants[] = $user;
+public function getLatitude(): ?float
+    {
+        return $this->latitude;
     }
-    return $this;
-}
 
-public function removeParticipant(User $user): self
-{
-    $this->participants->removeElement($user);
-    return $this;
-}
+    public function setLatitude(?float $latitude): self
+    {
+        $this->latitude = $latitude;
+        return $this;
+    }
+
+    public function getLongitude(): ?float
+    {
+        return $this->longitude;
+    }
+
+    public function setLongitude(?float $longitude): self
+    {
+        $this->longitude = $longitude;
+        return $this;
+    }
 }

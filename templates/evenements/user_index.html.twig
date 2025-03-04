@@ -10,22 +10,18 @@
         overflow: hidden;
         background: linear-gradient(145deg, #ffffff, #f8f9fa);
     }
-
     .card:hover {
         transform: translateY(-10px);
         box-shadow: 0 12px 24px rgba(0,0,0,0.15);
     }
-
     .card-img-top {
         transition: transform 0.4s ease;
         height: 200px;
         object-fit: cover;
     }
-
     .card:hover .card-img-top {
         transform: scale(1.05);
     }
-
     .card-title {
         font-family: 'Montserrat', sans-serif;
         font-weight: 600;
@@ -36,7 +32,6 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
-
     .event-date {
         background: #4e73df;
         color: white;
@@ -49,7 +44,6 @@
         z-index: 1;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
-
     .location-badge {
         background: rgba(78, 115, 223, 0.1);
         color: #4e73df !important;
@@ -57,7 +51,6 @@
         border-radius: 10px;
         font-size: 0.85rem;
     }
-
     .detail-btn {
         background: #4e73df;
         border: none;
@@ -69,40 +62,66 @@
         margin: 0 auto;
         display: block;
     }
-
     .detail-btn:hover {
         background: #375ab4;
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(78, 115, 223, 0.3);
     }
-
     .empty-state {
         background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
         border-radius: 20px;
         padding: 2rem !important;
         border: none;
     }
-
     .empty-state i {
         font-size: 4rem;
         background: linear-gradient(45deg, #4e73df, #3b51b5);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
-
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
     }
-
     .card {
         animation: fadeIn 0.6s ease forwards;
+    }
+    /* Style pour le bouton de recherche */
+    .search-btn {
+        background: #28a745;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 30px;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #fff;
+        text-decoration: none;
+        transition: background 0.3s ease, transform 0.3s ease;
+    }
+    .search-btn:hover {
+        background: #218838;
+        transform: translateY(-2px);
     }
 </style>
 
 <div class="container py-5">
+    {# Affichage des messages flash success #}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    {# Bouton de redirection vers la page de recherche par filtrage placé en haut #}
+    <div class="text-center mb-4">
+        <a href="{{ path('event_ajax_search') }}" class="search-btn">
+            Rechercher des événements
+        </a>
+    </div>
+
     <h1 class="text-center mb-5 display-4 fw-bold text-primary" style="font-family: 'Montserrat', sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
-        Événements à venir
+       Les événements sociales et culturelles 
     </h1>
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
@@ -116,8 +135,7 @@
                                 class="card-img-top"
                                 alt="{{ event.titre }}"
                                 loading="lazy"
-                                onerror="this.onerror=null; this.src='{{ asset('img/default-event.jpg') }}'"
-                            >
+                                onerror="this.onerror=null; this.src='{{ asset('img/default-event.jpg') }}'">
                         </div>
                     </a>
                     
@@ -154,3 +172,4 @@
     </div>
 </div>
 {% endblock %}
+

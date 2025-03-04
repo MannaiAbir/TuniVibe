@@ -3,8 +3,95 @@
 {% block title %}Liste des Événements{% endblock %}
 
 {% block body %}
-<div class="container-fluid py-5 bg-white">
-    <h1 class="text-center mb-5 display-4">Événements à venir</h1>
+<style>
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 15px;
+        overflow: hidden;
+        background: linear-gradient(145deg, #ffffff, #f8f9fa);
+    }
+
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    }
+
+    .card-img-top {
+        transition: transform 0.4s ease;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+
+    .card-title {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        color: #2c3e50;
+        min-height: 3rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .card {
+        animation: fadeIn 0.6s ease forwards;
+    }
+
+    .alert {
+        border-radius: 10px;
+        border-left: 5px solid;
+        margin: 1rem auto;
+        max-width: 800px;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        border-color: #28a745;
+        color: #155724;
+    }
+
+    .alert-info {
+        background-color: #d1ecf1;
+        border-color: #17a2b8;
+        color: #0c5460;
+    }
+
+    .alert-warning {
+        background-color: #fff3cd;
+        border-color: #ffc107;
+        color: #856404;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        border-color: #dc3545;
+        color: #721c24;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div class="container py-5">
+    {# Section des notifications #}
+    {% for type, messages in app.flashes(['success', 'info', 'warning', 'danger']) %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <h1 class="text-center mb-5 display-4 fw-bold text-primary" style="font-family: 'Montserrat', sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
+        Lancez vos événements et activités
+    </h1>
 
     <!-- Boutons d'action -->
     <div class="text-center mb-4">
@@ -13,25 +100,24 @@
                 <i class="fas fa-plus me-2"></i>Créer un événement
             </a>
             <a href="{{ path('app_activites_new') }}" class="btn btn-primary me-2">
-                <i class="fas fa-running me-2"></i>Créer une activité
+                <i class="fas fa-plus me-2"></i>Créer une activité
             </a>
-            <a href="{{ path('app_activites_index') }}" class="btn btn-info">
+            <a href="{{ path('app_activites_index') }}" class="btn btn-info me-2">
                 <i class="fas fa-list-ol me-2"></i>Liste des activités
             </a>
         </div>
     </div>
 
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 px-3">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
         {% for evenement in evenements %}
             <div class="col">
-                <div class="card h-100 shadow-sm border-light">
+                <div class="card h-100 overflow-hidden">
                     <div class="ratio ratio-1x1">
                         {% if evenement.image %}
                             <img src="{{ evenement.image }}" class="card-img-top object-fit-cover" alt="{{ evenement.titre }}">
                         {% else %}
                             <img src="https://source.unsplash.com/random/800x800?event" class="card-img-top object-fit-cover" alt="Image aléatoire">
                         {% endif %}
-                        
                     </div>
 
                     <div class="card-body">
@@ -71,3 +157,6 @@
     </div>
 </div>
 {% endblock %}
+
+
+
