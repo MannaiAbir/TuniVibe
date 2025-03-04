@@ -424,7 +424,7 @@ h1, h2, h3, h4, h5, h6 {
 # image
 --------------------------------------------------------------*/
     .card-img-top {
-      width: 100%;
+      width: 300%;
       height: 200px; /* Vous pouvez ajuster la hauteur à ce que vous souhaitez */
       object-fit: cover; /* Cette propriété permet de garder les proportions sans déformer l'image */
   }

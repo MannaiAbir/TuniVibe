@@ -1,0 +1,42 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+    <canvas id="userChart"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('userChart').getContext('2d');
+
+        const currentYearData = {{ currentYearData|json_encode|raw }};
+        const previousYearData = {{ previousYearData|json_encode|raw }};
+
+        const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        
+        function getData(data) {
+            let result = new Array(12).fill(0);
+            data.forEach(row => {
+                result[row.month - 1] = row.count;
+            });
+            return result;
+        }
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Users This Year',
+                        data: getData(currentYearData),
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                    },
+                    {
+                        label: 'Users Last Year',
+                        data: getData(previousYearData),
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)'
+                    }
+                ]
+            }
+        });
+    </script>
+{% endblock %}

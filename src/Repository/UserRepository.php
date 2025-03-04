@@ -16,6 +16,24 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
+    public function countUsersToday(): int
+{
+    return $this->createQueryBuilder('u')
+        ->select('COUNT(u.id)')
+        ->where('u.createdAt >= :today')
+        ->setParameter('today', (new \DateTime())->setTime(0, 0))
+        ->getQuery()
+        ->getSingleScalarResult();
+}
+public function countUsersByMonth(): array
+{
+    return $this->createQueryBuilder('u')
+        ->select('MONTH(u.createdAt) as month, COUNT(u.id) as count')
+        ->groupBy('month')
+        ->getQuery()
+        ->getResult();
+}
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

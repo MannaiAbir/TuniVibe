@@ -1,0 +1,17 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+    <h1>Nombre d'utilisateurs inscrits aujourd'hui : <span id="user-count">{{ userCountToday }}</span></h1>
+
+    <script>
+        function updateUserCount() {
+            fetch("{{ path('admin_user_count_today') }}")
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("user-count").innerHTML = data;
+                });
+        }
+
+        setInterval(updateUserCount, 5000); // Mise à jour toutes les 5 secondes
+    </script>
+{% endblock %}

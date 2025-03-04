@@ -13,6 +13,8 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Regex;
 use App\Form\DataTransformer\RoleToArrayTransformer;
 
 class RegistrationFormType extends AbstractType
@@ -21,17 +23,49 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
-            'label' => 'Username',
-             ])
-             
-            ->add('email')
+                'label' => 'Username',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le nom d\'utilisateur ne peut pas être vide.',
+                    ]),
+                    new Length([
+                        'min' => 3,
+                        'minMessage' => 'Le nom d\'utilisateur doit comporter au moins {{ limit }} caractères.',
+                        'max' => 50,
+                        'maxMessage' => 'Le nom d\'utilisateur ne peut pas dépasser {{ limit }} caractères.',
+                    ])
+                ]
+            ])
+            ->add('email', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'L\'email ne peut pas être vide.',
+                    ]),
+                    new Email([
+                        'message' => 'Veuillez entrer un email valide.',
+                    ])
+                ]
+            ])
             ->add('numeroTelephone', TextType::class, [
                 'label' => 'Numéro de téléphone',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le numéro de téléphone ne peut pas être vide.',
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[0-9]{8,15}$/',
+                        'message' => 'Le numéro de téléphone doit être composé de chiffres uniquement et contenir entre 8 et 15 chiffres.',
+                    ])
+                ]
             ])
             ->add('adresse', TextType::class, [
                 'label' => 'Adresse',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'L\'adresse ne peut pas être vide.',
+                    ])
+                ]
             ])
-
             ->add('roles', ChoiceType::class, [
                 'label' => 'Rôle',
                 'choices' => [
@@ -40,41 +74,33 @@ class RegistrationFormType extends AbstractType
                 ],
                 'multiple' => false,
                 'expanded' => true,
-               
             ])
-
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'Vous devez accepter les conditions d\'utilisation.',
                     ]),
                 ],
             ])
-
             ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Veuillez entrer un mot de passe.',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
+                        'minMessage' => 'Votre mot de passe doit comporter au moins {{ limit }} caractères.',
                         'max' => 4096,
-                    ]),
+                    ])
                 ],
-            ])
-            
-        ;
-        
-            // Add the data transformer
-    $builder->get('roles')
-    ->addModelTransformer(new RoleToArrayTransformer());
+            ]);
+
+        // Ajout du transformateur de données
+        $builder->get('roles')
+            ->addModelTransformer(new RoleToArrayTransformer());
     }
 
     public function configureOptions(OptionsResolver $resolver): void
