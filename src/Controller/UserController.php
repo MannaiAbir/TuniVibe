@@ -54,7 +54,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/user/delete/{id}', name: 'app_delete', methods: ['GET'])]
+    #[Route('/user/delete/{id}', name: 'app_delete', methods: ['POST', 'DELETE'])]
     #[IsGranted('ROLE_User')]
     public function delete(int $id, EntityManagerInterface $entityManager, LoggerInterface $logger): RedirectResponse
     {
@@ -71,14 +71,25 @@ class UserController extends AbstractController
             throw $this->createNotFoundException('User not found.');
         }
 
-        // Remove the user from the database
-        $entityManager->remove($user);
-        $entityManager->flush(); // Commit the deletion
+        // 🚨 Supprimer les demandes de réinitialisation du mot de passe liées
+    $resetPasswordRequests = $entityManager->getRepository(\App\Entity\ResetPasswordRequest::class)->findBy(['user' => $user]);
+    foreach ($resetPasswordRequests as $request) {
+        $entityManager->remove($request);
+       // 🔥 Déconnecter l'utilisateur si c'est lui-même qui se supprime
+       if ($this->getUser() === $user) {
+        $request->getSession()->invalidate(); // Supprime la session
+        $this->container->get('security.token_storage')->setToken(null); // Déconnecte
+    }
+
+    // Supprimer l'utilisateur
+    $entityManager->remove($user);
+    $entityManager->flush();
 
         // Add a success message
         $this->addFlash('success', 'User deleted successfully.');
 
         // Redirect back to the user dashboard
-        return $this->redirectToRoute('app_user');
+        return $this->redirectToRoute('app_home');
     }
+}
 }

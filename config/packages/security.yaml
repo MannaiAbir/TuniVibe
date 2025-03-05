@@ -37,6 +37,11 @@ security:
                 path: /
                 # always_remember_me: true
             entry_point: form_login # Set the entry point to form_login
+           # password_reset:
+                #enabled: true
+               # request_path: app_forgot_password_request
+                #check_email_path: app_check_email
+                #reset_path: app_reset_password
 
     # Access control
     access_control:

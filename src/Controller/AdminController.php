@@ -28,7 +28,7 @@ final class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/{id}', name: 'app_editadmin', methods: ['GET', 'POST'])]
+    #[Route('/edituser/{id}', name: 'app_edituser', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         // Create the form for editing the user
@@ -50,12 +50,12 @@ final class AdminController extends AbstractController
             
         }
         // Render the edit form
-        return $this->render('admin/edit.html.twig', [
+        return $this->render('admin/edituser.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/admin/delete/{id}', name: 'app_deleteadmin', methods: ['GET'])]
+    #[Route('/admin/deleteadmin/{id}', name: 'app_deleteadmin', methods: ['GET'])]
     public function delete(int $id, EntityManagerInterface $entityManager, LoggerInterface $logger): RedirectResponse
     {
         $logger->info('Attempting to delete user with id: ' . $id);
