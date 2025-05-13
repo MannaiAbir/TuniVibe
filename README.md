@@ -42,7 +42,7 @@ Tunivibe est une plateforme web innovante développée avec **Symfony 6.4**, dé
 ## Installation
 ```bash
 # 1. Cloner le dépôt
-git clone [https://github.com/votre-repo/tunivibe-symfony.git](https://github.com/MannaiAbir/TuniVibe.git)
+git clone https://github.com/MannaiAbir/TuniVibe.git
 cd tunivibe-symfony
 
 # 2. Installer les dépendances
