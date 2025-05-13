@@ -1,2 +1,57 @@
-Tunivibe est une plateforme web innovante développée avec le framework Symfony 6, qui s’inscrit dans la thématique des expériences sociales et culturelles. Ce projet met en avant la richesse du patrimoine tunisien à travers une interface moderne et interactive. La plateforme permet à des utilisateurs de s'inscrire, de créer un profil, et de participer à plusieurs types d’activités culturelles. Elle intègre cinq modules principaux, à commencer par la gestion des workshops, où des personnes talentueuses peuvent proposer des ateliers gratuits en ligne (artisanat, cuisine tunisienne, musique, etc.) pour transmettre leur savoir-faire et renforcer l'identité culturelle locale. Ces ateliers sont accessibles à tous sans frais, afin de favoriser le partage libre de la culture tunisienne.
-Un second module dédié à la gestion des événements permet l’organisation et la promotion d’activités culturelles physiques dans différentes régions de Tunisie, telles que des festivals, des visites guidées ou des rencontres artistiques. Lors de ces événements, des collectes de fonds volontaires peuvent être mises en place sous forme de dons, afin de soutenir les organisateurs ou financer des initiatives culturelles locales. Le troisième module concerne la gestion des hébergements culturels, où des familles tunisiennes peuvent proposer un séjour dans leur maison pour partager leur mode de vie, leur cuisine et leur environnement. Au-delà de l’aspect culturel, cet hébergement n’est pas gratuit, ce qui permet aux hôtes de générer un revenu complémentaire, contribuant ainsi à améliorer leur situation financière tout en renforçant les liens humains. Le quatrième module est une bibliothèque culturelle collaborative, permettant aux utilisateurs de publier, lire et commenter des livres liés à la culture tunisienne. Enfin, un espace vlog permet de publier des témoignages, des commentaires et des réflexions personnelles autour des expériences vécues en Tunisie. Ce projet web a pour objectif de créer une communauté culturelle inclusive et dynamique, en mettant en valeur les richesses de notre pays via des outils numériques accessibles.
+# Tunivibe - Plateforme Culturelle Tunisienne
+
+![Symfony](https://img.shields.io/badge/Symfony-6.4-%23000000?logo=symfony)
+![PHP](https://img.shields.io/badge/PHP-8.2-%23777BB4?logo=php)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5-%237952B3?logo=bootstrap)
+
+## Overview
+Tunivibe est une plateforme web innovante développée avec **Symfony 6.4**, dédiée à la promotion du patrimoine culturel tunisien. Ce projet a été réalisé dans le cadre du programme de l'**Esprit School of Engineering**.
+
+## Features
+### Modules Culturels
+- 🎨 **Workshops** : Ateliers en ligne gratuits (artisanat, cuisine)
+- 🎪 **Événements** : Organisation de festivals avec système de dons
+- 🏠 **Hébergements** : Séjours chez l'habitant rémunérés
+- 📚 **Bibliothèque** : Partage collaboratif de livres
+- 🎥 **Espace Vlog** : Témoignages vidéo
+
+### Fonctionnalités Techniques
+- 🔐 Authentification sécurisée
+- 💳 Système de paiement intégré
+- 📊 Tableau de bord administrateur
+- 📱 Design responsive (Bootstrap 5)
+
+## Tech Stack
+### Backend
+- Symfony 6.4
+- PHP 8.2
+- Doctrine ORM
+- MySQL 8.0
+
+### Frontend
+- Twig (templates)
+- Bootstrap 5
+- JavaScript/ES6
+- Webpack Encore
+
+### Outils
+- Visual Studio Code
+- Composer
+- GitHub
+
+## Installation
+```bash
+# 1. Cloner le dépôt
+git clone [https://github.com/votre-repo/tunivibe-symfony.git](https://github.com/MannaiAbir/TuniVibe.git)
+cd tunivibe-symfony
+
+# 2. Installer les dépendances
+composer install
+npm install
+
+# 3. Configurer la base de données
+# Créer un fichier .env.local et configurer DATABASE_URL
+
+# 4. Lancer le projet
+symfony serve -d
+npm run watch
